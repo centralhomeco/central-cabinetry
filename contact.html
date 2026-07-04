@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Central Cabinetry</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+    <span>&#128222; (843) 712-1001</span>
+    <span>Monday to Saturday, 9:00am to 5:00pm</span>
+</div>
+<nav class="navbar">
+    <div class="nav-inner">
+        <a href="index.html" class="logo">Central Cabinetry</a>
+        <div class="nav-links" id="navLinks"><a href="about-us.html">About Us</a><a href="door-styles.html">Door Styles</a><a href="gallery.html">Gallery</a><a href="videos.html">Videos</a><a href="contact.html" class="active">Contact Us</a><a href="book-appointment.html">Book Appointment</a></div>
+        <a href="tel:(843) 712-1001" class="nav-phone">(843) 712-1001</a>
+        <button class="nav-toggle" onclick="toggleMenu()">&#9776;</button>
+    </div>
+</nav>
+
+<div class="floating-bar">
+    <a href="tel:(843) 712-1001" title="Call Us">&#128222;</a>
+    <a href="book-appointment.html" title="Book Appointment">&#128197;</a>
+    <a href="mailto:centralhomegood@gmail.com" title="Email Us">&#9993;</a>
+</div>
+<div class="page-banner">
+    <div class="page-banner-overlay">
+        <div class="breadcrumb"><a href="index.html">&#127968;</a> &rsaquo; Contact Us</div>
+        <h1>Contact Us</h1>
+    </div>
+</div>
+<section style="background:#f5f5f5">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-info">
+                <h3>Visit Our Showroom</h3>
+                <p>&#128205; 1297 US-501, Myrtle Beach, SC 29577</p>
+                <p>&#128222; <a href="tel:(843) 712-1001">(843) 712-1001</a></p>
+                <p>&#9993; <a href="mailto:centralhomegood@gmail.com">centralhomegood@gmail.com</a></p>
+                <p>&#128336; Monday to Saturday, 9:00am to 5:00pm</p>
+                <br>
+                <iframe src="https://maps.google.com/maps?q=1297+US-501,+Myrtle+Beach,+SC+29577&output=embed"
+                    width="100%" height="250" style="border:0;border-radius:8px" allowfullscreen loading="lazy"></iframe>
+            </div>
+            <div class="contact-form-wrap">
+                <h3>Send a Message</h3>
+                <form onsubmit="submitContact(event)">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <input type="tel" placeholder="Your Phone">
+                    <div class="radio-group">
+                        <label><input type="radio" name="ctype" value="homeowner" checked> Homeowner</label>
+                        <label><input type="radio" name="ctype" value="dealer"> Dealer / Contractor</label>
+                    </div>
+                    <select>
+                        <option value="">What can we help you with?</option>
+                        <option>Kitchen Cabinets</option>
+                        <option>Bathroom Vanities</option>
+                        <option>Closet Storage</option>
+                        <option>Pricing Information</option>
+                        <option>Other</option>
+                    </select>
+                    <textarea placeholder="Tell us about your project..."></textarea>
+                    <button type="submit" class="btn-primary" style="width:100%">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-col">
+            <h4>Central Cabinetry</h4>
+            <p>1297 US-501, Myrtle Beach, SC 29577</p>
+            <p>(843) 712-1001</p>
+            <p>centralhomegood@gmail.com</p>
+            <p>Monday to Saturday, 9:00am to 5:00pm</p>
+        </div>
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="about-us.html">About Us</a>
+            <a href="door-styles.html">Door Styles</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="book-appointment.html">Book Appointment</a>
+        </div>
+        <div class="footer-col">
+            <h4>Products</h4>
+            <a href="door-styles.html">Shaker Style</a>
+            <a href="door-styles.html">Double Edge Shaker</a>
+            <a href="door-styles.html">Raised Panel</a>
+            <a href="door-styles.html">View All Styles</a>
+        </div>
+        <div class="footer-col">
+            <h4>Follow Us</h4>
+            <a href="https://facebook.com/chgcabinets" target="_blank">Facebook</a>
+            <a href="https://instagram.com/central_cabinets" target="_blank">Instagram</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Central Cabinetry. All rights reserved.</p>
+    </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

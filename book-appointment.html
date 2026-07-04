@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment | Central Cabinetry</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+    <span>&#128222; (843) 712-1001</span>
+    <span>Monday to Saturday, 9:00am to 5:00pm</span>
+</div>
+<nav class="navbar">
+    <div class="nav-inner">
+        <a href="index.html" class="logo">Central Cabinetry</a>
+        <div class="nav-links" id="navLinks"><a href="about-us.html">About Us</a><a href="door-styles.html">Door Styles</a><a href="gallery.html">Gallery</a><a href="videos.html">Videos</a><a href="contact.html">Contact Us</a><a href="book-appointment.html" class="active">Book Appointment</a></div>
+        <a href="tel:(843) 712-1001" class="nav-phone">(843) 712-1001</a>
+        <button class="nav-toggle" onclick="toggleMenu()">&#9776;</button>
+    </div>
+</nav>
+
+<div class="floating-bar">
+    <a href="tel:(843) 712-1001" title="Call Us">&#128222;</a>
+    <a href="book-appointment.html" title="Book Appointment">&#128197;</a>
+    <a href="mailto:centralhomegood@gmail.com" title="Email Us">&#9993;</a>
+</div>
+<div class="page-banner">
+    <div class="page-banner-overlay">
+        <div class="breadcrumb"><a href="index.html">&#127968;</a> &rsaquo; Book Appointment</div>
+        <h1>Book an Appointment</h1>
+    </div>
+</div>
+<section style="background:#f5f5f5">
+    <div class="container" style="max-width:700px">
+        <p class="section-sub" style="margin-bottom:32px">Schedule a visit to our showroom or a free design consultation.</p>
+        <div class="form-card">
+            <div class="form-steps">
+                <div class="step active" id="step1btn">1. Your Info</div>
+                <div class="step" id="step2btn">2. Appointment</div>
+                <div class="step" id="step3btn">3. Confirm</div>
+            </div>
+            <form onsubmit="submitAppointment(event)">
+                <div class="form-step active" id="step1">
+                    <h3>Your Information</h3>
+                    <input type="text" placeholder="Full Name" required id="apptName">
+                    <input type="email" placeholder="Email Address" required>
+                    <input type="tel" placeholder="Phone Number" required>
+                    <div class="radio-group">
+                        <label><input type="radio" name="type" value="homeowner" checked> Homeowner</label>
+                        <label><input type="radio" name="type" value="contractor"> Contractor</label>
+                        <label><input type="radio" name="type" value="dealer"> Dealer</label>
+                    </div>
+                    <button type="button" class="btn-primary" onclick="nextStep(2)">Next &rsaquo;</button>
+                </div>
+                <div class="form-step" id="step2">
+                    <h3>Choose Date &amp; Time</h3>
+                    <input type="date" required>
+                    <select required>
+                        <option value="">Select a time</option>
+                        <option>9:00 AM</option>
+                        <option>10:00 AM</option>
+                        <option>11:00 AM</option>
+                        <option>1:00 PM</option>
+                        <option>2:00 PM</option>
+                        <option>3:00 PM</option>
+                        <option>4:00 PM</option>
+                    </select>
+                    <select>
+                        <option value="">Type of appointment</option>
+                        <option>Showroom Visit</option>
+                        <option>Design Consultation</option>
+                        <option>Measurement Visit</option>
+                        <option>Product Pickup</option>
+                    </select>
+                    <textarea placeholder="Additional notes or questions..." style="height:80px"></textarea>
+                    <div style="display:flex;gap:12px">
+                        <button type="button" class="btn-secondary" onclick="nextStep(1)">&lsaquo; Back</button>
+                        <button type="button" class="btn-primary" onclick="nextStep(3)">Next &rsaquo;</button>
+                    </div>
+                </div>
+                <div class="form-step" id="step3">
+                    <h3>Confirm Appointment</h3>
+                    <div class="confirm-box">
+                        <p>&#9989; Your appointment request is ready to submit.</p>
+                        <p>We will confirm your appointment by phone or email within 24 hours.</p>
+                        <p><strong>Location:</strong> 1297 US-501, Myrtle Beach, SC 29577</p>
+                        <p><strong>Phone:</strong> (843) 712-1001</p>
+                    </div>
+                    <div style="display:flex;gap:12px">
+                        <button type="button" class="btn-secondary" onclick="nextStep(2)">&lsaquo; Back</button>
+                        <button type="submit" class="btn-primary">Confirm Appointment</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-col">
+            <h4>Central Cabinetry</h4>
+            <p>1297 US-501, Myrtle Beach, SC 29577</p>
+            <p>(843) 712-1001</p>
+            <p>centralhomegood@gmail.com</p>
+            <p>Monday to Saturday, 9:00am to 5:00pm</p>
+        </div>
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="about-us.html">About Us</a>
+            <a href="door-styles.html">Door Styles</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="book-appointment.html">Book Appointment</a>
+        </div>
+        <div class="footer-col">
+            <h4>Products</h4>
+            <a href="door-styles.html">Shaker Style</a>
+            <a href="door-styles.html">Double Edge Shaker</a>
+            <a href="door-styles.html">Raised Panel</a>
+            <a href="door-styles.html">View All Styles</a>
+        </div>
+        <div class="footer-col">
+            <h4>Follow Us</h4>
+            <a href="https://facebook.com/chgcabinets" target="_blank">Facebook</a>
+            <a href="https://instagram.com/central_cabinets" target="_blank">Instagram</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Central Cabinetry. All rights reserved.</p>
+    </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>
