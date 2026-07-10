@@ -5,11 +5,145 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Outdoor Living | Central Cabinetry</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* PAGE BANNER */
+        .page-banner {
+            min-height: 240px;
+            background: linear-gradient(135deg, #1A1A2E 0%, #2A4A6A 100%);
+            display: flex; align-items: flex-end;
+        }
+        .page-banner-overlay { padding: 32px 40px; width: 100%; }
+        .page-banner-overlay h1 { color: #fff; font-size: 36px; font-weight: 800; margin-bottom: 6px; }
+        .page-banner-overlay p { color: #aaa; font-size: 15px; }
+        .breadcrumb { color: #aaa; font-size: 13px; margin-bottom: 8px; }
+        .breadcrumb a { color: #888; text-decoration: none; }
+
+        /* SECTION TABS NAV */
+        .outdoor-tabs { display: flex; gap: 0; border-bottom: 2px solid #eee; margin-bottom: 40px; overflow-x: auto; }
+        .outdoor-tab { padding: 14px 28px; font-size: 14px; font-weight: 600; color: #888; cursor: pointer;
+            border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap;
+            background: none; border-top: none; border-left: none; border-right: none; }
+        .outdoor-tab.active { color: #2A6496; border-bottom-color: #2A6496; }
+        .outdoor-tab:hover { color: #2A6496; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* OUTDOOR KITCHENS */
+        .ok-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-bottom: 48px; }
+        .ok-hero-text h2 { font-size: 30px; font-weight: 800; color: #1A1A2E; margin-bottom: 8px; }
+        .ok-hero-text p { color: #555; font-size: 14px; line-height: 1.8; margin-bottom: 20px; }
+        .ok-hero-img { height: 340px; border-radius: 12px; background-size: cover; background-position: center;
+            background-image: url('images/outdoor-kitchen-2.jpg'); }
+        .spec-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+        .spec-list li { font-size: 13px; color: #444; display: flex; align-items: center; gap: 8px; }
+
+        .ok-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 48px; }
+        .ok-feature { background: #f8f9fa; border-radius: 10px; padding: 24px; text-align: center; border: 1px solid #eee; }
+        .ok-feature-icon { font-size: 32px; margin-bottom: 12px; }
+        .ok-feature h4 { font-size: 15px; font-weight: 700; color: #1A1A2E; margin-bottom: 6px; }
+        .ok-feature p { font-size: 13px; color: #666; line-height: 1.6; }
+
+        .ok-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .ok-gallery-img { height: 240px; border-radius: 10px; background-size: cover; background-position: center; overflow: hidden; position: relative; }
+        .ok-gallery-img:first-child { grid-column: span 2; height: 320px; }
+        .ok-gallery-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); transition: background 0.3s; display: flex; align-items: center; justify-content: center; }
+        .ok-gallery-img:hover .ok-gallery-overlay { background: rgba(0,0,0,0.35); }
+        .ok-gallery-label { color: #fff; font-size: 15px; font-weight: 700; opacity: 0; transition: opacity 0.3s; }
+        .ok-gallery-img:hover .ok-gallery-label { opacity: 1; }
+
+        /* HOYT FURNITURE */
+        .hoyt-hero { background: #f5f5f5; border-radius: 14px; padding: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-bottom: 48px; }
+        .hoyt-hero-text h2 { font-size: 30px; font-weight: 800; color: #1A1A2E; margin-bottom: 6px; }
+        .hoyt-hero-text h3 { font-size: 16px; font-weight: 600; color: #2A6496; margin-bottom: 16px; }
+        .hoyt-hero-text p { color: #555; font-size: 14px; line-height: 1.8; margin-bottom: 20px; }
+        .hoyt-hero-img { height: 320px; border-radius: 10px; background-size: cover; background-position: center;
+            background-image: url('images/hoyt-4piece-set.jpg'); }
+        .hoyt-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .hoyt-badge { background: #e8f0fb; color: #2A6496; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+        .hoyt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 48px; }
+        .hoyt-card { background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.06); transition: box-shadow .2s, transform .2s; }
+        .hoyt-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.12); transform: translateY(-3px); }
+        .hoyt-card-img { height: 220px; background-size: cover; background-position: center; background-color: #f0f0f0; position: relative; }
+        .hoyt-card-badge { position: absolute; top: 10px; left: 10px; background: #2A6496; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+        .hoyt-card-body { padding: 16px; }
+        .hoyt-card-brand { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .hoyt-card-name { font-size: 15px; font-weight: 700; color: #1A1A2E; margin-bottom: 4px; }
+        .hoyt-card-spec { font-size: 12px; color: #888; margin-bottom: 12px; }
+        .hoyt-card-desc { font-size: 12px; color: #666; line-height: 1.6; margin-bottom: 14px; }
+        .hoyt-card-footer { display: flex; align-items: center; justify-content: space-between; }
+        .hoyt-card-price { font-size: 16px; font-weight: 800; color: #2A6496; }
+        .hoyt-card-price span { font-size: 12px; color: #aaa; text-decoration: line-through; font-weight: 400; margin-left: 6px; }
+        .btn-inquire { background: #2A6496; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-inquire:hover { background: #1a4a6b; }
+
+        /* GALLERY */
+        .gallery-filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+        .gallery-filter { padding: 8px 20px; border: 2px solid #ddd; border-radius: 25px; background: #fff; font-size: 13px; font-weight: 600; color: #666; cursor: pointer; transition: all .2s; }
+        .gallery-filter.active, .gallery-filter:hover { border-color: #2A6496; color: #2A6496; background: #e8f0fb; }
+
+        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .gallery-item { border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; }
+        .gallery-item img { width: 100%; height: 220px; object-fit: cover; display: block; transition: transform .3s; }
+        .gallery-item:hover img { transform: scale(1.05); }
+        .gallery-item-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); transition: background .3s; display: flex; align-items: flex-end; padding: 16px; }
+        .gallery-item:hover .gallery-item-overlay { background: rgba(0,0,0,0.45); }
+        .gallery-item-label { color: #fff; font-size: 13px; font-weight: 700; opacity: 0; transition: opacity .3s; }
+        .gallery-item:hover .gallery-item-label { opacity: 1; }
+
+        /* QUOTE FORM */
+        .quote-section { background: #f5f5f5; border-radius: 14px; padding: 48px 40px; }
+        .quote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+        .quote-info h2 { font-size: 28px; font-weight: 800; color: #1A1A2E; margin-bottom: 12px; }
+        .quote-info p { color: #555; font-size: 14px; line-height: 1.8; margin-bottom: 24px; }
+        .quote-perks { display: flex; flex-direction: column; gap: 12px; }
+        .quote-perk { display: flex; align-items: flex-start; gap: 12px; }
+        .quote-perk-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+        .quote-perk-text h4 { font-size: 14px; font-weight: 700; color: #1A1A2E; margin-bottom: 2px; }
+        .quote-perk-text p { font-size: 12px; color: #777; }
+
+        .quote-form { background: #fff; border-radius: 10px; padding: 32px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+        .quote-form h3 { font-size: 20px; font-weight: 700; color: #1A1A2E; margin-bottom: 20px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; color: #555; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 10px 14px;
+            font-size: 14px; color: #333; background: #fafafa; transition: border-color .2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: #2A6496; background: #fff;
+        }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .btn-submit { width: 100%; background: #2A6496; color: #fff; border: none; border-radius: 8px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .2s; }
+        .btn-submit:hover { background: #1a4a6b; }
+        .form-success { display: none; text-align: center; padding: 20px; color: #155724; background: #d4edda; border-radius: 8px; font-weight: 600; margin-top: 16px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .ok-hero, .hoyt-hero, .quote-grid { grid-template-columns: 1fr; }
+            .ok-features { grid-template-columns: 1fr 1fr; }
+            .hoyt-grid { grid-template-columns: 1fr 1fr; }
+            .gallery-grid { grid-template-columns: 1fr 1fr; }
+            .ok-gallery { grid-template-columns: 1fr; }
+            .ok-gallery-img:first-child { grid-column: span 1; height: 240px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 540px) {
+            .ok-features { grid-template-columns: 1fr; }
+            .hoyt-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .outdoor-tab { padding: 10px 16px; font-size: 13px; }
+            .page-banner-overlay { padding: 24px 20px; }
+            .quote-section { padding: 32px 20px; }
+            .quote-form { padding: 24px 16px; }
+        }
+    </style>
 </head>
 <body>
 
 <div class="topbar">
-    <span>📞 (843) 712-1001</span>
+    <span>&#128222; (843) 712-1001</span>
     <span>Monday to Saturday, 9:00am to 5:00pm</span>
 </div>
 
@@ -25,112 +159,378 @@
             <a href="book-appointment.html">Book Appointment</a>
         </div>
         <a href="tel:(843) 712-1001" class="nav-phone">(843) 712-1001</a>
-        <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+        <button class="nav-toggle" onclick="toggleMenu()">&#9776;</button>
     </div>
 </nav>
 
 <div class="floating-bar">
-    <a href="tel:(843) 712-1001" title="Call Us">📞</a>
-    <a href="book-appointment.html" title="Book Appointment">📅</a>
-    <a href="mailto:centralhomegood@gmail.com" title="Email Us">✉</a>
+    <a href="tel:(843) 712-1001" title="Call Us">&#128222;</a>
+    <a href="book-appointment.html" title="Book Appointment">&#128197;</a>
+    <a href="mailto:centralhomegood@gmail.com" title="Email Us">&#9993;</a>
 </div>
 
 <!-- PAGE BANNER -->
 <div class="page-banner">
     <div class="page-banner-overlay">
-        <div class="breadcrumb"><a href="index.html">🏠</a> › Outdoor Living</div>
+        <p class="breadcrumb"><a href="index.html">&#127968;</a> &rsaquo; Outdoor Living</p>
         <h1>Outdoor Living</h1>
-        <p>Outdoor kitchens & premium Hoyt furniture for your perfect outdoor space</p>
+        <p>Outdoor Kitchens &bull; Hoyt Furniture &bull; Gallery &bull; Request a Quote</p>
     </div>
 </div>
 
-<!-- OUTDOOR KITCHENS -->
-<section>
+<!-- SECTION TABS -->
+<section style="padding-bottom: 0;">
     <div class="container">
-        <h2>Outdoor Kitchens</h2>
-        <p class="section-sub">Bring the full kitchen experience to your backyard</p>
-
-        <div class="outdoor-intro">
-            <div class="outdoor-intro-text">
-                <p>Transform your outdoor space into the ultimate entertainment area with a custom outdoor kitchen. From simple grilling stations to fully equipped kitchens with refrigerators, sinks, and storage — we design and supply everything you need.</p>
-                <br>
-                <h3>What We Offer</h3>
-                <ul class="spec-list">
-                    <li>✅ Custom cabinet configurations</li>
-                    <li>✅ Weather-resistant materials</li>
-                    <li>✅ Grill and appliance integration</li>
-                    <li>✅ Countertop selection assistance</li>
-                    <li>✅ Storage and organization solutions</li>
-                    <li>✅ Free design consultation</li>
-                </ul>
-                <br>
-                <a href="contact.html?category=outdoor" class="btn-primary">Request a Quote</a>
-            </div>
-            <div class="outdoor-intro-img outdoor-kitchen-img"></div>
+        <div class="outdoor-tabs">
+            <button class="outdoor-tab active" onclick="showOutdoorTab('kitchens', this)">&#127859; Outdoor Kitchens</button>
+            <button class="outdoor-tab" onclick="showOutdoorTab('hoyt', this)">&#127968; Hoyt Outdoor Furniture</button>
+            <button class="outdoor-tab" onclick="showOutdoorTab('gallery', this)">&#128247; Gallery</button>
+            <button class="outdoor-tab" onclick="showOutdoorTab('quote', this)">&#128203; Request a Quote</button>
         </div>
     </div>
 </section>
 
-<!-- HOYT FURNITURE -->
-<section style="background:#f5f5f5">
+<!-- =================== TAB: OUTDOOR KITCHENS =================== -->
+<div id="tab-kitchens" class="tab-panel active">
+<section>
     <div class="container">
-        <h2>Hoyt Outdoor Furniture</h2>
-        <p class="section-sub">Premium outdoor furniture built to last</p>
 
-        <div class="outdoor-intro" style="direction:rtl">
-            <div class="outdoor-intro-text" style="direction:ltr">
-                <p>Hoyt outdoor furniture combines exceptional craftsmanship with weather-resistant materials, creating pieces that are as durable as they are beautiful. Perfect for patios, pools, and outdoor living areas.</p>
-                <br>
-                <h3>Collections Available</h3>
-                <div class="hoyt-categories">
-                    <div class="hoyt-cat">
-                        <span>🪑</span>
-                        <h4>Seating</h4>
-                        <p>Lounge chairs, sofas, and sectionals</p>
-                    </div>
-                    <div class="hoyt-cat">
-                        <span>🍽️</span>
-                        <h4>Dining</h4>
-                        <p>Tables and dining chairs for outdoor meals</p>
-                    </div>
-                    <div class="hoyt-cat">
-                        <span>☂️</span>
-                        <h4>Shade</h4>
-                        <p>Umbrellas and pergola accessories</p>
-                    </div>
-                    <div class="hoyt-cat">
-                        <span>🛋️</span>
-                        <h4>Accessories</h4>
-                        <p>Cushions, covers, and outdoor rugs</p>
+        <div class="ok-hero">
+            <div class="ok-hero-text">
+                <h2>Custom Outdoor Kitchens</h2>
+                <p>Transform your backyard into the ultimate entertainment destination. From compact grilling stations to fully equipped outdoor kitchens with refrigerators, sinks, and custom cabinetry — we design and supply everything you need to cook, entertain, and relax outdoors in Myrtle Beach style.</p>
+                <ul class="spec-list">
+                    <li>&#9989; Custom weather-resistant cabinet configurations</li>
+                    <li>&#9989; Stainless steel and marine-grade materials</li>
+                    <li>&#9989; Grill and appliance integration</li>
+                    <li>&#9989; Granite, quartz &amp; concrete countertops</li>
+                    <li>&#9989; Sink, refrigerator &amp; storage solutions</li>
+                    <li>&#9989; Free in-store design consultation</li>
+                </ul>
+                <a href="#" onclick="showOutdoorTab('quote', document.querySelector('.outdoor-tab:last-child')); return false;" class="btn-primary">Get a Free Quote</a>
+            </div>
+            <div class="ok-hero-img"></div>
+        </div>
+
+        <!-- 3 Feature Cards -->
+        <div class="ok-features">
+            <div class="ok-feature">
+                <div class="ok-feature-icon">&#127859;</div>
+                <h4>Grill Stations</h4>
+                <p>Built-in grill islands with custom cabinetry, side burners, and storage designed to fit your space perfectly.</p>
+            </div>
+            <div class="ok-feature">
+                <div class="ok-feature-icon">&#127968;</div>
+                <h4>Full Outdoor Kitchens</h4>
+                <p>Complete kitchen setups with sink, refrigerator, prep area, and dining — the full indoor experience, outdoors.</p>
+            </div>
+            <div class="ok-feature">
+                <div class="ok-feature-icon">&#127794;</div>
+                <h4>Carolina-Ready Materials</h4>
+                <p>All cabinets and surfaces are selected for durability in the coastal South Carolina climate — salt, humidity, and heat resistant.</p>
+            </div>
+        </div>
+
+        <!-- Photo Gallery Strip -->
+        <h3 style="font-size:20px;font-weight:700;color:#1A1A2E;margin-bottom:20px;">Outdoor Kitchen Inspiration</h3>
+        <div class="ok-gallery">
+            <div class="ok-gallery-img" style="background-image:url('images/outdoor-kitchen-4.jpg')">
+                <div class="ok-gallery-overlay"><span class="ok-gallery-label">Full Outdoor Kitchen Setup</span></div>
+            </div>
+            <div class="ok-gallery-img" style="background-image:url('images/outdoor-kitchen-1.jpg')">
+                <div class="ok-gallery-overlay"><span class="ok-gallery-label">Stainless Steel Cabinets</span></div>
+            </div>
+            <div class="ok-gallery-img" style="background-image:url('images/outdoor-kitchen-3.jpg')">
+                <div class="ok-gallery-overlay"><span class="ok-gallery-label">Waterproof Cabinet System</span></div>
+            </div>
+        </div>
+
+    </div>
+</section>
+</div>
+
+<!-- =================== TAB: HOYT FURNITURE =================== -->
+<div id="tab-hoyt" class="tab-panel">
+<section>
+    <div class="container">
+
+        <div class="hoyt-hero">
+            <div class="hoyt-hero-text">
+                <h2>Hoyt Outdoor Furniture</h2>
+                <h3>by AllModern — Available at Central Cabinetry</h3>
+                <p>The Hoyt collection by AllModern combines sleek modern design with premium powder-coated aluminum frames and weather-resistant cushions. Crafted using advanced laser welding technology with hand-finished surfaces, every piece delivers high-end quality built to withstand the elements year-round.</p>
+                <div class="hoyt-badges">
+                    <span class="hoyt-badge">&#9989; Powder-Coated Aluminum</span>
+                    <span class="hoyt-badge">&#9989; Water-Resistant Cushions</span>
+                    <span class="hoyt-badge">&#9989; Laser Welded Frame</span>
+                    <span class="hoyt-badge">&#9989; Removable Cushion Covers</span>
+                    <span class="hoyt-badge">&#9989; Fully Assembled Options</span>
+                </div>
+                <a href="#" onclick="showOutdoorTab('quote', document.querySelector('.outdoor-tab:last-child')); return false;" class="btn-primary">Inquire About Pricing</a>
+            </div>
+            <div class="hoyt-hero-img"></div>
+        </div>
+
+        <!-- Product Cards -->
+        <div class="hoyt-grid">
+
+            <div class="hoyt-card">
+                <div class="hoyt-card-img" style="background-image:url('images/hoyt-4piece-set.jpg')">
+                    <span class="hoyt-card-badge">Best Seller</span>
+                </div>
+                <div class="hoyt-card-body">
+                    <div class="hoyt-card-brand">AllModern · Hoyt Collection</div>
+                    <div class="hoyt-card-name">4-Piece Aluminum Lounge Set</div>
+                    <div class="hoyt-card-spec">Sofa + 2 Armchairs + Coffee Table</div>
+                    <div class="hoyt-card-desc">Complete outdoor conversation set with premium cushions. Powder-coated aluminum frame in Silver Gray. Perfect for patios and pool decks.</div>
+                    <div class="hoyt-card-footer">
+                        <div class="hoyt-card-price">Call for Price <span>Wayfair Listed</span></div>
+                        <a href="#" onclick="showOutdoorTab('quote', document.querySelector('.outdoor-tab:last-child')); return false;" class="btn-inquire">Inquire</a>
                     </div>
                 </div>
-                <br>
-                <a href="contact.html?category=outdoor" class="btn-primary">See Our Showroom</a>
             </div>
-            <div class="outdoor-intro-img hoyt-img" style="direction:ltr"></div>
+
+            <div class="hoyt-card">
+                <div class="hoyt-card-img" style="background-image:url('images/hoyt-conversation-set.jpg')">
+                    <span class="hoyt-card-badge">Popular</span>
+                </div>
+                <div class="hoyt-card-body">
+                    <div class="hoyt-card-brand">AllModern · Hoyt Collection</div>
+                    <div class="hoyt-card-name">Outdoor Conversation Set with End Table</div>
+                    <div class="hoyt-card-spec">3-Seat Sofa + End Table · Seating Capacity: 3</div>
+                    <div class="hoyt-card-desc">Includes cushions with removable covers. Seat height 14.76". Weather-resistant frame. Available in multiple color combinations.</div>
+                    <div class="hoyt-card-footer">
+                        <div class="hoyt-card-price">$1,499 <span>was $1,759</span></div>
+                        <a href="#" onclick="showOutdoorTab('quote', document.querySelector('.outdoor-tab:last-child')); return false;" class="btn-inquire">Inquire</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hoyt-card">
+                <div class="hoyt-card-img" style="background-image:url('images/hoyt-armchair-set.jpg')">
+                </div>
+                <div class="hoyt-card-body">
+                    <div class="hoyt-card-brand">AllModern · Hoyt Collection</div>
+                    <div class="hoyt-card-name">37.40" Outdoor Aluminum Armchair Set</div>
+                    <div class="hoyt-card-spec">Set of 2 · Frame: Bronze / Khaki Cushions</div>
+                    <div class="hoyt-card-desc">Meticulously crafted using advanced laser welding. Hand-finished smooth surface. Spacious 37.40" frames for maximum comfort poolside or on the patio.</div>
+                    <div class="hoyt-card-footer">
+                        <div class="hoyt-card-price">$1,119 <span>was $1,189</span></div>
+                        <a href="#" onclick="showOutdoorTab('quote', document.querySelector('.outdoor-tab:last-child')); return false;" class="btn-inquire">Inquire</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hoyt-card">
+                <div class="hoyt-card-img" style="background-image:url('images/hoyt-sofa.jpg')">
+                    <span class="hoyt-card-badge">New</span>
+                </div>
+                <div class="hoyt-card-body">
+                    <div class="hoyt-card-brand">AllModern · Hoyt Collection</div>
+                    <div class="hoyt-card-name">Outdoor Aluminum Sofa</div>
+                    <div class="hoyt-card-spec">3-Seat · Silver Gray Frame · Light Gray Cushions</div>
+                    <div class="hoyt-card-desc">Clean-lined modern sofa with premium water-resistant cushions. Structural mechanics meet human aesthetics — elegant and stable for any outdoor setting.</div>
+                    <div class="hoyt-card-footer">
+                        <div class="hoyt-card-price">Call for Price</div>
+                        <a href="#" onclick="showOutdoorTab('quote', document.querySelector('.outdoor-tab:last-child')); return false;" class="btn-inquire">Inquire</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hoyt-card">
+                <div class="hoyt-card-img" style="background-image:url('images/hoyt-chaise-lounge.jpg')">
+                </div>
+                <div class="hoyt-card-body">
+                    <div class="hoyt-card-brand">AllModern · Hoyt Collection</div>
+                    <div class="hoyt-card-name">35" Outdoor Metal Chaise Lounge</div>
+                    <div class="hoyt-card-spec">Set of 2 · Slate Black Frame · Light Gray Cushions</div>
+                    <div class="hoyt-card-desc">5 adjustable positions. Wheels for easy repositioning. Fully assembled. Removable cushion cover. Wayfair Verified quality. Perfect for poolside relaxation.</div>
+                    <div class="hoyt-card-footer">
+                        <div class="hoyt-card-price">$1,599 <span>was $1,699</span></div>
+                        <a href="#" onclick="showOutdoorTab('quote', document.querySelector('.outdoor-tab:last-child')); return false;" class="btn-inquire">Inquire</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hoyt-card">
+                <div class="hoyt-card-img" style="background-image:url('images/hoyt-double-chaise.jpg')">
+                </div>
+                <div class="hoyt-card-body">
+                    <div class="hoyt-card-brand">AllModern · Hoyt Collection</div>
+                    <div class="hoyt-card-name">Outdoor Metal Double Chaise Lounge</div>
+                    <div class="hoyt-card-spec">Double-Wide · Bronze Frame · Khaki Cushions</div>
+                    <div class="hoyt-card-desc">Spacious double chaise perfect for couples. Weather-resistant powder-coated frame. Ideal for sunbathing on your deck or by the pool.</div>
+                    <div class="hoyt-card-footer">
+                        <div class="hoyt-card-price">Call for Price</div>
+                        <a href="#" onclick="showOutdoorTab('quote', document.querySelector('.outdoor-tab:last-child')); return false;" class="btn-inquire">Inquire</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+        <div style="background:#e8f0fb;border-radius:10px;padding:20px 24px;display:flex;align-items:center;gap:16px;margin-bottom:16px;">
+            <span style="font-size:28px;">&#128204;</span>
+            <div>
+                <strong style="color:#1A1A2E;font-size:14px;">See the Hoyt Collection In Person</strong>
+                <p style="color:#555;font-size:13px;margin-top:2px;">Visit our showroom at 1297 Highway 501, Myrtle Beach, SC to see Hoyt furniture on display. Our team will help you find the perfect pieces for your outdoor space.</p>
+            </div>
+        </div>
+
     </div>
 </section>
+</div>
 
-<!-- WHY -->
+<!-- =================== TAB: GALLERY =================== -->
+<div id="tab-gallery" class="tab-panel">
 <section>
     <div class="container">
-        <h2>Why Choose Us for Outdoor Living?</h2>
-        <div class="features-grid">
-            <div class="feature"><span>🎨</span><h4>Design Consultation</h4><p>Free in-store design help to plan your outdoor space.</p></div>
-            <div class="feature"><span>🏗️</span><h4>Quality Materials</h4><p>Weather-resistant cabinets and furniture built for the Carolina climate.</p></div>
-            <div class="feature"><span>💰</span><h4>Competitive Pricing</h4><p>Premium outdoor products at wholesale prices.</p></div>
-            <div class="feature"><span>📍</span><h4>Local Showroom</h4><p>Visit us in Myrtle Beach to see everything in person.</p></div>
+        <h2 style="font-size:28px;font-weight:800;color:#1A1A2E;margin-bottom:8px;">Project Gallery</h2>
+        <p style="color:#666;font-size:14px;margin-bottom:28px;">Browse our outdoor living projects — from custom kitchens to Hoyt furniture setups across Myrtle Beach.</p>
+
+        <div class="gallery-filters">
+            <button class="gallery-filter active" onclick="filterGallery('all', this)">All Projects</button>
+            <button class="gallery-filter" onclick="filterGallery('kitchen', this)">Outdoor Kitchens</button>
+            <button class="gallery-filter" onclick="filterGallery('furniture', this)">Hoyt Furniture</button>
+        </div>
+
+        <div class="gallery-grid" id="outdoorGallery">
+            <div class="gallery-item" data-cat="kitchen">
+                <img src="images/outdoor-kitchen-4.jpg" alt="Outdoor Kitchen Project 1">
+                <div class="gallery-item-overlay"><span class="gallery-item-label">Outdoor Kitchen — Myrtle Beach</span></div>
+            </div>
+            <div class="gallery-item" data-cat="furniture">
+                <img src="images/hoyt-4piece-set.jpg" alt="Hoyt 4-Piece Set">
+                <div class="gallery-item-overlay"><span class="gallery-item-label">Hoyt 4-Piece Lounge Set</span></div>
+            </div>
+            <div class="gallery-item" data-cat="kitchen">
+                <img src="images/outdoor-kitchen-2.jpg" alt="Outdoor Kitchen Stainless">
+                <div class="gallery-item-overlay"><span class="gallery-item-label">Stainless Steel Outdoor Kitchen</span></div>
+            </div>
+            <div class="gallery-item" data-cat="furniture">
+                <img src="images/hoyt-conversation-set.jpg" alt="Hoyt Conversation Set">
+                <div class="gallery-item-overlay"><span class="gallery-item-label">Hoyt Conversation Set</span></div>
+            </div>
+            <div class="gallery-item" data-cat="kitchen">
+                <img src="images/outdoor-kitchen-1.jpg" alt="Outdoor Kitchen Cabinets">
+                <div class="gallery-item-overlay"><span class="gallery-item-label">Custom Outdoor Cabinetry</span></div>
+            </div>
+            <div class="gallery-item" data-cat="furniture">
+                <img src="images/hoyt-chaise-lounge.jpg" alt="Hoyt Chaise Lounge">
+                <div class="gallery-item-overlay"><span class="gallery-item-label">Hoyt Chaise Lounge — Poolside</span></div>
+            </div>
+            <div class="gallery-item" data-cat="kitchen">
+                <img src="images/outdoor-kitchen-3.jpg" alt="Outdoor Kitchen Waterproof">
+                <div class="gallery-item-overlay"><span class="gallery-item-label">Waterproof Outdoor Cabinet System</span></div>
+            </div>
+            <div class="gallery-item" data-cat="furniture">
+                <img src="images/hoyt-armchair-set.jpg" alt="Hoyt Armchair Set">
+                <div class="gallery-item-overlay"><span class="gallery-item-label">Hoyt Armchair Set (Set of 2)</span></div>
+            </div>
+            <div class="gallery-item" data-cat="furniture">
+                <img src="images/hoyt-double-chaise.jpg" alt="Hoyt Double Chaise">
+                <div class="gallery-item-overlay"><span class="gallery-item-label">Hoyt Double Chaise Lounge</span></div>
+            </div>
+        </div>
+
+    </div>
+</section>
+</div>
+
+<!-- =================== TAB: REQUEST A QUOTE =================== -->
+<div id="tab-quote" class="tab-panel">
+<section>
+    <div class="container">
+        <div class="quote-section">
+            <div class="quote-grid">
+                <div class="quote-info">
+                    <h2>Request a Free Quote</h2>
+                    <p>Tell us about your outdoor project and we'll get back to you with a personalized quote. Whether it's a custom outdoor kitchen, Hoyt furniture, or a complete outdoor living setup — our team is ready to help.</p>
+                    <div class="quote-perks">
+                        <div class="quote-perk">
+                            <div class="quote-perk-icon">&#127968;</div>
+                            <div class="quote-perk-text">
+                                <h4>Free In-Store Consultation</h4>
+                                <p>Visit our showroom at 1297 Highway 501, Myrtle Beach, SC</p>
+                            </div>
+                        </div>
+                        <div class="quote-perk">
+                            <div class="quote-perk-icon">&#128222;</div>
+                            <div class="quote-perk-text">
+                                <h4>Call Us Directly</h4>
+                                <p><a href="tel:8437121001" style="color:#2A6496;font-weight:700;">(843) 712-1001</a> — Mon–Sat 9am to 5pm</p>
+                            </div>
+                        </div>
+                        <div class="quote-perk">
+                            <div class="quote-perk-icon">&#9989;</div>
+                            <div class="quote-perk-text">
+                                <h4>No Obligation</h4>
+                                <p>Get a detailed quote with no pressure — we're here to help you plan your dream outdoor space.</p>
+                            </div>
+                        </div>
+                        <div class="quote-perk">
+                            <div class="quote-perk-icon">&#128179;</div>
+                            <div class="quote-perk-text">
+                                <h4>Flexible Payment</h4>
+                                <p>We accept Credit Cards and Zelle for your convenience.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quote-form">
+                    <h3>&#128203; Tell Us About Your Project</h3>
+                    <form id="outdoorQuoteForm" onsubmit="submitOutdoorQuote(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>First Name *</label>
+                                <input type="text" placeholder="John" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name *</label>
+                                <input type="text" placeholder="Smith" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number *</label>
+                            <input type="tel" placeholder="(843) 000-0000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" placeholder="john@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>I'm Interested In *</label>
+                            <select required>
+                                <option value="">— Select a category —</option>
+                                <option>Outdoor Kitchen (Custom Build)</option>
+                                <option>Hoyt Outdoor Furniture</option>
+                                <option>Both — Outdoor Kitchen + Furniture</option>
+                                <option>Other / Not Sure Yet</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tell Us About Your Project</label>
+                            <textarea placeholder="Describe your space, budget, timeline, or any specific products you're interested in..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">&#128203; Send My Quote Request</button>
+                        <div class="form-success" id="quoteSuccess">
+                            &#9989; Thank you! We'll contact you within 1 business day to discuss your project.
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </section>
+</div>
 
-<!-- CTA -->
+<!-- CTA BANNER -->
 <section class="cta-dark">
     <div class="container" style="text-align:center">
         <h2>Ready to Create Your Dream Outdoor Space?</h2>
-        <p>Visit our showroom or contact us for a free consultation.</p>
-        <a href="contact.html" class="btn-light">Contact Us</a>
+        <p>Visit our showroom in Myrtle Beach or call us today for a free consultation.</p>
+        <a href="tel:8437121001" class="btn-light">&#128222; Call (843) 712-1001</a>
         <a href="book-appointment.html" class="btn-outline-white">Book Appointment</a>
     </div>
 </section>
@@ -154,13 +554,11 @@
             <a href="book-appointment.html">Book Appointment</a>
         </div>
         <div class="footer-col">
-            <h4>Products</h4>
-            <a href="door-styles.html">Cabinet Door Styles</a>
-            <a href="flooring.html">LVP Flooring</a>
-            <a href="flooring.html">WPC Flooring</a>
-            <a href="flooring.html">Engineered Hardwood</a>
+            <h4>Outdoor Living</h4>
             <a href="outdoor.html">Outdoor Kitchens</a>
-            <a href="outdoor.html">Hoyt Furniture</a>
+            <a href="outdoor.html">Hoyt Outdoor Furniture</a>
+            <a href="outdoor.html">Gallery</a>
+            <a href="outdoor.html">Request a Quote</a>
         </div>
         <div class="footer-col">
             <h4>Follow Us</h4>
@@ -174,43 +572,49 @@
 </footer>
 
 <script src="js/main.js"></script>
-<style>
-.page-banner {
-    min-height: 220px;
-    background: linear-gradient(135deg, #1A1A2E 0%, #2A4A6A 100%);
-    position: relative;
-    display: flex;
-    align-items: flex-end;
+<script>
+function showOutdoorTab(tab, btn) {
+    // Hide all panels
+    document.querySelectorAll('.tab-panel').forEach(function(el) { el.classList.remove('active'); });
+    // Deactivate all tab buttons
+    document.querySelectorAll('.outdoor-tab').forEach(function(el) { el.classList.remove('active'); });
+    // Show selected panel
+    document.getElementById('tab-' + tab).classList.add('active');
+    // Activate clicked button
+    if (btn) btn.classList.add('active');
+    // Scroll to tabs
+    document.querySelector('.outdoor-tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-.page-banner-overlay { padding: 32px 40px; width: 100%; }
-.page-banner-overlay h1 { color: #fff; font-size: 36px; font-weight: 800; margin-bottom: 6px; }
-.page-banner-overlay p { color: #aaa; font-size: 15px; }
-.breadcrumb { color: #aaa; font-size: 13px; margin-bottom: 8px; }
-.breadcrumb a { color: #888; text-decoration: none; }
 
-.outdoor-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-top: 32px; }
-.outdoor-intro-text h3 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
-.outdoor-intro-text p { color: #555; font-size: 14px; line-height: 1.7; }
-.outdoor-intro-img { height: 320px; border-radius: 12px; background-size: cover; background-position: center; }
-.outdoor-kitchen-img { background: linear-gradient(135deg, #2C3E50 0%, #4A6741 100%); }
-.hoyt-img { background: linear-gradient(135deg, #7B4F2E 0%, #C4962A 100%); }
-
-.spec-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-.spec-list li { font-size: 13px; color: #444; }
-
-.hoyt-categories { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
-.hoyt-cat { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 16px; }
-.hoyt-cat span { font-size: 24px; display: block; margin-bottom: 6px; }
-.hoyt-cat h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-.hoyt-cat p { font-size: 12px; color: #777; }
-
-.nav-links a.active { color: #2A6496; font-weight: 700; }
-
-@media (max-width: 768px) {
-    .outdoor-intro { grid-template-columns: 1fr; direction: ltr; }
-    .outdoor-intro-img { height: 220px; }
-    .hoyt-categories { grid-template-columns: 1fr; }
+function filterGallery(cat, btn) {
+    document.querySelectorAll('.gallery-filter').forEach(function(el) { el.classList.remove('active'); });
+    btn.classList.add('active');
+    document.querySelectorAll('.gallery-item').forEach(function(item) {
+        if (cat === 'all' || item.dataset.cat === cat) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
 }
-</style>
+
+function submitOutdoorQuote(e) {
+    e.preventDefault();
+    document.getElementById('quoteSuccess').style.display = 'block';
+    e.target.querySelectorAll('input, select, textarea, button[type=submit]').forEach(function(el) { el.disabled = true; });
+}
+
+// Handle anchor links like outdoor.html#quote
+window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash === '#quote') {
+        showOutdoorTab('quote', document.querySelectorAll('.outdoor-tab')[3]);
+    } else if (hash === '#hoyt') {
+        showOutdoorTab('hoyt', document.querySelectorAll('.outdoor-tab')[1]);
+    } else if (hash === '#gallery') {
+        showOutdoorTab('gallery', document.querySelectorAll('.outdoor-tab')[2]);
+    }
+});
+</script>
 </body>
 </html>
