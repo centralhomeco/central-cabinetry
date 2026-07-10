@@ -223,6 +223,7 @@ const SUPABASE_URL = 'https://apxelbabvviuwqpfivtr.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFweGVsYmFidnZpdXdxcGZpdnRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2NjEyOTYsImV4cCI6MjA5OTIzNzI5Nn0.EWt2FRAkJH86Is9P_uDjKDXnJ0O1J2qdg_BuctQavvY';
 
 let accessToken = null;
+let stylesCache = {};  // store styles by id to avoid inline JSON in onclick
 
 function headers(withAuth = false) {
     const h = { 'apikey': SUPABASE_ANON, 'Content-Type': 'application/json' };
@@ -273,6 +274,10 @@ async function loadStyles() {
     const grid = document.getElementById('styles-grid');
     const loading = document.getElementById('loading-styles');
 
+    // Cache styles by id so onclick can safely look them up without inline JSON
+    stylesCache = {};
+    styles.forEach(s => { stylesCache[s.id] = s; });
+
     grid.innerHTML = styles.map(s => `
         <div class="style-card">
             <div class="style-card-img" style="${s.image_url ? 'background-image:url(' + s.image_url + ')' : ''}">
@@ -284,13 +289,19 @@ async function loadStyles() {
                 <div class="style-card-code">(${s.code})</div>
                 <div class="style-card-name">${s.name}</div>
                 <div class="style-card-type">${s.style_type}</div>
-                <button class="btn-edit" onclick='openModal(${JSON.stringify(s)})'>Edit</button>
+                <button class="btn-edit" onclick="openModalById('${s.id}')">Edit</button>
             </div>
         </div>
     `).join('');
 
     loading.style.display = 'none';
     grid.style.display = 'grid';
+}
+
+function openModalById(id) {
+    const style = stylesCache[id];
+    if (!style) return;
+    openModal(style);
 }
 
 function openModal(style) {
