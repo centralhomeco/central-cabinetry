@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flooring | Central Cabinetry</title>
+    <title>Flooring | Central Home Good</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
         .page-banner{background:#1A1A2E;padding:48px 40px 32px;display:flex;flex-direction:column;justify-content:flex-end}
@@ -12,6 +12,14 @@
         .breadcrumb{color:#888;font-size:13px;margin-bottom:8px}
         .breadcrumb a{color:#666;text-decoration:none}
 
+
+        .search-bar{padding:16px 0 0}
+        .search-input-wrap{position:relative;max-width:500px;margin-bottom:24px}
+        .search-input-wrap input{width:100%;padding:12px 16px 12px 44px;border:2px solid #ddd;border-radius:8px;font-size:15px;font-family:inherit;transition:.2s}
+        .search-input-wrap input:focus{outline:none;border-color:#2A6496}
+        .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#888;font-size:18px}
+        .search-count{font-size:13px;color:#888;margin-top:-16px;margin-bottom:16px}
+        .no-results-msg{text-align:center;padding:40px;color:#888;display:none}
         .flooring-tabs{display:flex;gap:0;border-bottom:2px solid #eee;margin-bottom:40px;overflow-x:auto}
         .flooring-tab{padding:14px 28px;font-size:14px;font-weight:600;color:#888;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
         .flooring-tab.active{color:#2A6496;border-bottom-color:#2A6496}
@@ -60,7 +68,7 @@
 </div>
 <nav class="navbar">
     <div class="nav-inner">
-        <a href="index.html" class="logo">Central Cabinetry</a>
+        <a href="index.html" class="logo">Central Home Good</a>
         <div class="nav-links" id="navLinks">
             <a href="about-us.html">About Us</a>
             <a href="door-styles.html">Cabinets</a>
@@ -77,7 +85,7 @@
 <div class="floating-bar">
     <a href="tel:(843) 712-1001" title="Call Us">&#128222;</a>
     <a href="book-appointment.html" title="Book Appointment">&#128197;</a>
-    <a href="mailto:centralhomegood@gmail.com" title="Email Us">&#9993;</a>
+    <a href="mailto:sales@centralhomegood.com" title="Email Us">&#9993;</a>
 </div>
 
 <div class="page-banner">
@@ -95,6 +103,16 @@
             <button class="flooring-tab" onclick="showTab('wpc')">WPC Luxury Vinyl Plank</button>
             <button class="flooring-tab" onclick="showTab('spc')">SPC Luxury Vinyl Plank</button>
         </div>
+
+
+        <!-- SEARCH BAR -->
+        <div class="search-bar">
+            <div class="search-input-wrap">
+                <span class="search-icon">&#128269;</span>
+                <input type="text" id="floorSearch" placeholder="Search flooring... e.g. Oak, Hickory, WPC, 8mm" oninput="filterFlooring()">
+            </div>
+        </div>
+        <div class="search-count" id="floorCount"></div>
 
         <!-- TAB: ENGINEERED HARDWOOD -->
         <div id="tab-hardwood" class="tab-content active">
@@ -250,77 +268,25 @@
         <div id="tab-spc" class="tab-content">
             <div class="product-hero">
                 <div>
-                    <h2>UniCore SPC</h2>
+                    <h2>UniCore ULTRA</h2>
                     <h3>SPC Luxury Vinyl Plank</h3>
-                    <p>Beautifully designed. Unrelentingly tough. Our UniCore Stone Plastic Composite (SPC) rigid core vinyl is built to conquer the demands of an active household. Featuring an ultra-dense, 100% waterproof stone-polymer core, this collection delivers exceptional dent resistance and dimensional stability. Whether facing heavy foot traffic, playful pets, or accidental spills, UniCore SPC offers enduring, worry-free style that stands up to everyday life.</p>
+                    <p>Built for the demands of high-traffic residential and commercial spaces. UniCore ULTRA (SPC) features an ultra-rigid stone polymer composite core that is virtually indestructible — 100% waterproof, dent-resistant, and dimensionally stable in extreme temperature fluctuations. The perfect floor for spaces where performance is non-negotiable.</p>
                     <div class="specs-bar">
+                        <span class="spec-badge">&#9989; Ultra-Rigid Core</span>
                         <span class="spec-badge">&#9989; 100% Waterproof</span>
-                        <span class="spec-badge">&#9989; Attached Pad</span>
-                        <span class="spec-badge">&#9989; Life-Proof</span>
-                        <span class="spec-badge">&#9989; FloorScore Certified</span>
+                        <span class="spec-badge">&#9989; Dent Resistant</span>
+                        <span class="spec-badge">&#9989; Commercial Grade</span>
                     </div>
                     <a href="contact.html?category=flooring" class="btn-primary">Request a Quote</a>
                 </div>
-                <div class="product-hero-img" style="background-image:url('https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP6BCO-Room.webp')"></div>
+                <div class="product-hero-img" style="background:#2A4A6A;display:flex;align-items:center;justify-content:center">
+                    <span style="color:#fff;font-size:48px">&#127968;</span>
+                </div>
             </div>
-
-            <div class="products-grid">
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP6ACO-Room.webp" alt="Accomac Oak">
-                    <div class="product-card-body"><div class="product-card-name">Accomac Oak</div><div class="product-card-size">6mm × 7.1" × 48"</div></div>
-                </div>
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP6BCO-Room.webp" alt="Bay Creek Oak">
-                    <div class="product-card-body"><div class="product-card-name">Bay Creek Oak</div><div class="product-card-size">6mm × 7.1" × 48"</div></div>
-                </div>
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP6DVM-Room.webp" alt="Dorval Maple">
-                    <div class="product-card-body"><div class="product-card-name">Dorval Maple</div><div class="product-card-size">6mm × 7.1" × 48"</div></div>
-                </div>
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP6MBM-Room.webp" alt="Mirabel Maple">
-                    <div class="product-card-body"><div class="product-card-name">Mirabel Maple</div><div class="product-card-size">6mm × 7.1" × 48"</div></div>
-                </div>
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP6PRO-Room.webp" alt="Prairie Oak">
-                    <div class="product-card-body"><div class="product-card-name">Prairie Oak</div><div class="product-card-size">6mm × 7.1" × 48"</div></div>
-                </div>
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP6PTC-Room.webp" alt="Prestige Cherry">
-                    <div class="product-card-body"><div class="product-card-name">Prestige Cherry</div><div class="product-card-size">6mm × 7.1" × 48"</div></div>
-                </div>
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP6RFO-Room.webp" alt="Rustic French Oak">
-                    <div class="product-card-body"><div class="product-card-name">Rustic French Oak</div><div class="product-card-size">6mm × 7.1" × 48"</div></div>
-                </div>
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP6SLA-Room.webp" alt="Sterling Ash">
-                    <div class="product-card-body"><div class="product-card-name">Sterling Ash</div><div class="product-card-size">6mm × 7.1" × 48"</div></div>
-                </div>
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP6SSO-Room.webp" alt="Sugar Sand Oak">
-                    <div class="product-card-body"><div class="product-card-name">Sugar Sand Oak</div><div class="product-card-size">6mm × 7.1" × 48"</div></div>
-                </div>
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP6TVO-Room.webp" alt="Tavern Oak">
-                    <div class="product-card-body"><div class="product-card-name">Tavern Oak</div><div class="product-card-size">6mm × 7.1" × 48"</div></div>
-                </div>
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP6TTA-Room.webp" alt="Tobacco Trail Acacia">
-                    <div class="product-card-body"><div class="product-card-name">Tobacco Trail Acacia</div><div class="product-card-size">6mm × 7.1" × 48"</div></div>
-                </div>
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP6THO-Room.webp" alt="Trailhead Oak">
-                    <div class="product-card-body"><div class="product-card-name">Trailhead Oak</div><div class="product-card-size">6mm × 7.1" × 48"</div></div>
-                </div>
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP5CBO-Room.webp" alt="Champagne Beach Oak">
-                    <div class="product-card-body"><div class="product-card-name">Champagne Beach Oak</div><div class="product-card-size">5mm × 7.1" × 48"</div></div>
-                </div>
-                <div class="product-card">
-                    <img src="https://peninsulafloorings.com/wp-content/uploads/2026/03/LVP5HMO-Room.webp" alt="Honey Meadow Oak">
-                    <div class="product-card-body"><div class="product-card-name">Honey Meadow Oak</div><div class="product-card-size">5mm × 7.1" × 48"</div></div>
-                </div>
+            <div style="background:#f5f5f5;border-radius:12px;padding:40px;text-align:center">
+                <h3 style="font-size:20px;margin-bottom:12px;color:#1A1A2E">SPC Collection Coming Soon</h3>
+                <p style="color:#888;margin-bottom:24px">Contact us to learn about our available SPC Luxury Vinyl Plank options.</p>
+                <a href="contact.html?category=flooring" class="btn-primary">Contact Us for Availability</a>
             </div>
         </div>
 
@@ -340,10 +306,10 @@
 <footer>
     <div class="footer-inner">
         <div class="footer-col">
-            <h4>Central Cabinetry</h4>
+            <h4>Central Home Good</h4>
             <p>1297 US-501, Myrtle Beach, SC 29577</p>
             <p>(843) 712-1001</p>
-            <p>centralhomegood@gmail.com</p>
+            <p>sales@centralhomegood.com</p>
             <p>Monday to Saturday, 9:00am to 5:00pm</p>
         </div>
         <div class="footer-col">
@@ -368,10 +334,29 @@
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2026 Central Cabinetry. All rights reserved.</p>
+        <p>&copy; 2026 Central Home Good. All rights reserved.</p>
     </div>
 </footer>
 
+
+<script>
+function filterFlooring() {
+    const q = document.getElementById('floorSearch').value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.product-card');
+    let visible = 0;
+    cards.forEach(function(card) {
+        const text = card.innerText.toLowerCase();
+        const match = !q || text.includes(q);
+        card.style.display = match ? '' : 'none';
+        if (match) visible++;
+    });
+    const noRes = document.getElementById('floorNoResults');
+    document.getElementById('floorCount').textContent = q
+        ? visible + ' product' + (visible !== 1 ? 's' : '') + ' found for "' + q + '"'
+        : '';
+    if (noRes) noRes.style.display = visible === 0 ? 'block' : 'none';
+}
+</script>
 <script src="js/main.js"></script>
 <script>
 function showTab(tab) {
