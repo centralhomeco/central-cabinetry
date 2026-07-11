@@ -318,9 +318,9 @@ function filterFlooring() {
     .then(function(res) { return res.json(); })
     .then(function(all) {
         if (!Array.isArray(all)) return;
-        renderGroupedGrid(document.getElementById('hardwood-collections'), all.filter(p => p.section === 'hardwood'));
-        renderSimpleGrid(document.getElementById('wpc-products'), all.filter(p => p.section === 'wpc'));
-        renderSimpleGrid(document.getElementById('spc-products'), all.filter(p => p.section === 'spc'));
+        renderGroupedGrid(document.getElementById('hardwood-collections'), all.filter(p => p.category === 'hardwood'));
+        renderSimpleGrid(document.getElementById('wpc-products'), all.filter(p => p.category === 'wpc'));
+        renderSimpleGrid(document.getElementById('spc-products'), all.filter(p => p.category === 'spc'));
     })
     .catch(function(err) { console.error('Flooring products load error:', err); });
 })();
