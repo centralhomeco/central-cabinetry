@@ -474,8 +474,18 @@
         <div class="modal-body">
             <input type="hidden" id="outdoor-edit-id">
             <div class="field">
-                <label>Title</label>
+                <label>Admin Label (internal only, for your own reference)</label>
                 <input type="text" id="outdoor-edit-label">
+            </div>
+            <div id="outdoor-website-text-fields" style="display:none">
+                <div class="field">
+                    <label>Website Title (shown on the card, on the site)</label>
+                    <input type="text" id="outdoor-edit-website-title">
+                </div>
+                <div class="field">
+                    <label>Website Description (shown on the card, on the site)</label>
+                    <textarea id="outdoor-edit-website-desc"></textarea>
+                </div>
             </div>
             <div class="field">
                 <label>Image URL</label>
@@ -1505,7 +1515,13 @@ async function loadOutdoorImages() {
     outdoorLoaded = true;
 }
 
-function openOutdoorModalById(id) {
+const KITCHEN_CARD_TEXT_MAP = {
+    'outdoor-kitchen-4': 'kitchen-1',
+    'outdoor-kitchen-1': 'kitchen-2',
+    'outdoor-kitchen-2': 'kitchen-4'
+};
+
+async function openOutdoorModalById(id) {
     const row = outdoorCache[id];
     if (!row) return;
     document.getElementById('outdoor-edit-id').value = row.id;
@@ -1514,6 +1530,23 @@ function openOutdoorModalById(id) {
     document.getElementById('outdoor-edit-image').value = row.image_url || '';
     document.getElementById('outdoor-save-msg').textContent = '';
     previewOutdoorImage();
+
+    const textKeyPrefix = KITCHEN_CARD_TEXT_MAP[row.slug];
+    const textFields = document.getElementById('outdoor-website-text-fields');
+    if (textKeyPrefix) {
+        textFields.style.display = 'block';
+        document.getElementById('outdoor-edit-website-title').value = 'Loading...';
+        document.getElementById('outdoor-edit-website-desc').value = '';
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/site_content?page=eq.outdoor&content_key=in.(${textKeyPrefix}-title,${textKeyPrefix}-desc)`, { headers: headers(true) });
+        const rows = await res.json();
+        const titleRow = rows.find(r => r.content_key === textKeyPrefix + '-title');
+        const descRow = rows.find(r => r.content_key === textKeyPrefix + '-desc');
+        document.getElementById('outdoor-edit-website-title').value = titleRow ? titleRow.value || '' : '';
+        document.getElementById('outdoor-edit-website-desc').value = descRow ? descRow.value || '' : '';
+    } else {
+        textFields.style.display = 'none';
+    }
+
     document.getElementById('modal-outdoor').classList.add('open');
 }
 
@@ -1547,10 +1580,25 @@ async function saveOutdoorImage() {
         body: JSON.stringify(payload)
     });
 
+    const row = outdoorCache[id];
+    const textKeyPrefix = row ? KITCHEN_CARD_TEXT_MAP[row.slug] : null;
+    let textOk = true;
+    if (textKeyPrefix) {
+        const titleVal = document.getElementById('outdoor-edit-website-title').value;
+        const descVal = document.getElementById('outdoor-edit-website-desc').value;
+        const r1 = await fetch(`${SUPABASE_URL}/rest/v1/site_content?page=eq.outdoor&content_key=eq.${textKeyPrefix}-title`, {
+            method: 'PATCH', headers: { ...headers(true), 'Prefer': 'return=minimal' }, body: JSON.stringify({ value: titleVal })
+        });
+        const r2 = await fetch(`${SUPABASE_URL}/rest/v1/site_content?page=eq.outdoor&content_key=eq.${textKeyPrefix}-desc`, {
+            method: 'PATCH', headers: { ...headers(true), 'Prefer': 'return=minimal' }, body: JSON.stringify({ value: descVal })
+        });
+        textOk = r1.ok && r2.ok;
+    }
+
     btn.disabled = false;
     btn.textContent = 'Save Changes';
 
-    if (res.ok) {
+    if (res.ok && textOk) {
         msg.textContent = '✅ Saved successfully!';
         msg.className = 'save-msg success';
         outdoorLoaded = false;
