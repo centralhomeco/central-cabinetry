@@ -35,8 +35,8 @@
 <section>
     <div class="container">
         <p class="section-sub" style="margin-bottom:32px" data-ck="page-subtitle">Browse our completed kitchen and bathroom projects.</p>
-        <div class="gallery-full-grid">
-            <div class="gallery-full-item" data-ck="photo-1" style="background-image:url(images/lifestyle/gallery_1.jpg)" onclick="openLightboxFromEl(this)"><div class="gallery-label" data-ck="label-1">Modern White Kitchen</div></div><div class="gallery-full-item" data-ck="photo-2" style="background-image:url(images/lifestyle/gallery_2.jpg)" onclick="openLightboxFromEl(this)"><div class="gallery-label" data-ck="label-2">Dark Cabinets</div></div><div class="gallery-full-item" data-ck="photo-3" style="background-image:url(images/lifestyle/gallery_3.jpg)" onclick="openLightboxFromEl(this)"><div class="gallery-label" data-ck="label-3">Kitchen Island</div></div><div class="gallery-full-item" data-ck="photo-4" style="background-image:url(images/lifestyle/gallery_4.jpg)" onclick="openLightboxFromEl(this)"><div class="gallery-label" data-ck="label-4">Bathroom Vanity</div></div><div class="gallery-full-item" data-ck="photo-5" style="background-image:url(images/lifestyle/gallery_5.jpg)" onclick="openLightboxFromEl(this)"><div class="gallery-label" data-ck="label-5">Shaker Style</div></div><div class="gallery-full-item" data-ck="photo-6" style="background-image:url(images/lifestyle/gallery_6.jpg)" onclick="openLightboxFromEl(this)"><div class="gallery-label" data-ck="label-6">Kitchen Remodel</div></div>
+        <div class="gallery-full-grid" id="gallery-grid">
+            <p style="color:#888;padding:20px">Loading...</p>
         </div>
     </div>
 </section>
@@ -85,6 +85,27 @@ function openLightboxFromEl(el){
   const m = bg.match(/url\(['"]?(.*?)['"]?\)/);
   if (m) openLightbox(m[1]);
 }
+(function() {
+    const SUPABASE_URL = 'https://apxelbabvviuwqpfivtr.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFweGVsYmFidnZpdXdxcGZpdnRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2NjEyOTYsImV4cCI6MjA5OTIzNzI5Nn0.EWt2FRAkJH86Is9P_uDjKDXnJ0O1J2qdg_BuctQavvY';
+
+    fetch(`${SUPABASE_URL}/rest/v1/gallery_photos?active=eq.true&order=sort_order`, {
+        headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(photos) {
+        const grid = document.getElementById('gallery-grid');
+        if (!grid || !Array.isArray(photos)) return;
+        if (!photos.length) {
+            grid.innerHTML = '<p style="color:#888;padding:20px">No photos yet.</p>';
+            return;
+        }
+        grid.innerHTML = photos.map(function(p) {
+            return `<div class="gallery-full-item" style="background-image:url('${p.image_url || ''}')" onclick="openLightboxFromEl(this)"><div class="gallery-label">${p.caption || ''}</div></div>`;
+        }).join('');
+    })
+    .catch(function(err) { console.error('Gallery load error:', err); });
+})();
 </script>
 <script src="js/main.js"></script>
 <script src="js/site-content.js"></script>
