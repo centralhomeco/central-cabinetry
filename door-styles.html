@@ -26,11 +26,11 @@
         @media(max-width:700px){.ds-listing-grid{grid-template-columns:1fr}}
     </style>
 </head>
-<body>
+<body data-page="door-styles">
 
 <div class="topbar">
-    <span>&#128222; (843) 712-1001</span>
-    <span>Monday to Saturday, 9:00am to 5:00pm</span>
+    <span data-ck="phone">&#128222; (843) 712-1001</span>
+    <span data-ck="hours">Monday to Saturday, 9:00am to 5:00pm</span>
 </div>
 <nav class="navbar">
     <div class="nav-inner">
@@ -56,8 +56,8 @@
 
 <div style="background:#1A1A2E;padding:48px 40px 32px;display:flex;flex-direction:column;justify-content:flex-end">
     <p style="color:#888;font-size:13px;margin-bottom:8px"><a href="index.html" style="color:#666;text-decoration:none">&#127968;</a> &rsaquo; Cabinets</p>
-    <h1 style="color:#fff;font-size:36px;font-weight:800;margin:0">Shop by Door Style</h1>
-    <p style="color:#aaa;margin-top:6px;font-size:15px">16 premium cabinet door styles available</p>
+    <h1 style="color:#fff;font-size:36px;font-weight:800;margin:0" data-ck="banner-title">Shop by Door Style</h1>
+    <p style="color:#aaa;margin-top:6px;font-size:15px" data-ck="banner-subtitle">16 premium cabinet door styles available</p>
 </div>
 
 <section>
@@ -77,8 +77,8 @@
 
 <section class="cta-dark">
     <div class="container" style="text-align:center">
-        <h2>Ready to Choose Your Style?</h2>
-        <p>Visit our showroom or contact us for a free design consultation.</p>
+        <h2 data-ck="cta-title">Ready to Choose Your Style?</h2>
+        <p data-ck="cta-subtitle">Visit our showroom or contact us for a free design consultation.</p>
         <a href="contact.html" class="btn-light">Contact Us</a>
         <a href="book-appointment.html" class="btn-outline-white">Book Appointment</a>
     </div>
@@ -88,10 +88,10 @@
     <div class="footer-inner">
         <div class="footer-col">
             <h4>Central Home Good</h4>
-            <p>1297 US-501, Myrtle Beach, SC 29577</p>
-            <p>(843) 712-1001</p>
-            <p>sales@centralhomegood.com</p>
-            <p>Monday to Saturday, 9:00am to 5:00pm</p>
+            <p data-ck="footer-address">1297 US-501, Myrtle Beach, SC 29577</p>
+            <p data-ck="footer-phone">(843) 712-1001</p>
+            <p data-ck="footer-email">sales@centralhomegood.com</p>
+            <p data-ck="footer-hours">Monday to Saturday, 9:00am to 5:00pm</p>
         </div>
         <div class="footer-col">
             <h4>Quick Links</h4>
@@ -175,5 +175,6 @@ function filterStyles() {
 loadDoorStyles();
 </script>
 <script src="js/main.js"></script>
+<script src="js/site-content.js"></script>
 </body>
 </html>

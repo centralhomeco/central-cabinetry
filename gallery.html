@@ -6,11 +6,11 @@
     <title>Gallery | Central Home Good</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body data-page="gallery">
 
 <div class="topbar">
-    <span>&#128222; (843) 712-1001</span>
-    <span>Monday to Saturday, 9:00am to 5:00pm</span>
+    <span data-ck="phone">&#128222; (843) 712-1001</span>
+    <span data-ck="hours">Monday to Saturday, 9:00am to 5:00pm</span>
 </div>
 <nav class="navbar">
     <div class="nav-inner">
@@ -29,14 +29,14 @@
 <div class="page-banner">
     <div class="page-banner-overlay">
         <div class="breadcrumb"><a href="index.html">&#127968;</a> &rsaquo; Gallery</div>
-        <h1>Our Projects</h1>
+        <h1 data-ck="page-title">Our Projects</h1>
     </div>
 </div>
 <section>
     <div class="container">
-        <p class="section-sub" style="margin-bottom:32px">Browse our completed kitchen and bathroom projects.</p>
+        <p class="section-sub" style="margin-bottom:32px" data-ck="page-subtitle">Browse our completed kitchen and bathroom projects.</p>
         <div class="gallery-full-grid">
-            <div class="gallery-full-item" style="background-image:url(images/lifestyle/gallery_1.jpg)" onclick="openLightbox('images/lifestyle/gallery_1.jpg')"><div class="gallery-label">Modern White Kitchen</div></div><div class="gallery-full-item" style="background-image:url(images/lifestyle/gallery_2.jpg)" onclick="openLightbox('images/lifestyle/gallery_2.jpg')"><div class="gallery-label">Dark Cabinets</div></div><div class="gallery-full-item" style="background-image:url(images/lifestyle/gallery_3.jpg)" onclick="openLightbox('images/lifestyle/gallery_3.jpg')"><div class="gallery-label">Kitchen Island</div></div><div class="gallery-full-item" style="background-image:url(images/lifestyle/gallery_4.jpg)" onclick="openLightbox('images/lifestyle/gallery_4.jpg')"><div class="gallery-label">Bathroom Vanity</div></div><div class="gallery-full-item" style="background-image:url(images/lifestyle/gallery_5.jpg)" onclick="openLightbox('images/lifestyle/gallery_5.jpg')"><div class="gallery-label">Shaker Style</div></div><div class="gallery-full-item" style="background-image:url(images/lifestyle/gallery_6.jpg)" onclick="openLightbox('images/lifestyle/gallery_6.jpg')"><div class="gallery-label">Kitchen Remodel</div></div>
+            <div class="gallery-full-item" data-ck="photo-1" style="background-image:url(images/lifestyle/gallery_1.jpg)" onclick="openLightboxFromEl(this)"><div class="gallery-label" data-ck="label-1">Modern White Kitchen</div></div><div class="gallery-full-item" data-ck="photo-2" style="background-image:url(images/lifestyle/gallery_2.jpg)" onclick="openLightboxFromEl(this)"><div class="gallery-label" data-ck="label-2">Dark Cabinets</div></div><div class="gallery-full-item" data-ck="photo-3" style="background-image:url(images/lifestyle/gallery_3.jpg)" onclick="openLightboxFromEl(this)"><div class="gallery-label" data-ck="label-3">Kitchen Island</div></div><div class="gallery-full-item" data-ck="photo-4" style="background-image:url(images/lifestyle/gallery_4.jpg)" onclick="openLightboxFromEl(this)"><div class="gallery-label" data-ck="label-4">Bathroom Vanity</div></div><div class="gallery-full-item" data-ck="photo-5" style="background-image:url(images/lifestyle/gallery_5.jpg)" onclick="openLightboxFromEl(this)"><div class="gallery-label" data-ck="label-5">Shaker Style</div></div><div class="gallery-full-item" data-ck="photo-6" style="background-image:url(images/lifestyle/gallery_6.jpg)" onclick="openLightboxFromEl(this)"><div class="gallery-label" data-ck="label-6">Kitchen Remodel</div></div>
         </div>
     </div>
 </section>
@@ -48,10 +48,10 @@
     <div class="footer-inner">
         <div class="footer-col">
             <h4>Central Home Good</h4>
-            <p>1297 US-501, Myrtle Beach, SC 29577</p>
-            <p>(843) 712-1001</p>
-            <p>sales@centralhomegood.com</p>
-            <p>Monday to Saturday, 9:00am to 5:00pm</p>
+            <p data-ck="footer-address">1297 US-501, Myrtle Beach, SC 29577</p>
+            <p data-ck="footer-phone">(843) 712-1001</p>
+            <p data-ck="footer-email">sales@centralhomegood.com</p>
+            <p data-ck="footer-hours">Monday to Saturday, 9:00am to 5:00pm</p>
         </div>
         <div class="footer-col">
             <h4>Quick Links</h4>
@@ -79,6 +79,14 @@
         <p>&copy; 2026 Central Home Good. All rights reserved. &nbsp;|&nbsp; <a href="admin.html" style="color:inherit;opacity:.55;text-decoration:none;">Admin</a></p>
     </div>
 </footer>
+<script>
+function openLightboxFromEl(el){
+  const bg = el.style.backgroundImage;
+  const m = bg.match(/url\(['"]?(.*?)['"]?\)/);
+  if (m) openLightbox(m[1]);
+}
+</script>
 <script src="js/main.js"></script>
+<script src="js/site-content.js"></script>
 </body>
 </html>

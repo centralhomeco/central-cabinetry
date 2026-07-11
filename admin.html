@@ -195,6 +195,7 @@
             <button class="tab-btn" onclick="switchTab('about')" id="tab-btn-about">About Us Page</button>
             <button class="tab-btn" onclick="switchTab('flooring')" id="tab-btn-flooring">Flooring Photos</button>
             <button class="tab-btn" onclick="switchTab('outdoor')" id="tab-btn-outdoor">Outdoor Photos</button>
+            <button class="tab-btn" onclick="switchTab('sitecontent')" id="tab-btn-sitecontent">Site Content</button>
         </div>
 
         <div id="tab-styles">
@@ -258,6 +259,42 @@
             <div class="admin-sub">Click Edit to swap any outdoor living photo. Note: some photos (like the Hoyt 4-Piece Set) appear in more than one place on the page — editing it here updates all of them at once. Changes appear on the website immediately.</div>
             <div id="loading-outdoor">Loading...</div>
             <div id="outdoor-grid" class="styles-grid" style="display:none"></div>
+        </div>
+
+        <div id="tab-sitecontent" style="display:none">
+            <div class="admin-title">Site Content</div>
+            <div class="admin-sub">Edit any text or photo on any page of the website. Pick a page, then edit the fields below and save.</div>
+            <div class="field" style="max-width:340px;margin-bottom:24px">
+                <label>Page</label>
+                <select id="sc-page-select" onchange="loadSiteContent()">
+                    <option value="">Select a page...</option>
+                    <option value="global">Global (Phone, Hours, Footer — all pages)</option>
+                    <option value="home">Home</option>
+                    <option value="door-styles">Cabinets — Listing Page</option>
+                    <option value="door-style-ab">Door Style — Aria Blue</option>
+                    <option value="door-style-al">Door Style — Avalon</option>
+                    <option value="door-style-cs">Door Style — Cream White Shaker</option>
+                    <option value="door-style-ct">Door Style — Charlton</option>
+                    <option value="door-style-ds">Door Style — Dove White Shaker</option>
+                    <option value="door-style-es">Door Style — Ebony Shaker</option>
+                    <option value="door-style-gs">Door Style — Sage Green Shaker</option>
+                    <option value="door-style-nt">Door Style — Newport</option>
+                    <option value="door-style-pe">Door Style — Perla</option>
+                    <option value="door-style-sg">Door Style — Sterling</option>
+                    <option value="door-style-sm">Door Style — Smoky Gray</option>
+                    <option value="door-style-so">Door Style — Soda</option>
+                    <option value="door-style-ss">Door Style — Sandy Mirage Shaker</option>
+                    <option value="door-style-ts">Door Style — Toffee Shaker</option>
+                    <option value="door-style-us">Door Style — Unfinished Shaker</option>
+                    <option value="door-style-ws">Door Style — Weston Shaker</option>
+                    <option value="gallery">Gallery</option>
+                    <option value="contact">Contact Us</option>
+                    <option value="book-appointment">Book Appointment</option>
+                </select>
+            </div>
+            <div id="loading-sitecontent" style="display:none">Loading...</div>
+            <div id="sitecontent-empty" style="display:none;color:#888;padding:40px;text-align:center">No editable fields on this page yet.</div>
+            <div id="sitecontent-list" style="max-width:640px;display:flex;flex-direction:column;gap:20px"></div>
         </div>
     </div>
 </div>
@@ -547,13 +584,140 @@ function switchTab(tab) {
     document.getElementById('tab-about').style.display = tab === 'about' ? 'block' : 'none';
     document.getElementById('tab-flooring').style.display = tab === 'flooring' ? 'block' : 'none';
     document.getElementById('tab-outdoor').style.display = tab === 'outdoor' ? 'block' : 'none';
+    document.getElementById('tab-sitecontent').style.display = tab === 'sitecontent' ? 'block' : 'none';
     document.getElementById('tab-btn-styles').classList.toggle('active', tab === 'styles');
     document.getElementById('tab-btn-about').classList.toggle('active', tab === 'about');
     document.getElementById('tab-btn-flooring').classList.toggle('active', tab === 'flooring');
     document.getElementById('tab-btn-outdoor').classList.toggle('active', tab === 'outdoor');
+    document.getElementById('tab-btn-sitecontent').classList.toggle('active', tab === 'sitecontent');
     if (tab === 'about' && !aboutLoaded) loadAboutContent();
     if (tab === 'flooring' && !flooringLoaded) loadFlooringImages();
     if (tab === 'outdoor' && !outdoorLoaded) loadOutdoorImages();
+}
+
+async function loadSiteContent() {
+    const page = document.getElementById('sc-page-select').value;
+    const list = document.getElementById('sitecontent-list');
+    const loading = document.getElementById('loading-sitecontent');
+    const empty = document.getElementById('sitecontent-empty');
+    list.innerHTML = '';
+    empty.style.display = 'none';
+    if (!page) return;
+
+    loading.style.display = 'block';
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/site_content?page=eq.${page}&order=sort_order`, {
+        headers: headers(true)
+    });
+    const rows = await res.json();
+    loading.style.display = 'none';
+
+    if (!rows.length) { empty.style.display = 'block'; return; }
+
+    list.innerHTML = rows.map(r => renderSiteContentField(r)).join('');
+}
+
+function renderSiteContentField(r) {
+    const key = r.content_key;
+    if (r.content_type === 'image') {
+        return `
+        <div class="field">
+            <label>${r.label}</label>
+            <input type="text" id="sc-field-${key}" value="${(r.value || '').replace(/"/g, '&quot;')}" placeholder="https://...">
+            <div class="upload-row">
+                <button type="button" class="btn-upload" onclick="document.getElementById('sc-file-${key}').click()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Upload Photo
+                </button>
+                <span id="sc-status-${key}">or paste a URL above</span>
+            </div>
+            <input type="file" id="sc-file-${key}" accept="image/*" style="display:none" onchange="uploadSiteContentPhoto('${key}', this)">
+            ${r.value ? `<img id="sc-preview-${key}" class="img-preview" style="display:block" src="${r.value}">` : `<img id="sc-preview-${key}" class="img-preview" alt="Preview">`}
+            <button class="btn-save" style="max-width:160px;margin-top:10px" onclick="saveSiteContentField('${key}', 'image')">Save</button>
+            <span id="sc-msg-${key}" class="save-msg"></span>
+        </div>`;
+    }
+    const isLong = r.content_type === 'richtext' || (r.value || '').length > 80;
+    const inputHtml = isLong
+        ? `<textarea id="sc-field-${key}" style="height:90px">${(r.value || '')}</textarea>`
+        : `<input type="text" id="sc-field-${key}" value="${(r.value || '').replace(/"/g, '&quot;')}">`;
+    return `
+    <div class="field">
+        <label>${r.label}</label>
+        ${inputHtml}
+        <button class="btn-save" style="max-width:160px;margin-top:10px" onclick="saveSiteContentField('${key}', 'text')">Save</button>
+        <span id="sc-msg-${key}" class="save-msg"></span>
+    </div>`;
+}
+
+async function saveSiteContentField(key, type) {
+    const page = document.getElementById('sc-page-select').value;
+    const msg = document.getElementById('sc-msg-' + key);
+    const value = document.getElementById('sc-field-' + key).value;
+    msg.textContent = 'Saving...';
+    msg.className = 'save-msg';
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/site_content?page=eq.${page}&content_key=eq.${key}`, {
+        method: 'PATCH',
+        headers: { ...headers(true), 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ value: value })
+    });
+
+    if (res.ok) {
+        msg.textContent = '✅ Saved!';
+        msg.className = 'save-msg success';
+        if (type === 'image') {
+            const prev = document.getElementById('sc-preview-' + key);
+            prev.src = value;
+            prev.style.display = 'block';
+        }
+        setTimeout(() => { msg.textContent = ''; }, 2000);
+    } else {
+        msg.textContent = '❌ Error saving.';
+        msg.className = 'save-msg error';
+    }
+}
+
+async function uploadSiteContentPhoto(key, input) {
+    const file = input.files[0];
+    if (!file) return;
+    const status = document.getElementById('sc-status-' + key);
+    status.textContent = 'Uploading...';
+    status.className = 'uploading';
+
+    const ext = file.name.split('.').pop();
+    const filename = `site-content/${Date.now()}.${ext}`;
+
+    try {
+        const res = await fetch(
+            `${SUPABASE_URL}/storage/v1/object/images/${filename}`,
+            {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_ANON,
+                    'Authorization': `Bearer ${accessToken || SUPABASE_ANON}`,
+                    'Content-Type': file.type,
+                    'x-upsert': 'true'
+                },
+                body: file
+            }
+        );
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.message || `HTTP ${res.status}`);
+        }
+        const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/images/${filename}`;
+        document.getElementById('sc-field-' + key).value = publicUrl;
+        const prev = document.getElementById('sc-preview-' + key);
+        prev.src = publicUrl;
+        prev.style.display = 'block';
+        status.textContent = '✅ Photo uploaded! Click Save to apply.';
+        status.className = 'done';
+    } catch (err) {
+        console.error('Upload error:', err);
+        status.textContent = '❌ Upload failed: ' + err.message;
+        status.className = 'err';
+    }
+    input.value = '';
 }
 
 async function loadOutdoorImages() {
