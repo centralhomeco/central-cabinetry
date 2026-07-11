@@ -263,13 +263,17 @@
         </div>
 
         <div id="tab-outdoor" style="display:none">
-            <div class="admin-title">Outdoor — Photos</div>
-            <div class="admin-sub">Click Edit to swap any outdoor living photo. Note: some photos (like the Hoyt 4-Piece Set) appear in more than one place on the page — editing it here updates all of them at once. Changes appear on the website immediately.</div>
+            <div class="admin-title">Outdoor Kitchens — Photos</div>
+            <div class="admin-sub">Fixed photos used only in the Outdoor Kitchens tab (hero + the 4 category cards).</div>
             <div id="loading-outdoor">Loading...</div>
-            <div id="outdoor-grid" class="styles-grid" style="display:none"></div>
+            <div id="outdoor-kitchen-grid" class="styles-grid" style="display:none"></div>
 
-            <div class="admin-title" style="margin-top:40px">Outdoor — Hoyt Furniture Catalog</div>
-            <div class="admin-sub">Add, edit, or remove furniture pieces. Changes appear on the website immediately.</div>
+            <div class="admin-title" style="margin-top:40px">Hoyt Outdoor Furniture — Fixed Photos</div>
+            <div class="admin-sub">These photos are used in the Hoyt tab's hero banner and Gallery highlights (not in the product catalog below).</div>
+            <div id="outdoor-hoyt-grid" class="styles-grid" style="display:none"></div>
+
+            <div class="admin-title" style="margin-top:40px">Hoyt Outdoor Furniture — Product Catalog</div>
+            <div class="admin-sub">Add, edit, or remove furniture pieces. These appear only in the Hoyt Outdoor Furniture tab. Changes appear on the website immediately.</div>
             <button class="btn-save" style="max-width:200px;margin-bottom:20px" onclick="openNewOutdoorProductModal()">+ Add New Product</button>
             <div id="loading-outdoor-products">Loading...</div>
             <div id="outdoor-products-grid" class="styles-grid" style="display:none"></div>
@@ -1382,24 +1386,33 @@ async function loadOutdoorImages() {
     });
     const rows = await res.json();
 
-    const grid = document.getElementById('outdoor-grid');
+    const kitchenGrid = document.getElementById('outdoor-kitchen-grid');
+    const hoytGrid = document.getElementById('outdoor-hoyt-grid');
     const loading = document.getElementById('loading-outdoor');
 
     outdoorCache = {};
     rows.forEach(r => { outdoorCache[r.id] = r; });
 
-    grid.innerHTML = rows.map(r => `
+    function cardHtml(r) {
+        return `
         <div class="style-card">
             <div class="style-card-img" style="${r.image_url ? 'background-image:url(' + r.image_url + ')' : ''}"></div>
             <div class="style-card-body">
                 <div class="style-card-name">${r.label}</div>
                 <button class="btn-edit" onclick="openOutdoorModalById('${r.id}')">Edit</button>
             </div>
-        </div>
-    `).join('');
+        </div>`;
+    }
+
+    const kitchenRows = rows.filter(r => r.slug.startsWith('outdoor-kitchen-'));
+    const hoytRows = rows.filter(r => r.slug.startsWith('hoyt-'));
+
+    kitchenGrid.innerHTML = kitchenRows.map(cardHtml).join('');
+    hoytGrid.innerHTML = hoytRows.map(cardHtml).join('');
 
     loading.style.display = 'none';
-    grid.style.display = 'grid';
+    kitchenGrid.style.display = 'grid';
+    hoytGrid.style.display = 'grid';
     outdoorLoaded = true;
 }
 
