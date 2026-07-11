@@ -194,6 +194,7 @@
             <button class="tab-btn active" onclick="switchTab('styles')" id="tab-btn-styles">Door Styles</button>
             <button class="tab-btn" onclick="switchTab('about')" id="tab-btn-about">About Us Page</button>
             <button class="tab-btn" onclick="switchTab('flooring')" id="tab-btn-flooring">Flooring Photos</button>
+            <button class="tab-btn" onclick="switchTab('outdoor')" id="tab-btn-outdoor">Outdoor Photos</button>
         </div>
 
         <div id="tab-styles">
@@ -250,6 +251,13 @@
             <div class="admin-sub">Click Edit to swap any flooring photo. Changes appear on the website immediately.</div>
             <div id="loading-flooring">Loading...</div>
             <div id="flooring-grid" class="styles-grid" style="display:none"></div>
+        </div>
+
+        <div id="tab-outdoor" style="display:none">
+            <div class="admin-title">Outdoor Photos</div>
+            <div class="admin-sub">Click Edit to swap any outdoor living photo. Note: some photos (like the Hoyt 4-Piece Set) appear in more than one place on the page — editing it here updates all of them at once. Changes appear on the website immediately.</div>
+            <div id="loading-outdoor">Loading...</div>
+            <div id="outdoor-grid" class="styles-grid" style="display:none"></div>
         </div>
     </div>
 </div>
@@ -334,6 +342,37 @@
         <div class="modal-footer">
             <button class="btn-cancel" onclick="closeFlooringModal()">Cancel</button>
             <button class="btn-save" id="btn-save-flooring" onclick="saveFlooringImage()">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<!-- OUTDOOR EDIT MODAL -->
+<div class="modal-overlay" id="modal-outdoor">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modal-outdoor-title">Edit Outdoor Photo</h3>
+            <button class="btn-close" onclick="closeOutdoorModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="outdoor-edit-id">
+            <div class="field">
+                <label>Image URL</label>
+                <input type="text" id="outdoor-edit-image" placeholder="https://..." oninput="previewOutdoorImage()">
+                <div class="upload-row">
+                    <button type="button" class="btn-upload" onclick="document.getElementById('outdoor-file-input').click()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Upload Photo
+                    </button>
+                    <span id="outdoor-upload-status">or paste a URL above</span>
+                </div>
+                <input type="file" id="outdoor-file-input" accept="image/*" onchange="uploadOutdoorPhoto(this)">
+                <img id="outdoor-img-preview" class="img-preview" alt="Preview">
+            </div>
+            <div id="outdoor-save-msg" class="save-msg"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeOutdoorModal()">Cancel</button>
+            <button class="btn-save" id="btn-save-outdoor" onclick="saveOutdoorImage()">Save Changes</button>
         </div>
     </div>
 </div>
@@ -492,17 +531,153 @@ document.getElementById('modal').addEventListener('click', function(e) {
 let aboutLoaded = false;
 let flooringLoaded = false;
 let flooringCache = {};
+let outdoorLoaded = false;
+let outdoorCache = {};
 
 function switchTab(tab) {
     document.getElementById('tab-styles').style.display = tab === 'styles' ? 'block' : 'none';
     document.getElementById('tab-about').style.display = tab === 'about' ? 'block' : 'none';
     document.getElementById('tab-flooring').style.display = tab === 'flooring' ? 'block' : 'none';
+    document.getElementById('tab-outdoor').style.display = tab === 'outdoor' ? 'block' : 'none';
     document.getElementById('tab-btn-styles').classList.toggle('active', tab === 'styles');
     document.getElementById('tab-btn-about').classList.toggle('active', tab === 'about');
     document.getElementById('tab-btn-flooring').classList.toggle('active', tab === 'flooring');
+    document.getElementById('tab-btn-outdoor').classList.toggle('active', tab === 'outdoor');
     if (tab === 'about' && !aboutLoaded) loadAboutContent();
     if (tab === 'flooring' && !flooringLoaded) loadFlooringImages();
+    if (tab === 'outdoor' && !outdoorLoaded) loadOutdoorImages();
 }
+
+async function loadOutdoorImages() {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?order=sort_order`, {
+        headers: headers(true)
+    });
+    const rows = await res.json();
+
+    const grid = document.getElementById('outdoor-grid');
+    const loading = document.getElementById('loading-outdoor');
+
+    outdoorCache = {};
+    rows.forEach(r => { outdoorCache[r.id] = r; });
+
+    grid.innerHTML = rows.map(r => `
+        <div class="style-card">
+            <div class="style-card-img" style="${r.image_url ? 'background-image:url(' + r.image_url + ')' : ''}"></div>
+            <div class="style-card-body">
+                <div class="style-card-name">${r.label}</div>
+                <button class="btn-edit" onclick="openOutdoorModalById('${r.id}')">Edit</button>
+            </div>
+        </div>
+    `).join('');
+
+    loading.style.display = 'none';
+    grid.style.display = 'grid';
+    outdoorLoaded = true;
+}
+
+function openOutdoorModalById(id) {
+    const row = outdoorCache[id];
+    if (!row) return;
+    document.getElementById('outdoor-edit-id').value = row.id;
+    document.getElementById('modal-outdoor-title').textContent = 'Edit — ' + row.label;
+    document.getElementById('outdoor-edit-image').value = row.image_url || '';
+    document.getElementById('outdoor-save-msg').textContent = '';
+    previewOutdoorImage();
+    document.getElementById('modal-outdoor').classList.add('open');
+}
+
+function closeOutdoorModal() {
+    document.getElementById('modal-outdoor').classList.remove('open');
+}
+
+function previewOutdoorImage() {
+    const url = document.getElementById('outdoor-edit-image').value;
+    const img = document.getElementById('outdoor-img-preview');
+    if (url) { img.src = url; img.style.display = 'block'; }
+    else { img.style.display = 'none'; }
+}
+
+async function saveOutdoorImage() {
+    const id = document.getElementById('outdoor-edit-id').value;
+    const btn = document.getElementById('btn-save-outdoor');
+    const msg = document.getElementById('outdoor-save-msg');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    msg.textContent = '';
+
+    const payload = { image_url: document.getElementById('outdoor-edit-image').value || null };
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?id=eq.${id}`, {
+        method: 'PATCH',
+        headers: { ...headers(true), 'Prefer': 'return=minimal' },
+        body: JSON.stringify(payload)
+    });
+
+    btn.disabled = false;
+    btn.textContent = 'Save Changes';
+
+    if (res.ok) {
+        msg.textContent = '✅ Saved successfully!';
+        msg.className = 'save-msg success';
+        outdoorLoaded = false;
+        await loadOutdoorImages();
+        setTimeout(closeOutdoorModal, 1200);
+    } else {
+        msg.textContent = '❌ Error saving. Please try again.';
+        msg.className = 'save-msg error';
+    }
+}
+
+async function uploadOutdoorPhoto(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const status = document.getElementById('outdoor-upload-status');
+    status.textContent = 'Uploading...';
+    status.className = 'uploading';
+
+    const ext = file.name.split('.').pop();
+    const filename = `outdoor/${Date.now()}.${ext}`;
+
+    try {
+        const res = await fetch(
+            `${SUPABASE_URL}/storage/v1/object/images/${filename}`,
+            {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_ANON,
+                    'Authorization': `Bearer ${accessToken || SUPABASE_ANON}`,
+                    'Content-Type': file.type,
+                    'x-upsert': 'true'
+                },
+                body: file
+            }
+        );
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.message || `HTTP ${res.status}`);
+        }
+
+        const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/images/${filename}`;
+
+        document.getElementById('outdoor-edit-image').value = publicUrl;
+        previewOutdoorImage();
+
+        status.textContent = '✅ Photo uploaded!';
+        status.className = 'done';
+    } catch (err) {
+        console.error('Upload error:', err);
+        status.textContent = '❌ Upload failed: ' + err.message;
+        status.className = 'err';
+    }
+
+    input.value = '';
+}
+
+document.getElementById('modal-outdoor').addEventListener('click', function(e) {
+    if (e.target === this) closeOutdoorModal();
+});
 
 async function loadFlooringImages() {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/flooring_images?order=sort_order`, {
