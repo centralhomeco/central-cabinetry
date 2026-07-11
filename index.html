@@ -208,7 +208,7 @@
                 <span class="door-code">(${s.code})</span>
                 <h3>${s.name}</h3>
                 <p class="door-type">${s.style_type}</p>
-                <a href="door-style-${s.code.toLowerCase()}.html" class="btn-detail">View Details</a>
+                <a href="door-style-detail.html?code=${s.code.toLowerCase()}" class="btn-detail">View Details</a>
             </div>
         </div>`;
         }).join('');
