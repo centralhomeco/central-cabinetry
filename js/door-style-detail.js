@@ -32,7 +32,7 @@
         .catch(function(err) { console.error('Global content load error:', err); });
 
     // This door style
-    fetch(`${SUPABASE_URL}/rest/v1/door_styles?code=eq.${code}&select=code,name,style_type,image_url,banner_image`, { headers: h() })
+    fetch(`${SUPABASE_URL}/rest/v1/door_styles?code=eq.${code}&select=code,name,style_type,image_url,banner_image,box_material,drawer_slides,hinges,face_frame,shelves,interior_finish,overlay`, { headers: h() })
         .then(function(res) { return res.json(); })
         .then(function(rows) {
             const s = rows && rows[0];
@@ -47,6 +47,13 @@
             document.querySelectorAll('[data-ck="spec-style"]').forEach(function(el) { el.textContent = s.style_type; });
             document.querySelectorAll('[data-ck="spec-code"]').forEach(function(el) { el.textContent = s.code; });
             document.querySelectorAll('[data-ck="spec-door_type"]').forEach(function(el) { el.textContent = s.style_type; });
+            document.querySelectorAll('[data-ck="spec-box_material"]').forEach(function(el) { el.textContent = s.box_material || ''; });
+            document.querySelectorAll('[data-ck="spec-drawer_slides"]').forEach(function(el) { el.textContent = s.drawer_slides || ''; });
+            document.querySelectorAll('[data-ck="spec-hinges"]').forEach(function(el) { el.textContent = s.hinges || ''; });
+            document.querySelectorAll('[data-ck="spec-face_frame"]').forEach(function(el) { el.textContent = s.face_frame || ''; });
+            document.querySelectorAll('[data-ck="spec-shelves"]').forEach(function(el) { el.textContent = s.shelves || ''; });
+            document.querySelectorAll('[data-ck="spec-interior_finish"]').forEach(function(el) { el.textContent = s.interior_finish || ''; });
+            document.querySelectorAll('[data-ck="spec-overlay"]').forEach(function(el) { el.textContent = s.overlay || ''; });
 
             const banner = document.querySelector('[data-ck="banner-image"]');
             if (banner) banner.style.backgroundImage = "url('" + (s.banner_image || 'images/lifestyle/gallery_1.jpg') + "')";

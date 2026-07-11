@@ -382,6 +382,37 @@
                 <label>Description (optional)</label>
                 <textarea id="edit-description" placeholder="Short description..."></textarea>
             </div>
+            <div class="field" style="border-top:1px solid #eee;padding-top:16px;margin-top:4px">
+                <label style="font-weight:700">Specifications (shown on the detail page)</label>
+            </div>
+            <div class="field">
+                <label>Box Material</label>
+                <input type="text" id="edit-box_material">
+            </div>
+            <div class="field">
+                <label>Drawer Slides</label>
+                <input type="text" id="edit-drawer_slides">
+            </div>
+            <div class="field">
+                <label>Hinges</label>
+                <input type="text" id="edit-hinges">
+            </div>
+            <div class="field">
+                <label>Face Frame</label>
+                <input type="text" id="edit-face_frame">
+            </div>
+            <div class="field">
+                <label>Shelves</label>
+                <input type="text" id="edit-shelves">
+            </div>
+            <div class="field">
+                <label>Interior Finish</label>
+                <input type="text" id="edit-interior_finish">
+            </div>
+            <div class="field">
+                <label>Overlay</label>
+                <input type="text" id="edit-overlay">
+            </div>
             <div class="field">
                 <div class="checkbox-row">
                     <input type="checkbox" id="edit-active">
@@ -704,7 +735,10 @@ function openModalById(id) {
 function openNewStyleModal() {
     openModal({
         id: '', code: '', name: '', style_type: 'Shaker Style',
-        image_url: '', banner_image: '', description: '', active: true
+        image_url: '', banner_image: '', description: '', active: true,
+        box_material: '1/2" Plywood', drawer_slides: 'Soft-Close Undermount',
+        hinges: 'Soft-Close European', face_frame: '5-Piece Door',
+        shelves: 'Adjustable', interior_finish: 'Natural Maple', overlay: 'Full Overlay'
     });
 }
 
@@ -719,6 +753,13 @@ function openModal(style) {
     document.getElementById('edit-image').value = style.image_url || '';
     document.getElementById('edit-banner').value = style.banner_image || '';
     document.getElementById('edit-description').value = style.description || '';
+    document.getElementById('edit-box_material').value = style.box_material || '';
+    document.getElementById('edit-drawer_slides').value = style.drawer_slides || '';
+    document.getElementById('edit-hinges').value = style.hinges || '';
+    document.getElementById('edit-face_frame').value = style.face_frame || '';
+    document.getElementById('edit-shelves').value = style.shelves || '';
+    document.getElementById('edit-interior_finish').value = style.interior_finish || '';
+    document.getElementById('edit-overlay').value = style.overlay || '';
     document.getElementById('edit-active').checked = style.active !== false;
     document.getElementById('btn-delete-style').style.display = isNew ? 'none' : 'block';
     document.getElementById('save-msg').textContent = '';
@@ -769,6 +810,13 @@ async function saveStyle() {
         image_url: document.getElementById('edit-image').value || null,
         banner_image: document.getElementById('edit-banner').value || null,
         description: document.getElementById('edit-description').value || null,
+        box_material: document.getElementById('edit-box_material').value || null,
+        drawer_slides: document.getElementById('edit-drawer_slides').value || null,
+        hinges: document.getElementById('edit-hinges').value || null,
+        face_frame: document.getElementById('edit-face_frame').value || null,
+        shelves: document.getElementById('edit-shelves').value || null,
+        interior_finish: document.getElementById('edit-interior_finish').value || null,
+        overlay: document.getElementById('edit-overlay').value || null,
         active: document.getElementById('edit-active').checked,
     };
     if (isNew) {
