@@ -114,7 +114,7 @@ img{max-width:100%}
 .specs-list{list-style:none;display:flex;flex-direction:column;gap:10px}
 .specs-list li{color:#ccc;font-size:14px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:8px}
 .specs-list li strong{color:#fff}
-.detail-swatch{background:#f5f5f5;border-radius:8px;padding:24px;display:flex;justify-content:center}
+.detail-swatch{background:#f5f5f5;border-radius:8px;padding:24px;display:flex;flex-direction:column;align-items:center}
 .detail-swatch img{width:100%;max-width:220px;border-radius:6px;border:1px solid #eee;box-shadow:0 4px 14px rgba(0,0,0,.08)}
 .related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:16px}
 .related-card{border:1px solid #eee;border-radius:8px;overflow:hidden;text-align:center;padding-bottom:12px}
