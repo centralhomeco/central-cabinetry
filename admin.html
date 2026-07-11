@@ -974,7 +974,7 @@ async function saveGalleryPhoto() {
         await loadGalleryPhotos();
         setTimeout(closeGalleryPhotoModal, 1000);
     } else {
-        msg.textContent = '❌ Error saving.'; msg.className = 'save-msg error';
+        const err = await res.json().catch(() => ({})); msg.textContent = '❌ Error: ' + (err.message || err.hint || ('HTTP ' + res.status)); msg.className = 'save-msg error';
     }
 }
 async function deleteGalleryPhoto() {
@@ -1099,7 +1099,7 @@ async function saveFlooringProduct() {
         await loadFlooringProducts();
         setTimeout(closeFlooringProductModal, 1000);
     } else {
-        msg.textContent = '❌ Error saving.'; msg.className = 'save-msg error';
+        const err = await res.json().catch(() => ({})); msg.textContent = '❌ Error: ' + (err.message || err.hint || ('HTTP ' + res.status)); msg.className = 'save-msg error';
     }
 }
 async function deleteFlooringProduct() {
@@ -1216,7 +1216,7 @@ async function saveOutdoorProduct() {
         await loadOutdoorProducts();
         setTimeout(closeOutdoorProductModal, 1000);
     } else {
-        msg.textContent = '❌ Error saving.'; msg.className = 'save-msg error';
+        const err = await res.json().catch(() => ({})); msg.textContent = '❌ Error: ' + (err.message || err.hint || ('HTTP ' + res.status)); msg.className = 'save-msg error';
     }
 }
 async function deleteOutdoorProduct() {
@@ -1332,7 +1332,8 @@ async function saveSiteContentField(key, type) {
         }
         setTimeout(() => { msg.textContent = ''; }, 2000);
     } else {
-        msg.textContent = '❌ Error saving.';
+        const err = await res.json().catch(() => ({}));
+        msg.textContent = '❌ Error: ' + (err.message || err.hint || ('HTTP ' + res.status));
         msg.className = 'save-msg error';
     }
 }
