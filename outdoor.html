@@ -411,13 +411,13 @@ function filterOutdoor() {
         }
         container.innerHTML = products.map(function(p) {
             return `
-                <div class="product-card">
+                <a href="outdoor-product-detail.html?id=${p.id}" class="product-card" style="text-decoration:none;color:inherit;display:block;cursor:pointer">
                     <img src="${p.image_url || ''}" alt="${p.name}">
                     <div class="product-card-body">
                         <div class="product-card-name">${p.name}</div>
                         <div class="product-card-desc">${p.description || ''}</div>
                     </div>
-                </div>`;
+                </a>`;
         }).join('');
     })
     .catch(function(err) { console.error('Outdoor products load error:', err); });
