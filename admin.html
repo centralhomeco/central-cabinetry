@@ -525,8 +525,35 @@
                 <input type="text" id="fp-edit-name">
             </div>
             <div class="field">
-                <label>Size / Dimensions</label>
+                <label>Size / Dimensions (shown on product card)</label>
                 <input type="text" id="fp-edit-size" placeholder='e.g. 1/2" × 7 1/2"'>
+            </div>
+            <div class="field" style="border-top:1px solid #eee;padding-top:16px;margin-top:4px">
+                <label style="font-weight:700">Detail Page Info (optional, shown when someone clicks the photo)</label>
+            </div>
+            <div class="field">
+                <label>Species</label>
+                <input type="text" id="fp-edit-species" placeholder="e.g. White Oak">
+            </div>
+            <div class="field">
+                <label>Grade</label>
+                <input type="text" id="fp-edit-grade" placeholder="e.g. Feature Grade">
+            </div>
+            <div class="field">
+                <label>SKU</label>
+                <input type="text" id="fp-edit-sku">
+            </div>
+            <div class="field">
+                <label>Dimension</label>
+                <input type="text" id="fp-edit-dimension" placeholder='e.g. 1/2" x 7 1/2"'>
+            </div>
+            <div class="field">
+                <label>Coverage</label>
+                <input type="text" id="fp-edit-coverage" placeholder="e.g. 31.09 sq ft per box">
+            </div>
+            <div class="field">
+                <label>Description</label>
+                <textarea id="fp-edit-description" placeholder="Short marketing description..."></textarea>
             </div>
             <div class="field">
                 <label>Photo</label>
@@ -1063,7 +1090,7 @@ document.getElementById('modal-gallery-photo').addEventListener('click', functio
 
 // ===== Flooring Product Catalog =====
 async function loadFlooringProducts() {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/flooring_products?order=section,sort_order`, { headers: headers(true) });
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/flooring_products?order=category,sort_order`, { headers: headers(true) });
     const rows = await res.json();
     const grid = document.getElementById('flooring-products-grid');
     const loading = document.getElementById('loading-flooring-products');
@@ -1078,7 +1105,7 @@ async function loadFlooringProducts() {
                 <span class="style-card-badge ${r.active ? 'badge-active' : 'badge-hidden'}">${r.active ? 'Active' : 'Hidden'}</span>
             </div>
             <div class="style-card-body">
-                <div class="style-card-code">${sectionLabel[r.section] || r.section}${r.collection ? ' — ' + r.collection : ''}</div>
+                <div class="style-card-code">${sectionLabel[r.category] || r.category}${r.collection ? ' — ' + r.collection : ''}</div>
                 <div class="style-card-name">${r.name}</div>
                 <div class="style-card-type">${r.size || ''}</div>
                 <button class="btn-edit" onclick="openFlooringProductModalById('${r.id}')">Edit</button>
@@ -1092,7 +1119,7 @@ async function loadFlooringProducts() {
 }
 
 function openNewFlooringProductModal() {
-    openFlooringProductModal({ id: '', section: 'hardwood', collection: '', name: '', size: '', image_url: '', active: true });
+    openFlooringProductModal({ id: '', category: 'hardwood', collection: '', name: '', size: '', image_url: '', active: true });
 }
 function openFlooringProductModalById(id) {
     const p = flooringProductsCache[id];
@@ -1102,10 +1129,16 @@ function openFlooringProductModal(p) {
     const isNew = !p.id;
     document.getElementById('fp-edit-id').value = p.id || '';
     document.getElementById('modal-flooring-product-title').textContent = isNew ? 'Add New Flooring Product' : 'Edit — ' + p.name;
-    document.getElementById('fp-edit-section').value = p.section || 'hardwood';
+    document.getElementById('fp-edit-section').value = p.category || 'hardwood';
     document.getElementById('fp-edit-collection').value = p.collection || '';
     document.getElementById('fp-edit-name').value = p.name || '';
     document.getElementById('fp-edit-size').value = p.size || '';
+    document.getElementById('fp-edit-species').value = p.species || '';
+    document.getElementById('fp-edit-grade').value = p.grade || '';
+    document.getElementById('fp-edit-sku').value = p.sku || '';
+    document.getElementById('fp-edit-dimension').value = p.dimension || '';
+    document.getElementById('fp-edit-coverage').value = p.coverage || '';
+    document.getElementById('fp-edit-description').value = p.description || '';
     document.getElementById('fp-edit-image').value = p.image_url || '';
     document.getElementById('fp-edit-active').checked = p.active !== false;
     document.getElementById('btn-delete-fp').style.display = isNew ? 'none' : 'block';
@@ -1129,10 +1162,16 @@ async function saveFlooringProduct() {
     btn.disabled = true; btn.textContent = 'Saving...'; msg.textContent = '';
 
     const payload = {
-        section: document.getElementById('fp-edit-section').value,
+        category: document.getElementById('fp-edit-section').value,
         collection: document.getElementById('fp-edit-collection').value || null,
         name: document.getElementById('fp-edit-name').value,
         size: document.getElementById('fp-edit-size').value || null,
+        species: document.getElementById('fp-edit-species').value || null,
+        grade: document.getElementById('fp-edit-grade').value || null,
+        sku: document.getElementById('fp-edit-sku').value || null,
+        dimension: document.getElementById('fp-edit-dimension').value || null,
+        coverage: document.getElementById('fp-edit-coverage').value || null,
+        description: document.getElementById('fp-edit-description').value || null,
         image_url: document.getElementById('fp-edit-image').value || null,
         active: document.getElementById('fp-edit-active').checked,
     };

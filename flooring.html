@@ -278,10 +278,10 @@ function filterFlooring() {
     // Product catalog (unlimited items, grouped by section then collection)
     function productCardHtml(p) {
         return `
-                <div class="product-card">
+                <a class="product-card" href="flooring-product-detail.html?id=${p.id}" style="text-decoration:none;color:inherit;display:block">
                     <img src="${p.image_url || ''}" alt="${p.name}">
                     <div class="product-card-body"><div class="product-card-name">${p.name}</div><div class="product-card-size">${p.size || ''}</div></div>
-                </div>`;
+                </a>`;
     }
 
     function renderSimpleGrid(container, products) {
