@@ -292,7 +292,7 @@
         <div id="tab-showcase" style="display:none">
             <div class="admin-title">Home Showcase Strip</div>
             <div class="admin-sub">Manage the horizontal strip of product photos shown on the home page. Changes appear immediately.</div>
-            <button class="btn-save" style="max-width:200px;margin-bottom:20px" onclick="openNewShowcaseModal()">+ Add New Showcase Photo</button>
+            <button class="btn-save" style="max-width:220px;margin-bottom:20px" onclick="openNewShowcaseModal()">+ Add New Showcase Photo</button>
             <div id="loading-showcase">Loading...</div>
             <div id="showcase-grid" class="styles-grid" style="display:none"></div>
         </div>
@@ -1956,9 +1956,7 @@ async function uploadPhoto(input) {
     // Reset file input so same file can be re-selected if needed
     input.value = '';
 }
-</script>
-</body>
-</html>
+
 
 // HOME SHOWCASE MANAGEMENT
 let showcaseCache = {};
@@ -2115,3 +2113,6 @@ switchTab = function(tab) {
 };
 
 document.getElementById('modal-showcase').addEventListener('click', function(e) { if (e.target === this) closeShowcaseModal(); });
+</script>
+</body>
+</html>
