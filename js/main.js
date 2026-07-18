@@ -76,4 +76,45 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     });
 });
 
-window.addEventListener('DOMContentLoaded',initHero);
+
+
+// SEARCH FUNCTIONALITY
+function initSearch() {
+    const searchInputs = document.querySelectorAll('.header-search input');
+    const searchBtns = document.querySelectorAll('.header-search-btn');
+
+    function handleSearch(input) {
+        const query = input.value.trim().toLowerCase();
+        if (!query) return;
+        
+        // Simple redirection to search results or a specific page
+        // For now, let's redirect to cabinets if searching for cabinets, etc.
+        if (query.includes('cabinet') || query.includes('door')) {
+            window.location.href = 'door-styles.html?q=' + encodeURIComponent(query);
+        } else if (query.includes('floor')) {
+            window.location.href = 'flooring.html?q=' + encodeURIComponent(query);
+        } else if (query.includes('outdoor') || query.includes('kitchen')) {
+            window.location.href = 'outdoor.html?q=' + encodeURIComponent(query);
+        } else {
+            // Default to door styles for now
+            window.location.href = 'door-styles.html?q=' + encodeURIComponent(query);
+        }
+    }
+
+    searchInputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleSearch(this);
+        });
+    });
+
+    searchBtns.forEach((btn, index) => {
+        btn.addEventListener('click', function() {
+            handleSearch(searchInputs[index]);
+        });
+    });
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+    initHero();
+    initSearch();
+});
