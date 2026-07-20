@@ -1417,10 +1417,16 @@ async function loadSiteContent() {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/site_content?page=eq.${page}&order=sort_order`, {
         headers: headers(true)
     });
-    const rows = await res.json();
     loading.style.display = 'none';
 
-    if (!rows.length) { empty.style.display = 'block'; return; }
+    if (res.status === 401) {
+        list.innerHTML = '<p style="color:#c00;padding:16px">Session expired. Please sign in again.</p>';
+        setTimeout(() => { window.location.href = 'admin.html'; }, 2000);
+        return;
+    }
+
+    const rows = await res.json();
+    if (!Array.isArray(rows) || !rows.length) { empty.style.display = 'block'; return; }
 
     list.innerHTML = rows.map(r => renderSiteContentField(r)).join('');
 }
