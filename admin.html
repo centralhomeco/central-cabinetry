@@ -1016,6 +1016,9 @@ function switchTab(tab) {
     document.getElementById('tab-flooring').style.display = tab === 'flooring' ? 'block' : 'none';
     document.getElementById('tab-outdoor').style.display = tab === 'outdoor' ? 'block' : 'none';
     document.getElementById('tab-gallery').style.display = tab === 'gallery' ? 'block' : 'none';
+    document.getElementById('tab-showcase').style.display = tab === 'showcase' ? 'block' : 'none';
+    document.getElementById('tab-btn-showcase').classList.toggle('active', tab === 'showcase');
+    if (tab === 'showcase') loadShowcase();
     document.getElementById('tab-sitecontent').style.display = tab === 'sitecontent' ? 'block' : 'none';
     document.getElementById('tab-btn-styles').classList.toggle('active', tab === 'styles');
     document.getElementById('tab-btn-about').classList.toggle('active', tab === 'about');
@@ -2105,12 +2108,7 @@ async function deleteShowcase() {
     }
 }
 
-// Update switchTab to include showcase
-const originalSwitchTab = switchTab;
-switchTab = function(tab) {
-    originalSwitchTab(tab);
-    if (tab === 'showcase') loadShowcase();
-};
+
 
 document.getElementById('modal-showcase').addEventListener('click', function(e) { if (e.target === this) closeShowcaseModal(); });
 </script>
