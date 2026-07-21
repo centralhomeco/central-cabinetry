@@ -281,7 +281,7 @@
     track.innerHTML = validImages.map(function(item) {
         return `
             <div class="showcase-item">
-                <img src="${item.image_url}" alt="${item.alt_text || 'Showcase'}">
+                <img src="${item.image_url}" alt="${item.alt_text || 'Showcase'}" onclick="openLightbox(this.src)">
             </div>
         `;
     }).join('');
