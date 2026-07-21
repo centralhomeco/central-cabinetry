@@ -160,38 +160,5 @@ window.addEventListener('DOMContentLoaded', function() {
             img.style.transformOrigin = 'center center';
         });
     });
-
-// your existing main.js code above...
-
-
-/* IMAGE LIGHTBOX */
-document.addEventListener("DOMContentLoaded", function(){
-
-    const lightbox = document.getElementById("imageLightbox");
-    const lightboxImg = document.getElementById("lightboxImage");
-    const closeBtn = document.querySelector(".lightbox-close");
-
-    if (!lightbox || !lightboxImg || !closeBtn) return;
-
-    document.querySelectorAll(".showcase-item img").forEach(function(img){
-
-        img.style.cursor = "pointer";
-
-        img.addEventListener("click", function(){
-            lightbox.style.display = "flex";
-            lightboxImg.src = this.src;
-        });
-
-    });
-
-    closeBtn.addEventListener("click", function(){
-        lightbox.style.display = "none";
-    });
-
-    lightbox.addEventListener("click", function(e){
-        if(e.target === lightbox){
-            lightbox.style.display = "none";
-        }
-    });
-
 });
+// your existing main.js code above...
