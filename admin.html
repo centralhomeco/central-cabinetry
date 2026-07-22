@@ -120,6 +120,10 @@
             padding: 10px 12px; font-size: 14px; font-family: inherit;
         }
         .field input:focus, .field select:focus { outline: none; border-color: #2A6496; }
+        .feature-row{display:flex;gap:8px;margin-bottom:8px}
+        .feature-row input{flex:1}
+        .btn-remove-feature{width:42px;border:1px solid #e0b4ae;border-radius:6px;background:#fff;color:#c0392b;font-size:20px;cursor:pointer}
+        .btn-add-feature{border:1px dashed #2A6496;border-radius:6px;background:#f4f8fc;color:#2A6496;padding:10px 14px;font-weight:700;cursor:pointer}
         .field textarea { height: 70px; resize: vertical; }
         .img-preview {
             margin-top: 8px; width: 100%; height: 120px;
@@ -630,8 +634,9 @@
                 </select>
             </div>
             <div class="field">
-                <label>Description</label>
-                <textarea id="op-edit-description"></textarea>
+                <label>Features (shown on the detail page)</label>
+                <div id="op-feature-list"></div>
+                <button type="button" class="btn-add-feature" onclick="addOutdoorFeature()">+ Add Feature</button>
             </div>
             <div class="field">
                 <label>Photo</label>
@@ -1342,13 +1347,32 @@ function openOutdoorProductModal(p) {
     document.getElementById('modal-outdoor-product-title').textContent = isNew ? 'Add New Outdoor Product' : 'Edit — ' + p.name;
     document.getElementById('op-edit-name').value = p.name || '';
     document.getElementById('op-edit-category').value = p.category === 'Outdoor Kitchen' ? 'Outdoor Kitchen' : 'Outdoor Furniture';
-    document.getElementById('op-edit-description').value = p.description || '';
+    const features = (p.description || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    document.getElementById('op-feature-list').innerHTML = '';
+    (features.length ? features : ['']).forEach(addOutdoorFeature);
     document.getElementById('op-edit-image').value = p.image_url || '';
     document.getElementById('op-edit-active').checked = p.active !== false;
     document.getElementById('btn-delete-op').style.display = isNew ? 'none' : 'block';
     document.getElementById('op-save-msg').textContent = '';
     previewOutdoorProductImage();
     document.getElementById('modal-outdoor-product').classList.add('open');
+}
+function addOutdoorFeature(value) {
+    const row = document.createElement('div');
+    row.className = 'feature-row';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'op-feature-input';
+    input.placeholder = 'Enter one feature';
+    input.value = typeof value === 'string' ? value : '';
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'btn-remove-feature';
+    remove.textContent = '−';
+    remove.title = 'Remove feature';
+    remove.onclick = function() { row.remove(); };
+    row.append(input, remove);
+    document.getElementById('op-feature-list').appendChild(row);
 }
 function closeOutdoorProductModal() {
     document.getElementById('modal-outdoor-product').classList.remove('open');
@@ -1368,7 +1392,7 @@ async function saveOutdoorProduct() {
     const payload = {
         name: document.getElementById('op-edit-name').value,
         category: document.getElementById('op-edit-category').value,
-        description: document.getElementById('op-edit-description').value || null,
+        description: Array.from(document.querySelectorAll('.op-feature-input')).map(input => input.value.trim()).filter(Boolean).join('\n') || null,
         image_url: document.getElementById('op-edit-image').value || null,
         active: document.getElementById('op-edit-active').checked,
     };
