@@ -46,20 +46,15 @@
                 ['SKU', p.sku],
                 ['Color Options', p.color_options],
             ];
+            const features = (p.description || '').split(/\r?\n/).map(function(feature) { return feature.trim(); }).filter(Boolean);
 
             const specsList = document.getElementById('product-specs-list');
-            specsList.innerHTML = rowsToShow
+            const detailRows = rowsToShow
                 .filter(function(r) { return r[1]; })
                 .map(function(r) { return `<li><strong>${r[0]}:</strong> ${r[1]}</li>`; })
                 .join('');
-
-            const descEl = document.getElementById('product-description');
-            if (p.description) {
-                descEl.textContent = p.description;
-                descEl.style.display = 'block';
-            } else {
-                descEl.style.display = 'none';
-            }
+            const featureRows = features.map(function(feature) { return `<li>${feature}</li>`; }).join('');
+            specsList.innerHTML = detailRows + featureRows;
         })
         .catch(function(err) { console.error('Outdoor product load error:', err); });
 })();
