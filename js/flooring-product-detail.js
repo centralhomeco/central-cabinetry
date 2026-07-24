@@ -43,6 +43,12 @@
             const img = document.querySelector('[data-ck="product-image"]');
 if (img) img.parentElement.classList.add('image-zoom-container');
 if (img && p.image_url) img.src = p.image_url;
+            const cornerBadge = document.getElementById('product-corner-badge');
+            if (cornerBadge && p.corner_image_url) {
+                cornerBadge.src = p.corner_image_url;
+                cornerBadge.className = 'fp-corner-badge ' + (p.corner_position === 'top-right' ? 'top-right' : 'top-left');
+                cornerBadge.style.display = 'block';
+            }
 
             const rowsToShow = [
                 ['Type', SECTION_LABEL[p.category] || p.category],

@@ -8,9 +8,12 @@
     <style>
         #product-specs-list li { color: #444 !important; border-bottom-color: #eee !important; }
         #product-specs-list li strong { color: #1A1A2E !important; }
-        .fp-photo{background:#f5f5f5;border-radius:8px;padding:16px;display:flex;justify-content:center}
-        .fp-photo img{width:100%;max-width:100%;border-radius:6px;transition:transform .15s}
-        .fp-photo img:hover{transform:scale(1.02)}
+        .fp-photo{background:#f5f5f5;border-radius:8px;padding:16px;display:flex;justify-content:center;position:relative;overflow:hidden}
+        .fp-photo>img[data-ck="product-image"]{width:100%;max-width:100%;border-radius:6px;transition:transform .15s}
+        .fp-photo>img[data-ck="product-image"]:hover{transform:scale(1.02)}
+        .fp-corner-badge{position:absolute;top:28px;width:auto;max-width:28%;max-height:28%;object-fit:contain;z-index:2;display:none}
+        .fp-corner-badge.top-left{left:28px}
+        .fp-corner-badge.top-right{right:28px}
     </style>
 </head>
 <body data-page="flooring-product-detail">
@@ -61,6 +64,7 @@
         <div class="detail-grid">
             <div class="fp-photo" style="order:2">
                 <img src="" data-ck="product-image" alt="Product photo" onclick="openLightbox(this.src)" style="cursor:zoom-in">
+                <img src="" id="product-corner-badge" class="fp-corner-badge top-left" alt="">
             </div>
             <div class="detail-specs" style="order:1;background:#fff;border:1px solid #eee;color:#1A1A2E">
                 <h1 data-ck="page-title" style="font-size:28px;margin-bottom:16px;color:#1A1A2E">Loading...</h1>

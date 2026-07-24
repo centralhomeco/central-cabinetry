@@ -605,6 +605,27 @@
                 <input type="file" id="fp-file-input" accept="image/*" onchange="uploadFlooringProductPhoto(this)">
                 <img id="fp-img-preview" class="img-preview" alt="Preview">
             </div>
+            <div class="field" style="border-top:1px solid #eee;padding-top:16px">
+                <label>Corner Badge Picture (optional)</label>
+                <div style="font-size:12px;color:#888;margin:0 0 8px">Adds a small picture over the top corner of this flooring photo, like the Peninsula Flooring example.</div>
+                <input type="text" id="fp-edit-corner-image" placeholder="https://..." oninput="previewFlooringCornerImage()">
+                <div class="upload-row">
+                    <button type="button" class="btn-upload" onclick="document.getElementById('fp-corner-file-input').click()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Upload Corner Picture
+                    </button>
+                    <span id="fp-corner-upload-status">or paste a URL above</span>
+                </div>
+                <input type="file" id="fp-corner-file-input" accept="image/*" onchange="uploadFlooringCornerPhoto(this)">
+                <img id="fp-corner-img-preview" class="img-preview" alt="Corner picture preview" style="max-width:160px">
+            </div>
+            <div class="field">
+                <label>Corner Position</label>
+                <select id="fp-edit-corner-position">
+                    <option value="top-left">Top Left</option>
+                    <option value="top-right">Top Right</option>
+                </select>
+            </div>
             <div class="field">
                 <div class="checkbox-row">
                     <input type="checkbox" id="fp-edit-active">
@@ -1255,7 +1276,7 @@ async function loadFlooringProducts() {
 }
 
 function openNewFlooringProductModal() {
-    openFlooringProductModal({ id: '', category: 'hardwood', collection: '', name: '', size: '', image_url: '', active: true });
+    openFlooringProductModal({ id: '', category: 'hardwood', collection: '', name: '', size: '', image_url: '', corner_image_url: '', corner_position: 'top-left', active: true });
 }
 function openFlooringProductModalById(id) {
     const p = flooringProductsCache[id];
@@ -1276,10 +1297,13 @@ function openFlooringProductModal(p) {
     document.getElementById('fp-edit-coverage').value = p.coverage || '';
     document.getElementById('fp-edit-description').value = p.description || '';
     document.getElementById('fp-edit-image').value = p.image_url || '';
+    document.getElementById('fp-edit-corner-image').value = p.corner_image_url || '';
+    document.getElementById('fp-edit-corner-position').value = p.corner_position || 'top-left';
     document.getElementById('fp-edit-active').checked = p.active !== false;
     document.getElementById('btn-delete-fp').style.display = isNew ? 'none' : 'block';
     document.getElementById('fp-save-msg').textContent = '';
     previewFlooringProductImage();
+    previewFlooringCornerImage();
     document.getElementById('modal-flooring-product').classList.add('open');
 }
 function closeFlooringProductModal() {
@@ -1289,6 +1313,11 @@ function previewFlooringProductImage() {
     const url = document.getElementById('fp-edit-image').value;
     const img = document.getElementById('fp-img-preview');
     if (url) { img.src = url; img.style.display = 'block'; } else { img.style.display = 'none'; }
+}
+function previewFlooringCornerImage() {
+    const url = document.getElementById('fp-edit-corner-image').value;
+    const img = document.getElementById('fp-corner-img-preview');
+    if (url) { img.src = url; img.style.display = 'block'; } else { img.style.display = 'none'; img.removeAttribute('src'); }
 }
 async function saveFlooringProduct() {
     const id = document.getElementById('fp-edit-id').value;
@@ -1309,6 +1338,8 @@ async function saveFlooringProduct() {
         coverage: document.getElementById('fp-edit-coverage').value || null,
         description: document.getElementById('fp-edit-description').value || null,
         image_url: document.getElementById('fp-edit-image').value || null,
+        corner_image_url: document.getElementById('fp-edit-corner-image').value || null,
+        corner_position: document.getElementById('fp-edit-corner-position').value || 'top-left',
         active: document.getElementById('fp-edit-active').checked,
     };
     if (isNew) payload.sort_order = Object.keys(flooringProductsCache).length + 1;
@@ -1353,6 +1384,28 @@ async function uploadFlooringProductPhoto(input) {
         const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/images/${filename}`;
         document.getElementById('fp-edit-image').value = publicUrl;
         previewFlooringProductImage();
+        status.textContent = '✅ Uploaded!'; status.className = 'done';
+    } catch (err) {
+        status.textContent = '❌ Upload failed: ' + err.message; status.className = 'err';
+    }
+    input.value = '';
+}
+async function uploadFlooringCornerPhoto(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const status = document.getElementById('fp-corner-upload-status');
+    status.textContent = 'Uploading...'; status.className = 'uploading';
+    const ext = file.name.split('.').pop();
+    const filename = `flooring-corner-badges/${Date.now()}.${ext}`;
+    try {
+        const form = new FormData();
+        form.append('file', file);
+        form.append('path', filename);
+        form.append('token', accessToken || '');
+        const res = await fetch('/api/upload', { method: 'POST', body: form });
+        if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.message || `HTTP ${res.status}`); }
+        document.getElementById('fp-edit-corner-image').value = `${SUPABASE_URL}/storage/v1/object/public/images/${filename}`;
+        previewFlooringCornerImage();
         status.textContent = '✅ Uploaded!'; status.className = 'done';
     } catch (err) {
         status.textContent = '❌ Upload failed: ' + err.message; status.className = 'err';
