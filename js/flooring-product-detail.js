@@ -41,8 +41,7 @@
             document.querySelectorAll('[data-ck="breadcrumb-name"]').forEach(function(el) { el.textContent = p.name; });
 
             const img = document.querySelector('[data-ck="product-image"]');
-if (img) img.parentElement.classList.add('image-zoom-container');
-if (img && p.image_url) img.src = p.image_url;
+            if (img && p.image_url) img.src = p.image_url;
             const cornerBadge = document.getElementById('product-corner-badge');
             if (cornerBadge && p.corner_image_url) {
                 cornerBadge.src = p.corner_image_url;
