@@ -253,6 +253,39 @@
         }).join('');
     })
     .catch(function(err) { console.error('Home door styles load error:', err); });
+
+    // Show the first 12 active gallery photos (four rows on desktop).
+    fetch(`${SUPABASE_URL}/rest/v1/gallery_photos?active=eq.true&order=sort_order.asc&limit=12&select=image_url,caption`, {
+        headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
+    })
+    .then(function(res) {
+        if (!res.ok) throw new Error('Supabase error: ' + res.status);
+        return res.json();
+    })
+    .then(function(photos) {
+        const grid = document.querySelector('.gallery-preview .gallery-grid');
+        if (!grid || !Array.isArray(photos)) return;
+
+        const visiblePhotos = photos.filter(function(photo) {
+            return photo && photo.image_url;
+        }).slice(0, 12);
+        if (!visiblePhotos.length) return;
+
+        grid.replaceChildren();
+        visiblePhotos.forEach(function(photo, index) {
+            const imageName = photo.image_url.split('/').pop().replace(/\.[^.]+$/, '');
+            const link = document.createElement('a');
+            link.href = 'gallery.html?img=' + encodeURIComponent(imageName);
+            link.className = 'gallery-thumb';
+            link.style.backgroundImage = 'url("' + photo.image_url.replace(/["\\]/g, '\\$&') + '")';
+            link.setAttribute('aria-label', photo.caption
+                ? 'View ' + photo.caption
+                : 'View gallery photo ' + (index + 1));
+            grid.appendChild(link);
+        });
+    })
+    .catch(function(err) { console.error('Home gallery load error:', err); });
+
     fetch(`${SUPABASE_URL}/rest/v1/home_showcase?order=sort_order.asc`, {
     headers: {
         'apikey': SUPABASE_ANON,
