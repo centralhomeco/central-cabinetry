@@ -91,6 +91,17 @@
             font-weight: 600; cursor: pointer;
         }
         .btn-edit:hover { background: #1a4a6b; }
+        .order-controls {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+            margin-bottom: 8px;
+        }
+        .btn-order {
+            background: #fff; color: #245a85; border: 1px solid #8ca8bf;
+            border-radius: 6px; padding: 7px 5px; font-size: 12px;
+            font-weight: 600; cursor: pointer;
+        }
+        .btn-order:hover:not(:disabled) { background: #eef5fb; }
+        .btn-order:disabled { opacity: .42; cursor: not-allowed; }
         .style-order-controls { display: flex; gap: 8px; margin-bottom: 8px; }
         .btn-order {
             flex: 1; border: 1px solid #aac4de; background: #f4f8fc;
@@ -1105,6 +1116,8 @@ let outdoorProductsCache = {};
 let outdoorProductsList = [];
 let galleryPhotosLoaded = false;
 let galleryPhotosCache = {};
+let galleryPhotoRows = [];
+let galleryPhotoReorderBusy = false;
 
 function switchTab(tab) {
     document.getElementById('tab-styles').style.display = tab === 'styles' ? 'block' : 'none';
@@ -1137,16 +1150,21 @@ async function loadGalleryPhotos() {
     const grid = document.getElementById('gallery-photos-grid');
     const loading = document.getElementById('loading-gallery-photos');
 
+    galleryPhotoRows = Array.isArray(rows) ? rows : [];
     galleryPhotosCache = {};
-    (rows || []).forEach(r => { galleryPhotosCache[r.id] = r; });
+    galleryPhotoRows.forEach(r => { galleryPhotosCache[r.id] = r; });
 
-    grid.innerHTML = (rows || []).map(r => `
+    grid.innerHTML = galleryPhotoRows.map((r, index) => `
         <div class="style-card">
             <div class="style-card-img" style="${r.image_url ? 'background-image:url(' + r.image_url + ')' : ''}">
                 <span class="style-card-badge ${r.active ? 'badge-active' : 'badge-hidden'}">${r.active ? 'Active' : 'Hidden'}</span>
             </div>
             <div class="style-card-body">
                 <div class="style-card-name">${r.caption || '(no caption)'}</div>
+                <div class="order-controls">
+                    <button class="btn-order" onclick="moveGalleryPhoto('${r.id}', -1)" ${index === 0 ? 'disabled' : ''}>← Earlier</button>
+                    <button class="btn-order" onclick="moveGalleryPhoto('${r.id}', 1)" ${index === galleryPhotoRows.length - 1 ? 'disabled' : ''}>Later →</button>
+                </div>
                 <button class="btn-edit" onclick="openGalleryPhotoModalById('${r.id}')">Edit</button>
             </div>
         </div>
@@ -1155,6 +1173,38 @@ async function loadGalleryPhotos() {
     loading.style.display = 'none';
     grid.style.display = 'grid';
     galleryPhotosLoaded = true;
+}
+async function moveGalleryPhoto(id, direction) {
+    if (galleryPhotoReorderBusy) return;
+
+    const currentIndex = galleryPhotoRows.findIndex(photo => photo.id === id);
+    const targetIndex = currentIndex + direction;
+    if (currentIndex < 0 || targetIndex < 0 || targetIndex >= galleryPhotoRows.length) return;
+
+    galleryPhotoReorderBusy = true;
+    const reordered = [...galleryPhotoRows];
+    [reordered[currentIndex], reordered[targetIndex]] = [reordered[targetIndex], reordered[currentIndex]];
+
+    try {
+        const updates = reordered
+            .map((photo, index) => ({ photo, sortOrder: index + 1 }))
+            .filter(({ photo, sortOrder }) => Number(photo.sort_order) !== sortOrder);
+
+        const results = await Promise.all(updates.map(({ photo, sortOrder }) =>
+            fetch(`${SUPABASE_URL}/rest/v1/gallery_photos?id=eq.${photo.id}`, {
+                method: 'PATCH',
+                headers: { ...headers(true), 'Prefer': 'return=minimal' },
+                body: JSON.stringify({ sort_order: sortOrder })
+            })
+        ));
+
+        if (results.some(result => !result.ok)) throw new Error('A photo could not be reordered.');
+        await loadGalleryPhotos();
+    } catch (error) {
+        alert('The gallery order could not be saved. Please try again.');
+    } finally {
+        galleryPhotoReorderBusy = false;
+    }
 }
 function openNewGalleryPhotoModal() {
     openGalleryPhotoModal({ id: '', caption: '', image_url: '', active: true });
