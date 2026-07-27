@@ -42,24 +42,62 @@
             if (img && p.image_url) img.src = p.image_url;
 
             const rowsToShow = [
-                ['Collection', p.category || 'Hoyt Collection'],
+                ['Category', p.category || 'Outdoor Furniture'],
                 ['SKU', p.sku],
                 ['Color Options', p.color_options],
             ];
+            const features = (p.description || '').split(/\r?\n/).map(function(feature) { return feature.trim(); }).filter(Boolean);
 
             const specsList = document.getElementById('product-specs-list');
-            specsList.innerHTML = rowsToShow
+            const detailRows = rowsToShow
                 .filter(function(r) { return r[1]; })
                 .map(function(r) { return `<li><strong>${r[0]}:</strong> ${r[1]}</li>`; })
                 .join('');
+            const featureRows = features.map(function(feature) { return `<li>${feature}</li>`; }).join('');
+            specsList.innerHTML = detailRows + featureRows;
 
-            const descEl = document.getElementById('product-description');
-            if (p.description) {
-                descEl.textContent = p.description;
-                descEl.style.display = 'block';
-            } else {
-                descEl.style.display = 'none';
-            }
+            const galleryPrefix = `product-gallery-${id}-`;
+            fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?slug=like.${encodeURIComponent(galleryPrefix + '*')}&order=sort_order&select=id,image_url,label`, { headers: h() })
+                .then(function(res) { return res.ok ? res.json() : []; })
+                .then(function(photos) {
+                    const uploadedPhotos = Array.isArray(photos) ? photos : [];
+                    const galleryPhotos = uploadedPhotos.filter(function(photo, index, all) {
+                        return photo.image_url && all.findIndex(function(item) { return item.image_url === photo.image_url; }) === index;
+                    });
+                    if (!galleryPhotos.length) return;
+
+                    const gallery = document.getElementById('product-gallery');
+                    const mainImage = document.getElementById('product-gallery-main');
+
+                    function selectPhoto(photo, button) {
+                        mainImage.src = photo.image_url;
+                        mainImage.alt = photo.label || `${p.name} product photo`;
+                        gallery.querySelectorAll('.op-gallery-thumb').forEach(function(thumb) {
+                            thumb.classList.toggle('active', thumb === button);
+                            thumb.setAttribute('aria-pressed', thumb === button ? 'true' : 'false');
+                        });
+                    }
+
+                    galleryPhotos.forEach(function(photo, index) {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'op-gallery-thumb';
+                        button.setAttribute('aria-label', `Show ${photo.label || `${p.name} photo ${index + 1}`}`);
+                        button.setAttribute('aria-pressed', 'false');
+
+                        const image = document.createElement('img');
+                        image.src = photo.image_url;
+                        image.alt = photo.label || `${p.name} thumbnail ${index + 1}`;
+                        image.loading = index === 0 ? 'eager' : 'lazy';
+                        button.appendChild(image);
+                        button.onclick = function() { selectPhoto(photo, button); };
+                        gallery.appendChild(button);
+
+                        if (index === 0) selectPhoto(photo, button);
+                    });
+
+                    document.getElementById('product-gallery-section').style.display = 'block';
+                });
         })
         .catch(function(err) { console.error('Outdoor product load error:', err); });
 })();

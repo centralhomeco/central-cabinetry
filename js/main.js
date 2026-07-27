@@ -18,12 +18,20 @@ async function initShowcase() {
         });
         const rows = await res.json();
         if (rows.length > 0) {
-            track.innerHTML = rows.map(r => `
-                <div class="showcase-item">
-                    <img src="${r.image_url}" alt="${r.label || 'Product Showcase'}" onclick="openLightbox(this.src)">
-                    ${r.label ? `<div class="showcase-label">${r.label}</div>` : ''}
-                </div>
-            `).join('');
+            track.innerHTML = rows.map(r => {
+                const marker = '|||link:';
+                const markerIndex = (r.label || '').indexOf(marker);
+                const displayLabel = markerIndex === -1 ? (r.label || '') : r.label.slice(0, markerIndex);
+                const embeddedLink = markerIndex === -1 ? '' : r.label.slice(markerIndex + marker.length);
+                const rawDestination = embeddedLink || r.alt_text || '';
+                const destination = (/^https?:\/\//.test(rawDestination) || /^[\w-]+\.html(?:\?|$)/.test(rawDestination))
+                    ? rawDestination
+                    : '';
+                const label = displayLabel ? `<div class="showcase-label">${displayLabel}</div>` : '';
+                return destination
+                    ? `<a class="showcase-item" href="${destination}" aria-label="View ${displayLabel || 'showcase item'}"><img src="${r.image_url}" alt="${displayLabel || 'Product Showcase'}">${label}</a>`
+                    : `<div class="showcase-item"><img src="${r.image_url}" alt="${displayLabel || 'Product Showcase'}" onclick="openLightbox(this.src)">${label}</div>`;
+            }).join('');
         }
     } catch (err) {
         console.error('Error loading showcase:', err);
@@ -87,8 +95,82 @@ function closeLightbox(){
 }
 
 // FORMS
-function submitContact(e){e.preventDefault();alert('Thank you! We will get back to you shortly.');e.target.reset()}
-function submitAppointment(e){e.preventDefault();alert('Appointment confirmed! We will contact you within 24 hours.');e.target.reset();nextStep(1)}
+async function submitContact(e){
+    e.preventDefault();
+    var form=e.target;
+    var button=form.querySelector('button[type="submit"]');
+    var status=form.querySelector('.contact-form-status');
+    var data=new FormData(form);
+    var payload={
+        name:data.get('name'),
+        email:data.get('email'),
+        phone:data.get('phone'),
+        customerType:data.get('ctype'),
+        topic:data.get('topic'),
+        message:data.get('message'),
+        website:data.get('website')
+    };
+
+    button.disabled=true;
+    button.textContent='Sending...';
+    status.style.color='#555';
+    status.textContent='Sending your message...';
+
+    try{
+        var response=await fetch('/api/contact',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify(payload)
+        });
+        var result=await response.json().catch(function(){return {};});
+        if(!response.ok) throw new Error(result.error||'Your message could not be sent.');
+        form.reset();
+        status.style.color='#155724';
+        status.textContent='Thank you! Your message was sent successfully.';
+    }catch(error){
+        status.style.color='#b42318';
+        status.textContent=error.message||'Your message could not be sent. Please try again.';
+    }finally{
+        button.disabled=false;
+        button.textContent='Send Message';
+    }
+}
+async function submitAppointment(e){
+  e.preventDefault();
+  var f=e.target;
+  var btn=f.querySelector('button[type="submit"]');
+  var orig=btn.textContent;
+  btn.textContent='Sending...';
+  btn.disabled=true;
+  var nameEl=document.getElementById('apptName');
+  var name=nameEl?nameEl.value:'';
+  var allInputs=f.querySelectorAll('input,select,textarea');
+  var email=allInputs[1]?allInputs[1].value:'';
+  var phone=allInputs[2]?allInputs[2].value:'';
+  var ctype=f.querySelector('input[name="type"]:checked');
+  var customerType=ctype?ctype.value:'';
+  var date=allInputs[4]?allInputs[4].value:'';
+  var time=allInputs[5]?allInputs[5].value:'';
+  var appointmentType=allInputs[6]?allInputs[6].value:'';
+  var notes=allInputs[7]?allInputs[7].value:'';
+  try{
+    var res=await fetch('/api/send-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'appointment',name:name,email:email,phone:phone,customerType:customerType,date:date,time:time,appointmentType:appointmentType,notes:notes})});
+    var data=await res.json();
+    if(res.ok){
+      alert('Appointment confirmed! We will contact you within 24 hours.');
+      f.reset();
+      nextStep(1);
+    } else {
+      alert('Sorry, there was an error. Please call us at (843) 712-1001.');
+      console.error(data);
+    }
+  } catch(err){
+    alert('Sorry, there was an error. Please call us at (843) 712-1001.');
+    console.error(err);
+  }
+  btn.textContent=orig;
+  btn.disabled=false;
+}
 
 // SMOOTH SCROLL
 document.querySelectorAll('a[href^="#"]').forEach(function(a){

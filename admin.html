@@ -102,6 +102,14 @@
         }
         .btn-order:hover:not(:disabled) { background: #eef5fb; }
         .btn-order:disabled { opacity: .42; cursor: not-allowed; }
+        .style-order-controls { display: flex; gap: 8px; margin-bottom: 8px; }
+        .btn-order {
+            flex: 1; border: 1px solid #aac4de; background: #f4f8fc;
+            color: #2A6496; border-radius: 6px; padding: 7px 5px;
+            font-size: 12px; font-weight: 600; cursor: pointer;
+        }
+        .btn-order:hover { background: #ddeaf5; }
+        .btn-order:disabled { opacity: .35; cursor: not-allowed; }
 
         /* MODAL */
         .modal-overlay {
@@ -131,6 +139,10 @@
             padding: 10px 12px; font-size: 14px; font-family: inherit;
         }
         .field input:focus, .field select:focus { outline: none; border-color: #2A6496; }
+        .feature-row{display:flex;gap:8px;margin-bottom:8px}
+        .feature-row input{flex:1}
+        .btn-remove-feature{width:42px;border:1px solid #e0b4ae;border-radius:6px;background:#fff;color:#c0392b;font-size:20px;cursor:pointer}
+        .btn-add-feature{border:1px dashed #2A6496;border-radius:6px;background:#f4f8fc;color:#2A6496;padding:10px 14px;font-weight:700;cursor:pointer}
         .field textarea { height: 70px; resize: vertical; }
         .img-preview {
             margin-top: 8px; width: 100%; height: 120px;
@@ -213,7 +225,7 @@
 
         <div id="tab-styles">
             <div class="admin-title">Door Styles</div>
-            <div class="admin-sub">Click Edit to update any door style, or add a new one. Changes appear on the website immediately.</div>
+            <div class="admin-sub">Use Move Earlier and Move Later to change the order on the cabinet page. Changes appear on the website immediately.</div>
             <button class="btn-save" style="max-width:200px;margin-bottom:20px" onclick="openNewStyleModal()">+ Add New Door Style</button>
             <div id="loading-styles">Loading...</div>
             <div id="styles-grid" class="styles-grid" style="display:none"></div>
@@ -280,13 +292,19 @@
             <div id="loading-outdoor">Loading...</div>
             <div id="outdoor-kitchen-grid" class="styles-grid" style="display:none"></div>
 
+            <div class="admin-title" style="margin-top:40px">Outdoor Kitchens — Product Catalog</div>
+            <div class="admin-sub">Add, edit, or remove outdoor kitchen items. These appear in the Outdoor Kitchens tab. Changes appear on the website immediately.</div>
+            <button class="btn-save" style="max-width:240px;margin-bottom:20px" onclick="openNewOutdoorProductModal('Outdoor Kitchen')">+ Add Kitchen Item</button>
+            <div id="loading-kitchen-products">Loading...</div>
+            <div id="kitchen-products-grid" class="styles-grid" style="display:none"></div>
+
             <div class="admin-title" style="margin-top:40px">Hoyt Outdoor Furniture — Fixed Photos</div>
             <div class="admin-sub">These photos are used in the Hoyt tab's hero banner and Gallery highlights (not in the product catalog below).</div>
             <div id="outdoor-hoyt-grid" class="styles-grid" style="display:none"></div>
 
             <div class="admin-title" style="margin-top:40px">Hoyt Outdoor Furniture — Product Catalog</div>
             <div class="admin-sub">Add, edit, or remove furniture pieces. These appear only in the Hoyt Outdoor Furniture tab. Changes appear on the website immediately.</div>
-            <button class="btn-save" style="max-width:200px;margin-bottom:20px" onclick="openNewOutdoorProductModal()">+ Add New Product</button>
+            <button class="btn-save" style="max-width:200px;margin-bottom:20px" onclick="openNewOutdoorProductModal('Outdoor Furniture')">+ Add New Product</button>
             <div id="loading-outdoor-products">Loading...</div>
             <div id="outdoor-products-grid" class="styles-grid" style="display:none"></div>
 
@@ -302,8 +320,8 @@
 
         <div id="tab-showcase" style="display:none">
             <div class="admin-title">Home Showcase Strip</div>
-            <div class="admin-sub">Manage the horizontal strip of product photos shown on the home page. Changes appear immediately.</div>
-            <button class="btn-save" style="max-width:220px;margin-bottom:20px" onclick="openNewShowcaseModal()">+ Add New Showcase Photo</button>
+            <div class="admin-sub">Add products from cabinets, flooring, or outdoor living. Visitors can click each item to open its product page.</div>
+            <button class="btn-save" style="max-width:220px;margin-bottom:20px" onclick="openNewShowcaseModal()">+ Add Showcase Item</button>
             <div id="loading-showcase">Loading...</div>
             <div id="showcase-grid" class="styles-grid" style="display:none"></div>
         </div>
@@ -598,6 +616,27 @@
                 <input type="file" id="fp-file-input" accept="image/*" onchange="uploadFlooringProductPhoto(this)">
                 <img id="fp-img-preview" class="img-preview" alt="Preview">
             </div>
+            <div class="field" style="border-top:1px solid #eee;padding-top:16px">
+                <label>Corner Badge Picture (optional)</label>
+                <div style="font-size:12px;color:#888;margin:0 0 8px">Adds a small picture over the top corner of this flooring photo, like the Peninsula Flooring example.</div>
+                <input type="text" id="fp-edit-corner-image" placeholder="https://..." oninput="previewFlooringCornerImage()">
+                <div class="upload-row">
+                    <button type="button" class="btn-upload" onclick="document.getElementById('fp-corner-file-input').click()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Upload Corner Picture
+                    </button>
+                    <span id="fp-corner-upload-status">or paste a URL above</span>
+                </div>
+                <input type="file" id="fp-corner-file-input" accept="image/*" onchange="uploadFlooringCornerPhoto(this)">
+                <img id="fp-corner-img-preview" class="img-preview" alt="Corner picture preview" style="max-width:160px">
+            </div>
+            <div class="field">
+                <label>Corner Position</label>
+                <select id="fp-edit-corner-position">
+                    <option value="top-left">Top Left</option>
+                    <option value="top-right">Top Right</option>
+                </select>
+            </div>
             <div class="field">
                 <div class="checkbox-row">
                     <input type="checkbox" id="fp-edit-active">
@@ -628,8 +667,16 @@
                 <input type="text" id="op-edit-name">
             </div>
             <div class="field">
-                <label>Description</label>
-                <textarea id="op-edit-description"></textarea>
+                <label>Product Type</label>
+                <select id="op-edit-category">
+                    <option value="Outdoor Kitchen">Outdoor Kitchen Item</option>
+                    <option value="Outdoor Furniture">Outdoor Furniture</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Features (shown on the detail page)</label>
+                <div id="op-feature-list"></div>
+                <button type="button" class="btn-add-feature" onclick="addOutdoorFeature()">+ Add Feature</button>
             </div>
             <div class="field">
                 <label>Photo</label>
@@ -643,6 +690,14 @@
                 </div>
                 <input type="file" id="op-file-input" accept="image/*" onchange="uploadOutdoorProductPhoto(this)">
                 <img id="op-img-preview" class="img-preview" alt="Preview">
+            </div>
+            <div class="field" id="op-gallery-section">
+                <label>Additional Photos</label>
+                <p style="color:#888;margin:0 0 10px;font-size:14px">These appear farther down the product detail page.</p>
+                <div id="op-gallery-list" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px"></div>
+                <button type="button" class="btn-upload" id="op-gallery-upload-btn" onclick="document.getElementById('op-gallery-file-input').click()">+ Upload Additional Photos</button>
+                <input type="file" id="op-gallery-file-input" accept="image/*" multiple onchange="uploadOutdoorGalleryPhotos(this)" style="display:none">
+                <span id="op-gallery-upload-status" style="display:block;color:#888;margin-top:8px"></span>
             </div>
             <div class="field">
                 <div class="checkbox-row">
@@ -670,8 +725,19 @@
             <div class="modal-body">
                 <input type="hidden" id="showcase-edit-id">
                 <div class="field">
+                    <label>Choose an item from the website</label>
+                    <select id="showcase-product-select" onchange="applyShowcaseProduct()">
+                        <option value="">Choose a cabinet door, flooring item, or outdoor product...</option>
+                    </select>
+                    <div style="font-size:12px;color:#888;margin-top:6px">Selecting an item fills in its name, photo, and product-page link. You can still adjust them below.</div>
+                </div>
+                <div class="field">
                     <label>Label (optional, shown on hover)</label>
                     <input type="text" id="showcase-edit-label" placeholder="e.g. Modern Kitchen">
+                </div>
+                <div class="field">
+                    <label>Product Page Link</label>
+                    <input type="text" id="showcase-edit-link" placeholder="e.g. door-style-detail.html?code=ws">
                 </div>
                 <div class="field">
                     <label>Photo</label>
@@ -748,6 +814,7 @@ const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 
 let accessToken = null;
 let stylesCache = {};  // store styles by id to avoid inline JSON in onclick
+let stylesList = [];
 
 function headers(withAuth = false) {
     const h = { 'apikey': SUPABASE_ANON, 'Content-Type': 'application/json' };
@@ -799,10 +866,11 @@ async function loadStyles() {
     const loading = document.getElementById('loading-styles');
 
     // Cache styles by id so onclick can safely look them up without inline JSON
+    stylesList = Array.isArray(styles) ? styles : [];
     stylesCache = {};
     styles.forEach(s => { stylesCache[s.id] = s; });
 
-    grid.innerHTML = styles.map(s => `
+    grid.innerHTML = styles.map((s, index) => `
         <div class="style-card">
             <div class="style-card-img" style="${s.image_url ? 'background-image:url(' + s.image_url + ')' : ''}">
                 <span class="style-card-badge ${s.active ? 'badge-active' : 'badge-hidden'}">
@@ -813,6 +881,10 @@ async function loadStyles() {
                 <div class="style-card-code">(${s.code})</div>
                 <div class="style-card-name">${s.name}</div>
                 <div class="style-card-type">${s.style_type}</div>
+                <div class="style-order-controls">
+                    <button class="btn-order" onclick="moveStyle('${s.id}', -1)" ${index === 0 ? 'disabled' : ''}>← Earlier</button>
+                    <button class="btn-order" onclick="moveStyle('${s.id}', 1)" ${index === styles.length - 1 ? 'disabled' : ''}>Later →</button>
+                </div>
                 <button class="btn-edit" onclick="openModalById('${s.id}')">Edit</button>
             </div>
         </div>
@@ -820,6 +892,37 @@ async function loadStyles() {
 
     loading.style.display = 'none';
     grid.style.display = 'grid';
+}
+
+async function moveStyle(id, direction) {
+    const currentIndex = stylesList.findIndex(style => style.id === id);
+    const targetIndex = currentIndex + direction;
+    if (currentIndex < 0 || targetIndex < 0 || targetIndex >= stylesList.length) return;
+
+    const reordered = stylesList.slice();
+    [reordered[currentIndex], reordered[targetIndex]] = [reordered[targetIndex], reordered[currentIndex]];
+
+    const grid = document.getElementById('styles-grid');
+    grid.style.pointerEvents = 'none';
+    grid.style.opacity = '.6';
+
+    const responses = await Promise.all(reordered.map((style, index) =>
+        fetch(`${SUPABASE_URL}/rest/v1/door_styles?id=eq.${style.id}`, {
+            method: 'PATCH',
+            headers: { ...headers(true), 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ sort_order: index + 1 })
+        })
+    ));
+
+    grid.style.pointerEvents = '';
+    grid.style.opacity = '';
+
+    if (responses.some(response => !response.ok)) {
+        alert('The new door order could not be saved. Please try again.');
+        return;
+    }
+
+    await loadStyles();
 }
 
 function openModalById(id) {
@@ -1010,6 +1113,7 @@ let flooringProductsLoaded = false;
 let flooringProductsCache = {};
 let outdoorProductsLoaded = false;
 let outdoorProductsCache = {};
+let outdoorProductsList = [];
 let galleryPhotosLoaded = false;
 let galleryPhotosCache = {};
 let galleryPhotoRows = [];
@@ -1222,7 +1326,7 @@ async function loadFlooringProducts() {
 }
 
 function openNewFlooringProductModal() {
-    openFlooringProductModal({ id: '', category: 'hardwood', collection: '', name: '', size: '', image_url: '', active: true });
+    openFlooringProductModal({ id: '', category: 'hardwood', collection: '', name: '', size: '', image_url: '', corner_image_url: '', corner_position: 'top-left', active: true });
 }
 function openFlooringProductModalById(id) {
     const p = flooringProductsCache[id];
@@ -1243,10 +1347,13 @@ function openFlooringProductModal(p) {
     document.getElementById('fp-edit-coverage').value = p.coverage || '';
     document.getElementById('fp-edit-description').value = p.description || '';
     document.getElementById('fp-edit-image').value = p.image_url || '';
+    document.getElementById('fp-edit-corner-image').value = p.corner_image_url || '';
+    document.getElementById('fp-edit-corner-position').value = p.corner_position || 'top-left';
     document.getElementById('fp-edit-active').checked = p.active !== false;
     document.getElementById('btn-delete-fp').style.display = isNew ? 'none' : 'block';
     document.getElementById('fp-save-msg').textContent = '';
     previewFlooringProductImage();
+    previewFlooringCornerImage();
     document.getElementById('modal-flooring-product').classList.add('open');
 }
 function closeFlooringProductModal() {
@@ -1256,6 +1363,11 @@ function previewFlooringProductImage() {
     const url = document.getElementById('fp-edit-image').value;
     const img = document.getElementById('fp-img-preview');
     if (url) { img.src = url; img.style.display = 'block'; } else { img.style.display = 'none'; }
+}
+function previewFlooringCornerImage() {
+    const url = document.getElementById('fp-edit-corner-image').value;
+    const img = document.getElementById('fp-corner-img-preview');
+    if (url) { img.src = url; img.style.display = 'block'; } else { img.style.display = 'none'; img.removeAttribute('src'); }
 }
 async function saveFlooringProduct() {
     const id = document.getElementById('fp-edit-id').value;
@@ -1276,6 +1388,8 @@ async function saveFlooringProduct() {
         coverage: document.getElementById('fp-edit-coverage').value || null,
         description: document.getElementById('fp-edit-description').value || null,
         image_url: document.getElementById('fp-edit-image').value || null,
+        corner_image_url: document.getElementById('fp-edit-corner-image').value || null,
+        corner_position: document.getElementById('fp-edit-corner-position').value || 'top-left',
         active: document.getElementById('fp-edit-active').checked,
     };
     if (isNew) payload.sort_order = Object.keys(flooringProductsCache).length + 1;
@@ -1326,36 +1440,116 @@ async function uploadFlooringProductPhoto(input) {
     }
     input.value = '';
 }
+async function uploadFlooringCornerPhoto(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const status = document.getElementById('fp-corner-upload-status');
+    status.textContent = 'Uploading...'; status.className = 'uploading';
+    const ext = file.name.split('.').pop();
+    const filename = `flooring-corner-badges/${Date.now()}.${ext}`;
+    try {
+        const form = new FormData();
+        form.append('file', file);
+        form.append('path', filename);
+        form.append('token', accessToken || '');
+        const res = await fetch('/api/upload', { method: 'POST', body: form });
+        if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.message || `HTTP ${res.status}`); }
+        document.getElementById('fp-edit-corner-image').value = `${SUPABASE_URL}/storage/v1/object/public/images/${filename}`;
+        previewFlooringCornerImage();
+        status.textContent = '✅ Uploaded!'; status.className = 'done';
+    } catch (err) {
+        status.textContent = '❌ Upload failed: ' + err.message; status.className = 'err';
+    }
+    input.value = '';
+}
 document.getElementById('modal-flooring-product').addEventListener('click', function(e) { if (e.target === this) closeFlooringProductModal(); });
 
 // ===== Outdoor (Hoyt) Product Catalog =====
 async function loadOutdoorProducts() {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/outdoor_products?order=sort_order`, { headers: headers(true) });
     const rows = await res.json();
-    const grid = document.getElementById('outdoor-products-grid');
-    const loading = document.getElementById('loading-outdoor-products');
+    const kitchenGrid = document.getElementById('kitchen-products-grid');
+    const furnitureGrid = document.getElementById('outdoor-products-grid');
+    const kitchenLoading = document.getElementById('loading-kitchen-products');
+    const furnitureLoading = document.getElementById('loading-outdoor-products');
 
+    outdoorProductsList = Array.isArray(rows) ? rows : [];
     outdoorProductsCache = {};
-    (rows || []).forEach(r => { outdoorProductsCache[r.id] = r; });
+    outdoorProductsList.forEach(r => { outdoorProductsCache[r.id] = r; });
 
-    grid.innerHTML = (rows || []).map(r => `
+    function productCards(products) {
+        if (!products.length) return '<p style="color:#888">No products added yet.</p>';
+        return products.map((r, index) => `
         <div class="style-card">
             <div class="style-card-img" style="${r.image_url ? 'background-image:url(' + r.image_url + ')' : ''}">
                 <span class="style-card-badge ${r.active ? 'badge-active' : 'badge-hidden'}">${r.active ? 'Active' : 'Hidden'}</span>
             </div>
             <div class="style-card-body">
                 <div class="style-card-name">${r.name}</div>
+                <div class="style-order-controls">
+                    <button class="btn-order" onclick="moveOutdoorProduct('${r.id}', -1)" ${index === 0 ? 'disabled' : ''}>← Earlier</button>
+                    <button class="btn-order" onclick="moveOutdoorProduct('${r.id}', 1)" ${index === products.length - 1 ? 'disabled' : ''}>Later →</button>
+                </div>
                 <button class="btn-edit" onclick="openOutdoorProductModalById('${r.id}')">Edit</button>
             </div>
         </div>
-    `).join('');
+        `).join('');
+    }
 
-    loading.style.display = 'none';
-    grid.style.display = 'grid';
+    const kitchenProducts = (rows || []).filter(r => r.category === 'Outdoor Kitchen');
+    const furnitureProducts = (rows || []).filter(r => r.category !== 'Outdoor Kitchen');
+    kitchenGrid.innerHTML = productCards(kitchenProducts);
+    furnitureGrid.innerHTML = productCards(furnitureProducts);
+
+    kitchenLoading.style.display = 'none';
+    furnitureLoading.style.display = 'none';
+    kitchenGrid.style.display = 'grid';
+    furnitureGrid.style.display = 'grid';
     outdoorProductsLoaded = true;
 }
-function openNewOutdoorProductModal() {
-    openOutdoorProductModal({ id: '', name: '', description: '', image_url: '', active: true });
+
+async function moveOutdoorProduct(id, direction) {
+    const current = outdoorProductsCache[id];
+    if (!current) return;
+
+    const categoryProducts = outdoorProductsList.filter(product =>
+        current.category === 'Outdoor Kitchen'
+            ? product.category === 'Outdoor Kitchen'
+            : product.category !== 'Outdoor Kitchen'
+    );
+    const currentIndex = categoryProducts.findIndex(product => product.id === id);
+    const targetIndex = currentIndex + direction;
+    if (currentIndex < 0 || targetIndex < 0 || targetIndex >= categoryProducts.length) return;
+
+    const reordered = categoryProducts.slice();
+    [reordered[currentIndex], reordered[targetIndex]] = [reordered[targetIndex], reordered[currentIndex]];
+
+    const kitchenSection = current.category === 'Outdoor Kitchen';
+    const grid = document.getElementById(kitchenSection ? 'kitchen-products-grid' : 'outdoor-products-grid');
+    grid.style.pointerEvents = 'none';
+    grid.style.opacity = '.6';
+
+    const responses = await Promise.all(reordered.map((product, index) =>
+        fetch(`${SUPABASE_URL}/rest/v1/outdoor_products?id=eq.${product.id}`, {
+            method: 'PATCH',
+            headers: { ...headers(true), 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ sort_order: index + 1 })
+        })
+    ));
+
+    grid.style.pointerEvents = '';
+    grid.style.opacity = '';
+
+    if (responses.some(response => !response.ok)) {
+        alert('The new product order could not be saved. Please try again.');
+        return;
+    }
+
+    await loadOutdoorProducts();
+}
+
+function openNewOutdoorProductModal(category) {
+    openOutdoorProductModal({ id: '', name: '', category: category || 'Outdoor Furniture', description: '', image_url: '', active: true });
 }
 function openOutdoorProductModalById(id) {
     const p = outdoorProductsCache[id];
@@ -1366,13 +1560,161 @@ function openOutdoorProductModal(p) {
     document.getElementById('op-edit-id').value = p.id || '';
     document.getElementById('modal-outdoor-product-title').textContent = isNew ? 'Add New Outdoor Product' : 'Edit — ' + p.name;
     document.getElementById('op-edit-name').value = p.name || '';
-    document.getElementById('op-edit-description').value = p.description || '';
+    document.getElementById('op-edit-category').value = p.category === 'Outdoor Kitchen' ? 'Outdoor Kitchen' : 'Outdoor Furniture';
+    const features = (p.description || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    document.getElementById('op-feature-list').innerHTML = '';
+    (features.length ? features : ['']).forEach(addOutdoorFeature);
     document.getElementById('op-edit-image').value = p.image_url || '';
     document.getElementById('op-edit-active').checked = p.active !== false;
     document.getElementById('btn-delete-op').style.display = isNew ? 'none' : 'block';
     document.getElementById('op-save-msg').textContent = '';
     previewOutdoorProductImage();
+    prepareOutdoorProductGallery(p.id);
     document.getElementById('modal-outdoor-product').classList.add('open');
+}
+function prepareOutdoorProductGallery(productId) {
+    const list = document.getElementById('op-gallery-list');
+    const button = document.getElementById('op-gallery-upload-btn');
+    const status = document.getElementById('op-gallery-upload-status');
+    list.innerHTML = '';
+    status.textContent = '';
+    button.style.display = productId ? 'inline-flex' : 'none';
+    if (!productId) {
+        status.textContent = 'Save the new product first, then edit it again to add more photos.';
+        return;
+    }
+    loadOutdoorProductGallery(productId);
+}
+async function loadOutdoorProductGallery(productId) {
+    const list = document.getElementById('op-gallery-list');
+    list.innerHTML = '<span style="color:#888">Loading photos...</span>';
+    const prefix = `product-gallery-${productId}-`;
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?slug=like.${encodeURIComponent(prefix + '*')}&order=sort_order`, { headers: headers(true) });
+    const rows = res.ok ? await res.json() : [];
+    list.innerHTML = '';
+    rows.forEach(function(photo, index) {
+        const card = document.createElement('div');
+        card.style.cssText = 'position:relative;border:1px solid #ddd;border-radius:8px;overflow:hidden;background:#f5f5f5';
+        const img = document.createElement('img');
+        img.src = photo.image_url;
+        img.alt = photo.label || 'Additional product photo';
+        img.style.cssText = 'width:100%;height:90px;object-fit:cover;display:block';
+        const orderControls = document.createElement('div');
+        orderControls.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:6px;background:#fff';
+        const earlier = document.createElement('button');
+        earlier.type = 'button';
+        earlier.className = 'btn-order';
+        earlier.textContent = '← Earlier';
+        earlier.disabled = index === 0;
+        earlier.onclick = function() { moveOutdoorGalleryPhoto(productId, rows, index, -1); };
+        const later = document.createElement('button');
+        later.type = 'button';
+        later.className = 'btn-order';
+        later.textContent = 'Later →';
+        later.disabled = index === rows.length - 1;
+        later.onclick = function() { moveOutdoorGalleryPhoto(productId, rows, index, 1); };
+        orderControls.append(earlier, later);
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.textContent = 'Remove';
+        remove.style.cssText = 'width:100%;border:0;padding:7px;background:#fff;color:#c0392b;cursor:pointer;font-weight:600';
+        remove.onclick = function() { deleteOutdoorGalleryPhoto(photo.id, productId); };
+        card.append(img, orderControls, remove);
+        list.appendChild(card);
+    });
+    if (!rows.length) list.innerHTML = '<span style="color:#888;grid-column:1/-1">No additional photos yet.</span>';
+}
+async function moveOutdoorGalleryPhoto(productId, photos, currentIndex, direction) {
+    const targetIndex = currentIndex + direction;
+    if (targetIndex < 0 || targetIndex >= photos.length) return;
+
+    const reordered = photos.slice();
+    [reordered[currentIndex], reordered[targetIndex]] = [reordered[targetIndex], reordered[currentIndex]];
+
+    const list = document.getElementById('op-gallery-list');
+    const status = document.getElementById('op-gallery-upload-status');
+    list.style.pointerEvents = 'none';
+    list.style.opacity = '.6';
+    status.textContent = 'Saving photo order...';
+
+    const responses = await Promise.all(reordered.map((photo, index) =>
+        fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?id=eq.${photo.id}`, {
+            method: 'PATCH',
+            headers: { ...headers(true), 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ sort_order: index + 1 })
+        })
+    ));
+
+    list.style.pointerEvents = '';
+    list.style.opacity = '';
+    if (responses.some(response => !response.ok)) {
+        status.textContent = 'Photo order could not be saved. Please try again.';
+        return;
+    }
+
+    status.textContent = 'Photo order saved!';
+    await loadOutdoorProductGallery(productId);
+}
+async function uploadOutdoorGalleryPhotos(input) {
+    const productId = document.getElementById('op-edit-id').value;
+    const files = Array.from(input.files || []);
+    if (!productId || !files.length) return;
+    const status = document.getElementById('op-gallery-upload-status');
+    const productName = document.getElementById('op-edit-name').value || 'Outdoor product';
+    status.textContent = `Uploading 0 of ${files.length}...`;
+    try {
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const ext = file.name.split('.').pop();
+            const stamp = Date.now() + '-' + i;
+            const filename = `outdoor-products/${productId}/gallery/${stamp}.${ext}`;
+            const form = new FormData();
+            form.append('file', file);
+            form.append('path', filename);
+            form.append('token', accessToken || '');
+            form.append('galleryProductId', productId);
+            form.append('gallerySlug', `product-gallery-${productId}-${stamp}`);
+            form.append('galleryLabel', `${productName} additional photo`);
+            form.append('gallerySortOrder', String(Math.floor(Date.now() / 1000) + i));
+            const uploadRes = await fetch('/api/upload', { method: 'POST', body: form });
+            if (!uploadRes.ok) {
+                const uploadError = await uploadRes.json().catch(() => ({}));
+                throw new Error(uploadError.error || uploadError.message || 'Photo upload failed');
+            }
+            status.textContent = `Uploading ${i + 1} of ${files.length}...`;
+        }
+        status.textContent = 'Additional photos uploaded!';
+        await loadOutdoorProductGallery(productId);
+    } catch (err) {
+        status.textContent = 'Upload failed: ' + err.message;
+    }
+    input.value = '';
+}
+async function deleteOutdoorGalleryPhoto(photoId, productId) {
+    if (!confirm('Remove this additional photo?')) return;
+    const res = await fetch('/api/delete-outdoor-gallery', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: photoId, token: accessToken || '' })
+    });
+    if (res.ok) loadOutdoorProductGallery(productId);
+}
+function addOutdoorFeature(value) {
+    const row = document.createElement('div');
+    row.className = 'feature-row';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'op-feature-input';
+    input.placeholder = 'Enter one feature';
+    input.value = typeof value === 'string' ? value : '';
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'btn-remove-feature';
+    remove.textContent = '−';
+    remove.title = 'Remove feature';
+    remove.onclick = function() { row.remove(); };
+    row.append(input, remove);
+    document.getElementById('op-feature-list').appendChild(row);
 }
 function closeOutdoorProductModal() {
     document.getElementById('modal-outdoor-product').classList.remove('open');
@@ -1391,7 +1733,8 @@ async function saveOutdoorProduct() {
 
     const payload = {
         name: document.getElementById('op-edit-name').value,
-        description: document.getElementById('op-edit-description').value || null,
+        category: document.getElementById('op-edit-category').value,
+        description: Array.from(document.querySelectorAll('.op-feature-input')).map(input => input.value.trim()).filter(Boolean).join('\n') || null,
         image_url: document.getElementById('op-edit-image').value || null,
         active: document.getElementById('op-edit-active').checked,
     };
@@ -1979,6 +2322,23 @@ async function uploadPhoto(input) {
 
 // HOME SHOWCASE MANAGEMENT
 let showcaseCache = {};
+let showcaseProducts = [];
+const SHOWCASE_LINK_MARKER = '|||link:';
+
+function parseShowcaseLabel(value) {
+    const text = value || '';
+    const markerIndex = text.indexOf(SHOWCASE_LINK_MARKER);
+    return markerIndex === -1
+        ? { label: text, link: '' }
+        : {
+            label: text.slice(0, markerIndex),
+            link: text.slice(markerIndex + SHOWCASE_LINK_MARKER.length)
+        };
+}
+
+function encodeShowcaseLabel(label, link) {
+    return link ? `${label}${SHOWCASE_LINK_MARKER}${link}` : label;
+}
 
 async function loadShowcase() {
     const loading = document.getElementById('loading-showcase');
@@ -1993,18 +2353,78 @@ async function loadShowcase() {
     showcaseCache = {};
     rows.forEach(r => { showcaseCache[r.id] = r; });
 
-    grid.innerHTML = rows.map(r => `
+    grid.innerHTML = rows.map(r => {
+        const showcase = parseShowcaseLabel(r.label);
+        return `
         <div class="style-card">
             <div class="style-card-img" style="${r.image_url ? 'background-image:url(' + r.image_url + ')' : ''}"></div>
             <div class="style-card-body">
-                <div class="style-card-name">${r.label || 'No Label'}</div>
+                <div class="style-card-name">${showcase.label || 'No Label'}</div>
                 <button class="btn-edit" onclick="openShowcaseModalById('${r.id}')">Edit</button>
             </div>
         </div>
-    `).join('');
+    `; }).join('');
 
     loading.style.display = 'none';
     grid.style.display = 'grid';
+    loadShowcaseProducts();
+}
+
+async function loadShowcaseProducts() {
+    if (showcaseProducts.length) return;
+    const [doorsRes, flooringRes, outdoorRes] = await Promise.all([
+        fetch(`${SUPABASE_URL}/rest/v1/door_styles?active=eq.true&order=sort_order&select=id,code,name,banner_image,image_url`, { headers: headers(true) }),
+        fetch(`${SUPABASE_URL}/rest/v1/flooring_products?active=eq.true&order=category,sort_order&select=id,name,image_url`, { headers: headers(true) }),
+        fetch(`${SUPABASE_URL}/rest/v1/outdoor_products?active=eq.true&order=sort_order&select=id,name,image_url`, { headers: headers(true) })
+    ]);
+    const [doors, flooring, outdoor] = await Promise.all([
+        doorsRes.ok ? doorsRes.json() : [],
+        flooringRes.ok ? flooringRes.json() : [],
+        outdoorRes.ok ? outdoorRes.json() : []
+    ]);
+    showcaseProducts = [
+        ...(doors || []).map(p => ({
+            key: `door:${p.id}`,
+            group: 'Cabinet Doors',
+            label: p.name,
+            image: p.banner_image || p.image_url || '',
+            link: `door-style-detail.html?code=${String(p.code || '').toLowerCase()}`
+        })),
+        ...(flooring || []).map(p => ({
+            key: `flooring:${p.id}`,
+            group: 'Flooring',
+            label: p.name,
+            image: p.image_url || '',
+            link: `flooring-product-detail.html?id=${p.id}`
+        })),
+        ...(outdoor || []).map(p => ({
+            key: `outdoor:${p.id}`,
+            group: 'Outdoor Living',
+            label: p.name,
+            image: p.image_url || '',
+            link: `outdoor-product-detail.html?id=${p.id}`
+        }))
+    ];
+    const select = document.getElementById('showcase-product-select');
+    const groups = ['Cabinet Doors', 'Flooring', 'Outdoor Living'];
+    select.innerHTML = '<option value="">Choose a cabinet door, flooring item, or outdoor product...</option>' +
+        groups.map(group => {
+            const options = showcaseProducts
+                .filter(p => p.group === group)
+                .map(p => `<option value="${p.key}">${p.label}</option>`)
+                .join('');
+            return options ? `<optgroup label="${group}">${options}</optgroup>` : '';
+        }).join('');
+}
+
+function applyShowcaseProduct() {
+    const key = document.getElementById('showcase-product-select').value;
+    const product = showcaseProducts.find(p => p.key === key);
+    if (!product) return;
+    document.getElementById('showcase-edit-label').value = product.label;
+    document.getElementById('showcase-edit-image').value = product.image;
+    document.getElementById('showcase-edit-link').value = product.link;
+    previewShowcaseImage();
 }
 
 function openShowcaseModalById(id) {
@@ -2014,15 +2434,20 @@ function openShowcaseModalById(id) {
 }
 
 function openNewShowcaseModal() {
-    openShowcaseModal({ id: '', label: '', image_url: '', sort_order: 10 });
+    openShowcaseModal({ id: '', label: '', image_url: '', alt_text: '', sort_order: 10 });
 }
 
-function openShowcaseModal(row) {
+async function openShowcaseModal(row) {
+    await loadShowcaseProducts();
+    const showcase = parseShowcaseLabel(row.label);
     document.getElementById('showcase-edit-id').value = row.id;
     const isNew = !row.id;
-    document.getElementById('modal-showcase-title').textContent = isNew ? 'Add Showcase Photo' : 'Edit Showcase Photo';
-    document.getElementById('showcase-edit-label').value = row.label || '';
+    document.getElementById('modal-showcase-title').textContent = isNew ? 'Add Showcase Item' : 'Edit Showcase Item';
+    document.getElementById('showcase-product-select').value = '';
+    document.getElementById('showcase-edit-label').value = showcase.label;
     document.getElementById('showcase-edit-image').value = row.image_url || '';
+    document.getElementById('showcase-edit-link').value = showcase.link ||
+        (/^https?:\/\/|^[\w-]+\.html(?:\?|$)/.test(row.alt_text || '') ? row.alt_text : '');
     document.getElementById('showcase-edit-sort').value = row.sort_order || 10;
     document.getElementById('btn-delete-showcase').style.display = isNew ? 'none' : 'block';
     document.getElementById('showcase-save-msg').textContent = '';
@@ -2077,8 +2502,10 @@ async function saveShowcase() {
     btn.disabled = true;
     btn.textContent = 'Saving...';
 
+    const displayLabel = document.getElementById('showcase-edit-label').value;
+    const productLink = document.getElementById('showcase-edit-link').value.trim();
     const payload = {
-        label: document.getElementById('showcase-edit-label').value,
+        label: encodeShowcaseLabel(displayLabel, productLink),
         image_url: document.getElementById('showcase-edit-image').value,
         sort_order: parseInt(document.getElementById('showcase-edit-sort').value) || 10
     };
@@ -2096,7 +2523,8 @@ async function saveShowcase() {
         await loadShowcase();
         setTimeout(closeShowcaseModal, 1000);
     } else {
-        msg.textContent = '❌ Error saving.';
+        const error = await res.json().catch(() => ({}));
+        msg.textContent = '❌ Error saving: ' + (error.message || `HTTP ${res.status}`);
         msg.className = 'save-msg error';
     }
     btn.disabled = false;
