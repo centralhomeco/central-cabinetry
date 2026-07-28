@@ -261,8 +261,8 @@ function filterFlooring() {
     const cards = document.querySelectorAll('.product-card');
     let visible = 0;
     cards.forEach(function(card) {
-        const text = card.innerText.toLowerCase();
-        const match = !q || text.includes(q);
+        const text = card.dataset.search || card.innerText;
+        const match = !q || searchTextMatches(q, text);
         card.style.display = match ? '' : 'none';
         if (match) visible++;
     });
@@ -299,8 +299,17 @@ function filterFlooring() {
 
     // Product catalog (unlimited items, grouped by section then collection)
     function productCardHtml(p) {
+        const sectionLabel = { hardwood: 'Engineered Hardwood Flooring wood natural oak hickory', wpc: 'WPC Luxury Vinyl Plank vinyl waterproof comfort', spc: 'LVP Luxury Vinyl Plank SPC vinyl waterproof rigid' };
+        const searchText = [
+            p.name,
+            p.size,
+            p.collection,
+            p.category,
+            sectionLabel[p.category],
+            'flooring floors'
+        ].filter(Boolean).join(' ');
         return `
-                <a class="product-card" href="flooring-product-detail.html?id=${p.id}" style="text-decoration:none;color:inherit;display:block">
+                <a class="product-card" href="flooring-product-detail.html?id=${p.id}" data-search="${searchText.toLowerCase().replace(/"/g, '&quot;')}" style="text-decoration:none;color:inherit;display:block">
                     <div class="product-card-photo">
                         <img src="${p.image_url || ''}" alt="${p.name}">
                         ${p.corner_image_url ? `<img class="flooring-corner-badge ${p.corner_position === 'top-right' ? 'top-right' : 'top-left'}" src="${p.corner_image_url}" alt="">` : ''}
@@ -346,6 +355,11 @@ function filterFlooring() {
         renderGroupedGrid(document.getElementById('hardwood-collections'), all.filter(p => p.category === 'hardwood'));
         renderSimpleGrid(document.getElementById('wpc-products'), all.filter(p => p.category === 'wpc'));
         renderSimpleGrid(document.getElementById('spc-products'), all.filter(p => p.category === 'spc'));
+        const initialQuery = new URLSearchParams(window.location.search).get('q');
+        if (initialQuery) {
+            document.getElementById('floorSearch').value = initialQuery;
+            filterFlooring();
+        }
     })
     .catch(function(err) { console.error('Flooring products load error:', err); });
 })();
