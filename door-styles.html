@@ -151,6 +151,11 @@ async function loadDoorStyles() {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('ds-grid').style.display = 'grid';
         document.getElementById('searchCount').textContent = allStyles.length + ' styles available';
+        const initialQuery = new URLSearchParams(window.location.search).get('q');
+        if (initialQuery) {
+            document.getElementById('searchInput').value = initialQuery;
+            filterStyles();
+        }
     } catch(err) {
         document.getElementById('loading').textContent = 'Error loading. Please refresh.';
     }
@@ -176,10 +181,8 @@ function filterStyles() {
     const cards = document.querySelectorAll('.ds-listing-card');
     let visible = 0;
     cards.forEach(card => {
-        const match = !q ||
-            card.dataset.name.includes(q) ||
-            card.dataset.type.includes(q) ||
-            card.dataset.code.includes(q);
+        const text = [card.dataset.name, card.dataset.type, card.dataset.code].join(' ');
+        const match = !q || searchTextMatches(q, text);
         card.style.display = match ? '' : 'none';
         if (match) visible++;
     });

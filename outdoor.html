@@ -383,8 +383,8 @@ function filterOutdoor() {
     }
     let visible = 0;
     document.querySelectorAll('.product-card, .kitchen-card').forEach(function(card) {
-        const text = card.innerText.toLowerCase();
-        const match = text.includes(q);
+        const text = card.dataset.search || card.innerText;
+        const match = searchTextMatches(q, text);
         card.style.display = match ? '' : 'none';
         if (match) visible++;
     });
@@ -425,7 +425,7 @@ function filterOutdoor() {
             if (!items.length) return '<p style="color:#888">No products listed yet.</p>';
             return items.map(function(p) {
             return `
-                <a href="outdoor-product-detail.html?id=${p.id}" class="product-card" style="text-decoration:none;color:inherit;display:block;cursor:pointer">
+                <a href="outdoor-product-detail.html?id=${p.id}" class="product-card" data-search="${[p.name, p.category, 'outdoor patio backyard kitchen grill bbq furniture chair sofa chaise table'].filter(Boolean).join(' ').toLowerCase().replace(/"/g, '&quot;')}" style="text-decoration:none;color:inherit;display:block;cursor:pointer">
                     <img src="${p.image_url || ''}" alt="${p.name}">
                     <div class="product-card-body">
                         <div class="product-card-name">${p.name}</div>
@@ -439,6 +439,11 @@ function filterOutdoor() {
         const furnitureContainer = document.getElementById('furniture-products');
         if (kitchenContainer) kitchenContainer.innerHTML = productCards(kitchenProducts);
         if (furnitureContainer) furnitureContainer.innerHTML = productCards(furnitureProducts);
+        const initialQuery = new URLSearchParams(window.location.search).get('q');
+        if (initialQuery) {
+            document.getElementById('outdoorSearch').value = initialQuery;
+            filterOutdoor();
+        }
     })
     .catch(function(err) { console.error('Outdoor products load error:', err); });
 })();

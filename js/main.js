@@ -184,6 +184,59 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
 
 
 // SEARCH FUNCTIONALITY
+const SEARCH_ALIASES = [
+    ['cabinet', 'cabinets', 'cabinetry', 'door', 'doors', 'shaker', 'raised panel', 'flat panel', 'slab'],
+    ['white', 'cream', 'ivory', 'painted', 'light'],
+    ['gray', 'grey', 'greige', 'charcoal'],
+    ['brown', 'wood', 'stain', 'stained', 'natural', 'oak', 'walnut', 'hickory'],
+    ['floor', 'flooring', 'floors', 'hardwood', 'wood floor', 'engineered wood', 'engineered hardwood', 'natdura'],
+    ['vinyl', 'lvp', 'luxury vinyl', 'luxury vinyl plank', 'spc', 'wpc', 'waterproof', 'unicore'],
+    ['outdoor', 'patio', 'backyard', 'outside', 'exterior'],
+    ['kitchen', 'grill', 'grilling', 'bbq', 'barbecue', 'island', 'sink', 'refrigerator', 'fridge'],
+    ['furniture', 'chair', 'chairs', 'sofa', 'sectional', 'chaise', 'lounge', 'table', 'dining', 'conversation']
+];
+
+function normalizeSearchText(value) {
+    return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function getSearchTerms(query) {
+    const normalized = normalizeSearchText(query);
+    if (!normalized) return [];
+    const terms = normalized.split(/\s+/).filter(Boolean);
+    SEARCH_ALIASES.forEach(function(group) {
+        const normalizedGroup = group.map(normalizeSearchText);
+        const hasGroupMatch = normalizedGroup.some(function(alias) {
+            return normalized === alias || normalized.includes(alias) || alias.includes(normalized) || terms.includes(alias);
+        });
+        if (hasGroupMatch) {
+            normalizedGroup.forEach(function(alias) {
+                alias.split(/\s+/).forEach(function(word) {
+                    if (word && !terms.includes(word)) terms.push(word);
+                });
+            });
+        }
+    });
+    return terms;
+}
+
+function searchTextMatches(query, text) {
+    const normalizedQuery = normalizeSearchText(query);
+    if (!normalizedQuery) return true;
+    const normalizedText = normalizeSearchText(text);
+    if (!normalizedText) return false;
+    if (normalizedText.includes(normalizedQuery)) return true;
+
+    return getSearchTerms(normalizedQuery).some(function(term) {
+        if (term.length < 2) return false;
+        if (normalizedText.includes(term)) return true;
+        return normalizedText.split(/\s+/).some(function(word) {
+            if (word.length < 4 || term.length < 4) return false;
+            return word.includes(term) || term.includes(word);
+        });
+    });
+}
+
 function initSearch() {
     const searchInputs = document.querySelectorAll('.header-search input');
     const searchBtns = document.querySelectorAll('.header-search-btn');
@@ -191,14 +244,12 @@ function initSearch() {
     function handleSearch(input) {
         const query = input.value.trim().toLowerCase();
         if (!query) return;
-        
-        // Simple redirection to search results or a specific page
-        // For now, let's redirect to cabinets if searching for cabinets, etc.
-        if (query.includes('cabinet') || query.includes('door')) {
+
+        if (searchTextMatches(query, 'cabinet cabinets cabinetry door doors shaker raised panel flat panel slab')) {
             window.location.href = 'door-styles.html?q=' + encodeURIComponent(query);
-        } else if (query.includes('floor')) {
+        } else if (searchTextMatches(query, 'floor flooring floors hardwood engineered wood vinyl lvp spc wpc waterproof')) {
             window.location.href = 'flooring.html?q=' + encodeURIComponent(query);
-        } else if (query.includes('outdoor') || query.includes('kitchen')) {
+        } else if (searchTextMatches(query, 'outdoor patio backyard outside kitchen grill bbq furniture sofa chaise chair table')) {
             window.location.href = 'outdoor.html?q=' + encodeURIComponent(query);
         } else {
             // Default to door styles for now
