@@ -1924,6 +1924,18 @@ async function loadOutdoorImages() {
     const loading = document.getElementById('loading-outdoor');
 
     outdoorCache = {};
+    if (!rows.some(r => r.slug === 'outdoor-kitchen-hero')) {
+        const storageRow = rows.find(r => r.slug === 'outdoor-kitchen-2') || {};
+        rows.unshift({
+            id: '__new_outdoor-kitchen-hero',
+            slug: 'outdoor-kitchen-hero',
+            label: 'Outdoor Kitchens Hero',
+            image_url: storageRow.image_url || 'images/outdoor-kitchen-2.jpg',
+            sort_order: 0,
+            is_new: true
+        });
+    }
+
     rows.forEach(r => { outdoorCache[r.id] = r; });
 
     function cardHtml(r) {
@@ -2003,18 +2015,24 @@ async function saveOutdoorImage() {
     btn.textContent = 'Saving...';
     msg.textContent = '';
 
+    const row = outdoorCache[id];
+    const isNewOutdoorImage = row && row.is_new;
     const payload = {
         label: document.getElementById('outdoor-edit-label').value,
         image_url: document.getElementById('outdoor-edit-image').value || null
     };
 
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?id=eq.${id}`, {
-        method: 'PATCH',
+    if (isNewOutdoorImage) {
+        payload.slug = row.slug;
+        payload.sort_order = row.sort_order || 0;
+    }
+
+    const res = await fetch(isNewOutdoorImage ? `${SUPABASE_URL}/rest/v1/outdoor_images` : `${SUPABASE_URL}/rest/v1/outdoor_images?id=eq.${id}`, {
+        method: isNewOutdoorImage ? 'POST' : 'PATCH',
         headers: { ...headers(true), 'Prefer': 'return=minimal' },
         body: JSON.stringify(payload)
     });
 
-    const row = outdoorCache[id];
     const textKeyPrefix = row ? KITCHEN_CARD_TEXT_MAP[row.slug] : null;
     let textOk = true;
     if (textKeyPrefix) {
