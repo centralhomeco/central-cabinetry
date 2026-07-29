@@ -132,6 +132,9 @@
 (async function loadAboutContent() {
     const SUPABASE_URL = 'https://apxelbabvviuwqpfivtr.supabase.co';
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFweGVsYmFidnZpdXdxcGZpdnRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2NjEyOTYsImV4cCI6MjA5OTIzNzI5Nn0.EWt2FRAkJH86Is9P_uDjKDXnJ0O1J2qdg_BuctQavvY';
+    function cleanAboutText(value) {
+        return String(value || '').replace('Central Home Good is', 'Central Home is');
+    }
     try {
         const res = await fetch(`${SUPABASE_URL}/rest/v1/about_content?id=eq.1&select=*`, {
             headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
@@ -141,8 +144,8 @@
         if (!c) return;
 
         if (c.intro_title) document.getElementById('about-title').textContent = c.intro_title;
-        if (c.intro_body_1) document.getElementById('about-body-1').textContent = c.intro_body_1;
-        if (c.intro_body_2) document.getElementById('about-body-2').textContent = c.intro_body_2;
+        if (c.intro_body_1) document.getElementById('about-body-1').textContent = cleanAboutText(c.intro_body_1);
+        if (c.intro_body_2) document.getElementById('about-body-2').textContent = cleanAboutText(c.intro_body_2);
         if (Array.isArray(c.differentials) && c.differentials.length) {
             document.getElementById('about-differentials').innerHTML =
                 c.differentials.map(d => `<li>&#9989; ${d}</li>`).join('');

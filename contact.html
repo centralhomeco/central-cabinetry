@@ -134,5 +134,24 @@
 </footer>
 <script src="js/main.js"></script>
 <script src="js/site-content.js"></script>
+<script>
+(function prefillContactForm() {
+    const params = new URLSearchParams(window.location.search);
+    const category = (params.get('category') || '').toLowerCase();
+    const product = params.get('product') || '';
+    const topic = document.querySelector('select[name="topic"]');
+    const message = document.querySelector('textarea[name="message"]');
+
+    if (topic && category) {
+        if (category === 'flooring') topic.value = 'Other';
+        else if (category === 'outdoor') topic.value = 'Other';
+        else topic.value = 'Kitchen Cabinets';
+    }
+
+    if (message && product) {
+        message.value = `I would like more information about ${product}.`;
+    }
+})();
+</script>
 </body>
 </html>

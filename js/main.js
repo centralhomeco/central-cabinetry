@@ -263,9 +263,21 @@ function initSearch() {
     });
 }
 
+function initFooterMemberBadge() {
+    const footerCol = document.querySelector('footer .footer-col');
+    if (!footerCol || footerCol.querySelector('.footer-member-badge')) return;
+
+    const badge = document.createElement('img');
+    badge.className = 'footer-member-badge';
+    badge.src = 'images/myrtle-beach-chamber-member-2026-2027.jpg';
+    badge.alt = '2026-2027 Myrtle Beach Area Chamber of Commerce member';
+    footerCol.appendChild(badge);
+}
+
 window.addEventListener('DOMContentLoaded', function() {
     initHero();
     initSearch();
+    initFooterMemberBadge();
     // initShowcase();
 
     // Inner Image Zoom Feature

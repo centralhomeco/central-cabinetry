@@ -36,7 +36,7 @@
                 return;
             }
 
-            document.title = `${p.name} | Central Home Good`;
+            document.title = `${p.name} | Central Home`;
             document.querySelectorAll('[data-ck="page-title"]').forEach(function(el) { el.textContent = p.name; });
             document.querySelectorAll('[data-ck="breadcrumb-name"]').forEach(function(el) { el.textContent = p.name; });
 
@@ -71,6 +71,11 @@
                 descEl.style.display = 'block';
             } else {
                 descEl.style.display = 'none';
+            }
+
+            const inquiryLink = document.getElementById('product-inquiry-link');
+            if (inquiryLink) {
+                inquiryLink.href = 'contact.html?category=flooring&product=' + encodeURIComponent(p.name);
             }
         })
         .catch(function(err) { console.error('Flooring product load error:', err); });
