@@ -16,12 +16,6 @@
         .breadcrumb a{color:#666;text-decoration:none}
 
 
-        .search-bar{padding:16px 0 0}
-        .search-input-wrap{position:relative;max-width:500px;margin-bottom:24px}
-        .search-input-wrap input{width:100%;padding:12px 16px 12px 44px;border:2px solid #ddd;border-radius:8px;font-size:15px;font-family:inherit;transition:.2s}
-        .search-input-wrap input:focus{outline:none;border-color:#2A6496}
-        .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#888;font-size:18px}
-        .search-count{font-size:13px;color:#888;margin-top:-16px;margin-bottom:16px}
         .no-results-msg{text-align:center;padding:40px;color:#888;display:none}
         .flooring-tabs{display:flex;gap:0;border-bottom:2px solid #eee;margin-bottom:40px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
         .flooring-tabs::-webkit-scrollbar{display:none}
@@ -125,16 +119,6 @@
             <button class="flooring-tab" onclick="showTab('wpc')">WPC Luxury Vinyl Plank</button>
             <button class="flooring-tab" onclick="showTab('spc')">LVP Luxury Vinyl Plank</button>
         </div>
-
-
-        <!-- SEARCH BAR -->
-        <div class="search-bar">
-            <div class="search-input-wrap">
-                <span class="search-icon">&#128269;</span>
-                <input type="text" id="floorSearch" placeholder="Search flooring... e.g. Oak, Hickory, WPC, 8mm" oninput="filterFlooring()">
-            </div>
-        </div>
-        <div class="search-count" id="floorCount"></div>
 
         <!-- TAB: ENGINEERED HARDWOOD -->
         <div id="tab-hardwood" class="tab-content active">
@@ -257,7 +241,7 @@
 
 <script>
 function filterFlooring() {
-    const q = document.getElementById('floorSearch').value.toLowerCase().trim();
+    const q = (new URLSearchParams(window.location.search).get('q') || '').toLowerCase().trim();
     const cards = document.querySelectorAll('.product-card');
     let visible = 0;
     cards.forEach(function(card) {
@@ -267,9 +251,6 @@ function filterFlooring() {
         if (match) visible++;
     });
     const noRes = document.getElementById('floorNoResults');
-    document.getElementById('floorCount').textContent = q
-        ? visible + ' product' + (visible !== 1 ? 's' : '') + ' found for "' + q + '"'
-        : '';
     if (noRes) noRes.style.display = visible === 0 ? 'block' : 'none';
 }
 </script>
@@ -357,7 +338,6 @@ function filterFlooring() {
         renderSimpleGrid(document.getElementById('spc-products'), all.filter(p => p.category === 'spc'));
         const initialQuery = new URLSearchParams(window.location.search).get('q');
         if (initialQuery) {
-            document.getElementById('floorSearch').value = initialQuery;
             filterFlooring();
         }
     })
