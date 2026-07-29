@@ -34,12 +34,17 @@
                 return;
             }
 
-            document.title = `${p.name} | Central Home Good`;
+            document.title = `${p.name} | Central Home`;
             document.querySelectorAll('[data-ck="page-title"]').forEach(function(el) { el.textContent = p.name; });
             document.querySelectorAll('[data-ck="breadcrumb-name"]').forEach(function(el) { el.textContent = p.name; });
 
             const img = document.querySelector('[data-ck="product-image"]');
             if (img && p.image_url) img.src = p.image_url;
+
+            const inquiryLink = document.getElementById('product-inquiry-link');
+            if (inquiryLink) {
+                inquiryLink.href = 'contact.html?category=outdoor&product=' + encodeURIComponent(p.name);
+            }
 
             const rowsToShow = [
                 ['Category', p.category || 'Outdoor Furniture'],

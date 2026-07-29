@@ -41,7 +41,7 @@
                 return;
             }
 
-            document.title = `${s.name} | Central Home Good`;
+            document.title = `${s.name} | Central Home`;
             document.querySelectorAll('[data-ck="page-title"]').forEach(function(el) { el.textContent = `(${s.code}) ${s.name}`; });
             document.querySelectorAll('[data-ck="breadcrumb-name"]').forEach(function(el) { el.textContent = s.name; });
             document.querySelectorAll('[data-ck="spec-style"]').forEach(function(el) { el.textContent = s.style_type; });
@@ -60,6 +60,11 @@
 
             const swatch = document.querySelector('[data-ck="swatch-image"]');
             if (swatch && s.image_url) { swatch.src = s.image_url; swatch.alt = s.name + ' door swatch'; }
+
+            const inquiryLink = document.getElementById('product-inquiry-link');
+            if (inquiryLink) {
+                inquiryLink.href = 'contact.html?category=cabinets&product=' + encodeURIComponent(`(${s.code}) ${s.name}`);
+            }
 
             // Related styles: same style_type, excluding this one
             fetch(`${SUPABASE_URL}/rest/v1/door_styles?style_type=eq.${encodeURIComponent(s.style_type)}&active=eq.true&order=sort_order`, { headers: h() })
