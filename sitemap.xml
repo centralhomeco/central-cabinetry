@@ -41,6 +41,21 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.centralhomeco.com/kitchen-cabinets-myrtle-beach.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.centralhomeco.com/flooring-myrtle-beach.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.centralhomeco.com/outdoor-kitchens-myrtle-beach.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.centralhomeco.com/door-style-detail.html?code=ab</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
