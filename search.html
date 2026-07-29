@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results | Central Home</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png">
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <style>
+        .search-banner{background:#1A1A2E;padding:48px 40px 32px}
+        .search-banner p{color:#888;font-size:13px;margin-bottom:8px}
+        .search-banner a{color:#666;text-decoration:none}
+        .search-banner h1{color:#fff;font-size:36px;font-weight:800;margin:0}
+        .search-banner .search-subtitle{color:#aaa;margin-top:6px;font-size:15px}
+        .search-summary{font-size:16px;color:#555;margin-bottom:28px}
+        .search-results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+        .search-card{border:1px solid #eee;border-radius:8px;overflow:hidden;background:#fff;text-decoration:none;color:inherit;display:block;transition:box-shadow .2s}
+        .search-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+        .search-card-img{height:190px;background:#f0f0f0;background-size:cover;background-position:center;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+        .search-card-img img{width:100%;height:100%;object-fit:cover;display:block}
+        .search-card-img.contain img{object-fit:contain;padding:12px;box-sizing:border-box;background:#f7f7f7}
+        .search-card-body{padding:15px 16px 16px}
+        .search-type{font-size:11px;font-weight:800;text-transform:uppercase;color:#2A6496;letter-spacing:0;margin-bottom:6px}
+        .search-name{font-size:16px;font-weight:700;color:#1A1A2E;margin-bottom:4px}
+        .search-detail{font-size:13px;color:#777;line-height:1.5}
+        .search-empty,.search-loading{text-align:center;padding:54px 20px;color:#888;background:#f7f7f7;border-radius:8px}
+        .search-empty h2{font-size:22px;color:#1A1A2E;margin-bottom:8px}
+        @media(max-width:900px){.search-results-grid{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:560px){.search-results-grid{grid-template-columns:1fr}.search-banner{padding:38px 24px 28px}.search-banner h1{font-size:30px}}
+    </style>
+</head>
+<body data-page="search">
+
+<nav class="navbar">
+    <div class="nav-inner">
+        <a href="index.html" class="branding">
+            <img src="images/logo.png" alt="Central Home Logo" class="logo-img">
+            <div class="logo-text-wrap">
+                <span class="logo-text">Central Home</span>
+                <span class="logo-tagline">CABINETS <span>&bull;</span> FLOORING <span>&bull;</span> OUTDOOR LIVING</span>
+            </div>
+        </a>
+        <div class="nav-links" id="navLinks">
+            <a href="door-styles.html">Cabinets</a>
+            <a href="flooring.html">Flooring</a>
+            <a href="outdoor.html">Outdoor Living</a>
+            <a href="about-us.html">About Us</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+        <div class="nav-right">
+            <div class="header-search">
+                <input type="text" placeholder="Search cabinets, flooring...">
+                <button class="header-search-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </button>
+            </div>
+            <a href="tel:(843) 712-1001" class="nav-phone">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.81 12.81 0 0 0 .62 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.62A2 2 0 0 1 22 16.92z"/></svg>
+                (843) 712-1001
+            </a>
+            <button class="nav-toggle" onclick="toggleMenu()">&#9776;</button>
+        </div>
+    </div>
+</nav>
+
+<div class="floating-bar">
+    <a href="tel:8437121001" title="Call Us">&#128222;</a>
+    <a href="book-appointment.html" title="Book Appointment">&#128197;</a>
+    <a href="mailto:sales@centralhomeco.com" title="Email Us">&#9993;</a>
+</div>
+
+<div class="search-banner">
+    <p><a href="index.html">Home</a> &rsaquo; Search</p>
+    <h1>Search Results</h1>
+    <div class="search-subtitle" id="searchSubtitle">Cabinets, flooring, and outdoor living in one place</div>
+</div>
+
+<section>
+    <div class="container">
+        <div class="search-summary" id="searchSummary"></div>
+        <div id="searchLoading" class="search-loading">Loading results...</div>
+        <div id="searchResults" class="search-results-grid" style="display:none"></div>
+        <div id="searchEmpty" class="search-empty" style="display:none">
+            <h2>No results found</h2>
+            <p>Try another search or contact us for help finding the right product.</p>
+        </div>
+    </div>
+</section>
+
+<section class="cta-dark">
+    <div class="container" style="text-align:center">
+        <h2>Need Help Finding the Right Fit?</h2>
+        <p>Visit our Myrtle Beach showroom or contact us for a free design consultation.</p>
+        <a href="contact.html" class="btn-light">Contact Us</a>
+        <a href="book-appointment.html" class="btn-outline-white">Book Appointment</a>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-col">
+            <h4>Central Home</h4>
+            <p data-ck="footer-address">1297 US-501, Myrtle Beach, SC 29577</p>
+            <p data-ck="footer-phone">(843) 712-1001</p>
+            <p data-ck="footer-email">sales@centralhomeco.com</p>
+            <p data-ck="footer-hours">Monday to Saturday, 9:00am to 5:00pm</p>
+        </div>
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="about-us.html">About Us</a>
+            <a href="door-styles.html">Cabinets</a>
+            <a href="flooring.html">Flooring</a>
+            <a href="outdoor.html">Outdoor Living</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="book-appointment.html">Book Appointment</a>
+        </div>
+        <div class="footer-col">
+            <h4>Products</h4>
+            <a href="door-styles.html">Cabinet Door Styles</a>
+            <a href="flooring.html">Flooring Collections</a>
+            <a href="outdoor.html">Outdoor Kitchens</a>
+            <a href="outdoor.html">Outdoor Furniture</a>
+        </div>
+        <div class="footer-col">
+            <h4>Follow Us</h4>
+            <a href="https://facebook.com/chgcabinets" target="_blank">Facebook</a>
+            <a href="https://instagram.com/central_cabinets" target="_blank">Instagram</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Central Home. All rights reserved. &nbsp;|&nbsp; <a href="admin.html" style="color:inherit;opacity:.55;text-decoration:none;">Admin</a></p>
+    </div>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://apxelbabvviuwqpfivtr.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFweGVsYmFidnZpdXdxcGZpdnRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2NjEyOTYsImV4cCI6MjA5OTIzNzI5Nn0.EWt2FRAkJH86Is9P_uDjKDXnJ0O1J2qdg_BuctQavvY';
+const query = new URLSearchParams(window.location.search).get('q') || '';
+
+function esc(value) {
+    return String(value || '').replace(/[&<>"']/g, function(ch) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+    });
+}
+
+function headers() {
+    return { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON };
+}
+
+function addResult(results, item) {
+    if (searchTextMatches(query, item.searchText)) results.push(item);
+}
+
+function cardHtml(item) {
+    const image = item.image ? `<img src="${esc(item.image)}" alt="${esc(item.name)}">` : '';
+    return `
+        <a class="search-card" href="${esc(item.link)}">
+            <div class="search-card-img ${item.contain ? 'contain' : ''}">${image}</div>
+            <div class="search-card-body">
+                <div class="search-type">${esc(item.type)}</div>
+                <div class="search-name">${esc(item.name)}</div>
+                <div class="search-detail">${esc(item.detail || '')}</div>
+            </div>
+        </a>`;
+}
+
+async function loadSearchResults() {
+    const normalized = normalizeSearchText(query);
+    const input = document.querySelector('.header-search input');
+    if (input) input.value = query;
+    document.getElementById('searchSubtitle').textContent = query ? `Results for "${query}"` : 'Search cabinets, flooring, and outdoor living';
+
+    if (!normalized) {
+        document.getElementById('searchLoading').style.display = 'none';
+        document.getElementById('searchSummary').textContent = 'Enter a search term above to see matching products.';
+        return;
+    }
+
+    try {
+        const [doorRes, flooringRes, outdoorRes] = await Promise.all([
+            fetch(`${SUPABASE_URL}/rest/v1/door_styles?active=eq.true&order=sort_order`, { headers: headers() }),
+            fetch(`${SUPABASE_URL}/rest/v1/flooring_products?active=eq.true&order=sort_order`, { headers: headers() }),
+            fetch(`${SUPABASE_URL}/rest/v1/outdoor_products?active=eq.true&order=sort_order`, { headers: headers() })
+        ]);
+        const [doors, flooring, outdoor] = await Promise.all([
+            doorRes.ok ? doorRes.json() : [],
+            flooringRes.ok ? flooringRes.json() : [],
+            outdoorRes.ok ? outdoorRes.json() : []
+        ]);
+        const results = [];
+
+        (Array.isArray(doors) ? doors : []).forEach(function(p) {
+            addResult(results, {
+                type: 'Cabinets',
+                name: `(${p.code}) ${p.name}`,
+                detail: p.style_type || 'Cabinet door style',
+                image: p.image_url || p.banner_image || '',
+                contain: Boolean(p.image_url),
+                link: `door-style-detail.html?code=${String(p.code || '').toLowerCase()}`,
+                searchText: [p.name, p.style_type, p.code, 'cabinet cabinets cabinetry door doors'].filter(Boolean).join(' ')
+            });
+        });
+
+        (Array.isArray(flooring) ? flooring : []).forEach(function(p) {
+            const section = { hardwood: 'Engineered Hardwood', wpc: 'WPC Luxury Vinyl Plank', spc: 'LVP Luxury Vinyl Plank' }[p.category] || 'Flooring';
+            addResult(results, {
+                type: 'Flooring',
+                name: p.name,
+                detail: [section, p.collection, p.size].filter(Boolean).join(' | '),
+                image: p.image_url || '',
+                link: `flooring-product-detail.html?id=${p.id}`,
+                searchText: [p.name, p.size, p.collection, p.category, section, 'flooring floors hardwood wood oak vinyl lvp spc wpc waterproof'].filter(Boolean).join(' ')
+            });
+        });
+
+        (Array.isArray(outdoor) ? outdoor : []).forEach(function(p) {
+            addResult(results, {
+                type: 'Outdoor Living',
+                name: p.name,
+                detail: p.category || 'Outdoor product',
+                image: p.image_url || '',
+                link: `outdoor-product-detail.html?id=${p.id}`,
+                searchText: [p.name, p.category, 'outdoor patio backyard kitchen grill bbq furniture chair sofa chaise table'].filter(Boolean).join(' ')
+            });
+        });
+
+        document.getElementById('searchLoading').style.display = 'none';
+        document.getElementById('searchSummary').textContent = `${results.length} result${results.length === 1 ? '' : 's'} for "${query}"`;
+        if (results.length) {
+            document.getElementById('searchResults').innerHTML = results.map(cardHtml).join('');
+            document.getElementById('searchResults').style.display = 'grid';
+        } else {
+            document.getElementById('searchEmpty').style.display = 'block';
+        }
+    } catch (err) {
+        document.getElementById('searchLoading').textContent = 'Search results could not load. Please refresh or try again.';
+        console.error('Search load error:', err);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', loadSearchResults);
+</script>
+<script src="js/main.js?v=search-results"></script>
+<script src="js/site-content.js"></script>
+</body>
+</html>

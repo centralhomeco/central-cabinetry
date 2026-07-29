@@ -187,7 +187,7 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
 const SEARCH_ALIASES = [
     ['cabinet', 'cabinets', 'cabinetry', 'door', 'doors'],
     ['shaker'],
-    ['white', 'cream', 'ivory', 'painted', 'light'],
+    ['white', 'cream', 'ivory', 'painted'],
     ['gray', 'grey', 'greige', 'charcoal'],
     ['brown', 'wood', 'stain', 'stained', 'natural', 'oak', 'walnut', 'hickory'],
     ['floor', 'flooring', 'floors', 'hardwood', 'wood floor', 'engineered wood', 'engineered hardwood', 'natdura'],
@@ -226,6 +226,7 @@ function searchTextMatches(query, text) {
     if (!normalizedQuery) return true;
     const normalizedText = normalizeSearchText(text);
     if (!normalizedText) return false;
+    if (normalizedQuery.split(/\s+/).includes('shaker') && !normalizedText.split(/\s+/).includes('shaker')) return false;
     if (normalizedText.includes(normalizedQuery)) return true;
 
     return getSearchTerms(normalizedQuery).some(function(term) {
@@ -246,20 +247,11 @@ function initSearch() {
         const query = input.value.trim().toLowerCase();
         if (!query) return;
 
-        if (searchTextMatches(query, 'cabinet cabinets cabinetry door doors shaker raised panel flat panel slab')) {
-            window.location.href = 'door-styles.html?q=' + encodeURIComponent(query);
-        } else if (searchTextMatches(query, 'floor flooring floors hardwood engineered wood vinyl lvp spc wpc waterproof')) {
-            window.location.href = 'flooring.html?q=' + encodeURIComponent(query);
-        } else if (searchTextMatches(query, 'outdoor patio backyard outside kitchen grill bbq furniture sofa chaise chair table')) {
-            window.location.href = 'outdoor.html?q=' + encodeURIComponent(query);
-        } else {
-            // Default to door styles for now
-            window.location.href = 'door-styles.html?q=' + encodeURIComponent(query);
-        }
+        window.location.href = 'search.html?q=' + encodeURIComponent(query);
     }
 
     searchInputs.forEach(input => {
-        input.addEventListener('keypress', function(e) {
+        input.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') handleSearch(this);
         });
     });
