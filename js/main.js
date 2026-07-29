@@ -185,7 +185,8 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
 
 // SEARCH FUNCTIONALITY
 const SEARCH_ALIASES = [
-    ['cabinet', 'cabinets', 'cabinetry', 'door', 'doors', 'shaker', 'raised panel', 'flat panel', 'slab'],
+    ['cabinet', 'cabinets', 'cabinetry', 'door', 'doors'],
+    ['shaker'],
     ['white', 'cream', 'ivory', 'painted', 'light'],
     ['gray', 'grey', 'greige', 'charcoal'],
     ['brown', 'wood', 'stain', 'stained', 'natural', 'oak', 'walnut', 'hickory'],
