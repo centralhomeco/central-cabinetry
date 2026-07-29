@@ -130,6 +130,9 @@ img{max-width:100%}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
 .diff-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:12px}
 .diff-list li{font-size:14px}
+.member-badge{margin-top:28px}
+.member-badge p{font-size:13px;font-weight:600;color:#555;margin-bottom:12px}
+.member-badge img{display:block;max-width:420px;width:100%;height:auto}
 .about-contact-card{background:var(--gray);padding:28px;border-radius:8px}
 .about-contact-card p{font-size:14px;margin-bottom:10px}
 
