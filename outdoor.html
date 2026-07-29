@@ -16,12 +16,6 @@
         .breadcrumb a{color:#666;text-decoration:none}
 
 
-        .search-bar{padding:16px 0 0}
-        .search-input-wrap{position:relative;max-width:500px;margin-bottom:24px}
-        .search-input-wrap input{width:100%;padding:12px 16px 12px 44px;border:2px solid #ddd;border-radius:8px;font-size:15px;font-family:inherit;transition:.2s}
-        .search-input-wrap input:focus{outline:none;border-color:#2A6496}
-        .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#888;font-size:18px}
-        .search-count{font-size:13px;color:#888;margin-top:-16px;margin-bottom:16px}
         .outdoor-tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:2px solid #eee;margin-bottom:40px}
         .outdoor-tab{padding:12px 24px;font-size:22px;font-weight:800;color:#888;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
         .outdoor-tab.active{color:#2A6496;border-bottom-color:#2A6496}
@@ -135,16 +129,6 @@
 
 <section>
     <div class="container">
-
-
-        <!-- SEARCH BAR -->
-        <div class="search-bar">
-            <div class="search-input-wrap">
-                <span class="search-icon">&#128269;</span>
-                <input type="text" id="outdoorSearch" placeholder="Search outdoor products... e.g. Chaise, Kitchen, Sofa" oninput="filterOutdoor()">
-            </div>
-        </div>
-        <div class="search-count" id="outdoorCount"></div>
 
         <!-- TABS -->
         <div class="outdoor-tabs">
@@ -375,10 +359,9 @@
 
 <script>
 function filterOutdoor() {
-    const q = document.getElementById('outdoorSearch').value.toLowerCase().trim();
+    const q = (new URLSearchParams(window.location.search).get('q') || '').toLowerCase().trim();
     if (!q) {
         document.querySelectorAll('.product-card, .kitchen-card').forEach(function(c){c.style.display='';});
-        document.getElementById('outdoorCount').textContent = '';
         return;
     }
     let visible = 0;
@@ -388,7 +371,6 @@ function filterOutdoor() {
         card.style.display = match ? '' : 'none';
         if (match) visible++;
     });
-    document.getElementById('outdoorCount').textContent = visible + ' product' + (visible !== 1 ? 's' : '') + ' found for "' + q + '"';
 }
 </script>
 <script src="js/main.js"></script>
@@ -441,7 +423,6 @@ function filterOutdoor() {
         if (furnitureContainer) furnitureContainer.innerHTML = productCards(furnitureProducts);
         const initialQuery = new URLSearchParams(window.location.search).get('q');
         if (initialQuery) {
-            document.getElementById('outdoorSearch').value = initialQuery;
             filterOutdoor();
         }
     })
