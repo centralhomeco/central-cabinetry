@@ -8,7 +8,7 @@
     const code = (params.get('code') || '').toUpperCase();
 
     if (!code) {
-        window.location.href = 'door-styles.html';
+        window.location.href = 'cabinet-styles.html';
         return;
     }
 
@@ -37,7 +37,7 @@
         .then(function(rows) {
             const s = rows && rows[0];
             if (!s) {
-                document.getElementById('detail-content').innerHTML = '<p style="padding:60px;text-align:center;color:#888">Door style not found. <a href="door-styles.html">Back to all styles</a></p>';
+                document.getElementById('detail-content').innerHTML = '<p style="padding:60px;text-align:center;color:#888">Door style not found. <a href="cabinet-styles.html">Back to all styles</a></p>';
                 return;
             }
 
