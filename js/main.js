@@ -125,6 +125,7 @@ async function submitContact(e){
         var result=await response.json().catch(function(){return {};});
         if(!response.ok) throw new Error(result.error||'Your message could not be sent.');
         form.reset();
+        if (window.centralHomeTrackLead) window.centralHomeTrackLead('contact_form');
         status.style.color='#155724';
         status.textContent='Thank you! Your message was sent successfully.';
     }catch(error){
@@ -157,6 +158,7 @@ async function submitAppointment(e){
     var res=await fetch('/api/send-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'appointment',name:name,email:email,phone:phone,customerType:customerType,date:date,time:time,appointmentType:appointmentType,notes:notes})});
     var data=await res.json();
     if(res.ok){
+      if (window.centralHomeTrackLead) window.centralHomeTrackLead('appointment_form');
       alert('Appointment confirmed! We will contact you within 24 hours.');
       f.reset();
       nextStep(1);

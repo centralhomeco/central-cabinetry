@@ -78,6 +78,8 @@
             .outdoor-tab{padding:10px 14px;font-size:18px;font-weight:800}
         }
     </style>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17836315268"></script>
+    <script src="js/ads-tracking.js" defer></script>
 </head>
 <body data-page="outdoor">
 
@@ -447,6 +449,7 @@ function showTabDirect(tab) {
 }
 function submitQuote(e) {
     e.preventDefault();
+    if (window.centralHomeTrackLead) window.centralHomeTrackLead('outdoor_quote_form');
     document.getElementById('quote-success').style.display='block';
     e.target.reset();
 }
