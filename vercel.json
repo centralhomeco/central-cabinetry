@@ -18,7 +18,41 @@
       "permanent": true
     },
     {
+      "source": "/door-style-detail.html",
+      "has": [
+        {
+          "type": "query",
+          "key": "code",
+          "value": "ct"
+        }
+      ],
+      "destination": "/cabinet-styles.html",
+      "permanent": true
+    },
+    {
+      "source": "/door-style-detail.html",
+      "has": [
+        {
+          "type": "query",
+          "key": "code",
+          "value": "cs"
+        }
+      ],
+      "destination": "/cabinet-styles.html",
+      "permanent": true
+    },
+    {
       "source": "/door-style-pe.html",
+      "destination": "/cabinet-styles.html",
+      "permanent": true
+    },
+    {
+      "source": "/door-style-ct.html",
+      "destination": "/cabinet-styles.html",
+      "permanent": true
+    },
+    {
+      "source": "/door-style-cs.html",
       "destination": "/cabinet-styles.html",
       "permanent": true
     }
