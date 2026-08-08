@@ -4,6 +4,23 @@
       "source": "/index.html",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/door-style-detail.html",
+      "has": [
+        {
+          "type": "query",
+          "key": "code",
+          "value": "pe"
+        }
+      ],
+      "destination": "/cabinet-styles.html",
+      "permanent": true
+    },
+    {
+      "source": "/door-style-pe.html",
+      "destination": "/cabinet-styles.html",
+      "permanent": true
     }
   ]
 }
