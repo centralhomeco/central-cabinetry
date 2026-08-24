@@ -20,7 +20,7 @@
 <section class="vanity-gallery-section">
     <div class="container">
         <p class="section-sub">Browse vanity and bath cabinet displays available through Central Home.</p>
-        <div class="vanity-gallery-grid">
+        <div class="vanity-gallery-grid" id="vanity-gallery-grid">
             <figure class="vanity-gallery-item">
                 <img src="images/bathroom-vanities/white-vanity-display-angle-1.jpg" alt="White bathroom vanity display with countertop">
                 <figcaption>White vanity display with a clean, bright cabinet finish.</figcaption>
@@ -54,6 +54,54 @@
 </section>
 
 <footer><div class="footer-inner"><div class="footer-col"><h4>Central Home</h4><p data-ck="footer-address">1297 US-501, Myrtle Beach, SC 29577</p><p data-ck="footer-phone">(843) 712-1001</p><p data-ck="footer-email">sales@centralhomeco.com</p><p data-ck="footer-hours">Monday to Saturday, 9:00am to 5:00pm</p></div><div class="footer-col"><h4>Quick Links</h4><a href="about-us.html">About Us</a><a href="cabinet-styles.html">Cabinets</a><a href="flooring.html">Flooring</a><a href="outdoor.html">Outdoor Living</a><a href="contact.html">Contact Us</a></div><div class="footer-col"><h4>Products</h4><a href="kitchen-cabinets-myrtle-beach.html">Kitchen Cabinets Myrtle Beach</a><a href="bathroom-vanities.html">Bathroom Vanities</a><a href="flooring-myrtle-beach.html">Flooring Myrtle Beach</a><a href="outdoor-kitchens-myrtle-beach.html">Outdoor Kitchens Myrtle Beach</a></div><div class="footer-col"><h4>Follow Us</h4><a href="https://facebook.com/chgcabinets" target="_blank">Facebook</a><a href="https://instagram.com/central_cabinets" target="_blank">Instagram</a></div></div><div class="footer-bottom"><p>&copy; 2026 Central Home. All rights reserved.</p></div></footer>
+<script>
+(function() {
+    const SUPABASE_URL = 'https://apxelbabvviuwqpfivtr.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFweGVsYmFidnZpdXdxcGZpdnRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2NjEyOTYsImV4cCI6MjA5OTIzNzI5Nn0.EWt2FRAkJH86Is9P_uDjKDXnJ0O1J2qdg_BuctQavvY';
+    const defaults = [
+        { slug: 'bathroom-vanity-white-angle-1', label: 'White vanity display with a clean, bright cabinet finish.', image_url: 'images/bathroom-vanities/white-vanity-display-angle-1.jpg', sort_order: 1 },
+        { slug: 'bathroom-vanity-gray-white-angle-1', label: 'Gray and white vanity display for a simple bath update.', image_url: 'images/bathroom-vanities/gray-white-vanity-display-angle-1.jpg', sort_order: 2 },
+        { slug: 'bathroom-vanity-gray-front', label: 'Gray vanity cabinet with practical drawer and door storage.', image_url: 'images/bathroom-vanities/gray-vanity-display-front.jpg', sort_order: 3 },
+        { slug: 'bathroom-vanity-white-angle-2', label: 'White vanity option shown from an angled showroom view.', image_url: 'images/bathroom-vanities/white-vanity-display-angle-2.jpg', sort_order: 4 },
+        { slug: 'bathroom-vanity-gray-closeup-1', label: 'Close-up of cabinet finish, hardware, and storage details.', image_url: 'images/bathroom-vanities/gray-vanity-display-closeup-1.jpg', sort_order: 5 },
+        { slug: 'bathroom-vanity-showroom', label: 'Showroom vanity display with countertop and bath storage.', image_url: 'images/bathroom-vanities/central-cabinetry-vanity-showroom.jpg', sort_order: 6 },
+        { slug: 'bathroom-vanity-bath-cabinet-display', label: 'Bath cabinet display for vanity and bathroom storage ideas.', image_url: 'images/bathroom-vanities/central-cabinetry-bath-cabinet-display.jpg', sort_order: 7 }
+    ];
+    function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, function(char) {
+            return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char];
+        });
+    }
+    function mergeRows(rows) {
+        const bySlug = {};
+        (Array.isArray(rows) ? rows : []).forEach(function(row) {
+            if (row.slug) bySlug[row.slug] = row;
+        });
+        const merged = defaults.map(function(photo) {
+            return bySlug[photo.slug] ? { ...photo, ...bySlug[photo.slug] } : photo;
+        });
+        (Array.isArray(rows) ? rows : []).forEach(function(row) {
+            if (row.slug && !defaults.some(function(photo) { return photo.slug === row.slug; })) merged.push(row);
+        });
+        return merged.sort(function(a, b) { return (Number(a.sort_order) || 9999) - (Number(b.sort_order) || 9999); });
+    }
+    function render(rows) {
+        const grid = document.getElementById('vanity-gallery-grid');
+        if (!grid) return;
+        grid.innerHTML = rows.filter(function(row) { return row.image_url; }).map(function(row) {
+            const label = escapeHtml(row.label || '');
+            return `<figure class="vanity-gallery-item"><img src="${escapeHtml(row.image_url)}" alt="${label || 'Bathroom vanity display'}"><figcaption>${label}</figcaption></figure>`;
+        }).join('');
+    }
+
+    fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?slug=like.bathroom-vanity-*&order=sort_order`, {
+        headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
+    })
+    .then(function(res) { return res.ok ? res.json() : []; })
+    .then(function(rows) { render(mergeRows(rows)); })
+    .catch(function(err) { console.error('Vanity photos load error:', err); });
+})();
+</script>
 <script src="js/main.js"></script><script src="js/site-content.js"></script>
 </body>
 </html>

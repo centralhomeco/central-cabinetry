@@ -218,6 +218,7 @@
             <button class="tab-btn" onclick="switchTab('about')" id="tab-btn-about">About Us Page</button>
             <button class="tab-btn" onclick="switchTab('flooring')" id="tab-btn-flooring">Flooring Photos</button>
             <button class="tab-btn" onclick="switchTab('outdoor')" id="tab-btn-outdoor">Outdoor Photos</button>
+            <button class="tab-btn" onclick="switchTab('vanities')" id="tab-btn-vanities">Vanity Photos</button>
             <button class="tab-btn" onclick="switchTab('gallery')" id="tab-btn-gallery">Gallery Photos</button>
 <button class="tab-btn" onclick="switchTab('showcase')" id="tab-btn-showcase">Home Showcase</button>
             <button class="tab-btn" onclick="switchTab('sitecontent')" id="tab-btn-sitecontent">Site Content</button>
@@ -308,6 +309,14 @@
             <div id="loading-outdoor-products">Loading...</div>
             <div id="outdoor-products-grid" class="styles-grid" style="display:none"></div>
 
+        </div>
+
+        <div id="tab-vanities" style="display:none">
+            <div class="admin-title">Bathroom Vanities — Gallery Photos</div>
+            <div class="admin-sub">Add, edit, remove, or reorder the photos shown on the Bathroom Vanities page. Changes appear on the website immediately.</div>
+            <button class="btn-save" style="max-width:220px;margin-bottom:20px" onclick="openNewVanityPhotoModal()">+ Add Vanity Photo</button>
+            <div id="loading-vanity-photos">Loading...</div>
+            <div id="vanity-photos-grid" class="styles-grid" style="display:none"></div>
         </div>
 
         <div id="tab-gallery" style="display:none">
@@ -763,8 +772,44 @@
                 <button class="btn-cancel" id="btn-delete-showcase" style="color:#c0392b;border-color:#e0b4ae" onclick="deleteShowcase()">Delete</button>
                 <button class="btn-save" id="btn-save-showcase" onclick="saveShowcase()">Save</button>
             </div>
+    </div>
+</div>
+
+    <div class="modal-overlay" id="modal-vanity-photo">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-vanity-photo-title">Vanity Photo</h3>
+                <button class="btn-close" onclick="closeVanityPhotoModal()">✕</button>
+            </div>
+        <div class="modal-body">
+            <input type="hidden" id="vp-edit-id">
+            <input type="hidden" id="vp-edit-slug">
+            <div class="field">
+                <label>Short Description</label>
+                <input type="text" id="vp-edit-caption" placeholder="e.g. White vanity display with countertop">
+            </div>
+            <div class="field">
+                <label>Photo</label>
+                <input type="text" id="vp-edit-image" placeholder="https://..." oninput="previewVanityPhotoImage()">
+                <div class="upload-row">
+                    <button type="button" class="btn-upload" onclick="document.getElementById('vp-file-input').click()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Upload Photo
+                    </button>
+                    <span id="vp-upload-status">or paste a URL above</span>
+                </div>
+                <input type="file" id="vp-file-input" accept="image/*" onchange="uploadVanityPhotoPhoto(this)">
+                <img id="vp-img-preview" class="img-preview" alt="Preview">
+            </div>
+            <div id="vp-save-msg" class="save-msg"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeVanityPhotoModal()">Cancel</button>
+            <button class="btn-cancel" id="btn-delete-vp" style="color:#c0392b;border-color:#e0b4ae" onclick="deleteVanityPhoto()">Delete</button>
+            <button class="btn-save" id="btn-save-vp" onclick="saveVanityPhoto()">Save</button>
         </div>
     </div>
+</div>
 
     <div class="modal-overlay" id="modal-gallery-photo">
         <div class="modal">
@@ -1118,12 +1163,27 @@ let galleryPhotosLoaded = false;
 let galleryPhotosCache = {};
 let galleryPhotoRows = [];
 let galleryPhotoReorderBusy = false;
+let vanityPhotosLoaded = false;
+let vanityPhotosCache = {};
+let vanityPhotoRows = [];
+let vanityPhotoReorderBusy = false;
+const VANITY_SLUG_PREFIX = 'bathroom-vanity-';
+const VANITY_DEFAULT_PHOTOS = [
+    { slug: 'bathroom-vanity-white-angle-1', label: 'White vanity display with a clean, bright cabinet finish.', image_url: 'images/bathroom-vanities/white-vanity-display-angle-1.jpg', sort_order: 1 },
+    { slug: 'bathroom-vanity-gray-white-angle-1', label: 'Gray and white vanity display for a simple bath update.', image_url: 'images/bathroom-vanities/gray-white-vanity-display-angle-1.jpg', sort_order: 2 },
+    { slug: 'bathroom-vanity-gray-front', label: 'Gray vanity cabinet with practical drawer and door storage.', image_url: 'images/bathroom-vanities/gray-vanity-display-front.jpg', sort_order: 3 },
+    { slug: 'bathroom-vanity-white-angle-2', label: 'White vanity option shown from an angled showroom view.', image_url: 'images/bathroom-vanities/white-vanity-display-angle-2.jpg', sort_order: 4 },
+    { slug: 'bathroom-vanity-gray-closeup-1', label: 'Close-up of cabinet finish, hardware, and storage details.', image_url: 'images/bathroom-vanities/gray-vanity-display-closeup-1.jpg', sort_order: 5 },
+    { slug: 'bathroom-vanity-showroom', label: 'Showroom vanity display with countertop and bath storage.', image_url: 'images/bathroom-vanities/central-cabinetry-vanity-showroom.jpg', sort_order: 6 },
+    { slug: 'bathroom-vanity-bath-cabinet-display', label: 'Bath cabinet display for vanity and bathroom storage ideas.', image_url: 'images/bathroom-vanities/central-cabinetry-bath-cabinet-display.jpg', sort_order: 7 }
+];
 
 function switchTab(tab) {
     document.getElementById('tab-styles').style.display = tab === 'styles' ? 'block' : 'none';
     document.getElementById('tab-about').style.display = tab === 'about' ? 'block' : 'none';
     document.getElementById('tab-flooring').style.display = tab === 'flooring' ? 'block' : 'none';
     document.getElementById('tab-outdoor').style.display = tab === 'outdoor' ? 'block' : 'none';
+    document.getElementById('tab-vanities').style.display = tab === 'vanities' ? 'block' : 'none';
     document.getElementById('tab-gallery').style.display = tab === 'gallery' ? 'block' : 'none';
     document.getElementById('tab-showcase').style.display = tab === 'showcase' ? 'block' : 'none';
     document.getElementById('tab-btn-showcase').classList.toggle('active', tab === 'showcase');
@@ -1133,6 +1193,7 @@ function switchTab(tab) {
     document.getElementById('tab-btn-about').classList.toggle('active', tab === 'about');
     document.getElementById('tab-btn-flooring').classList.toggle('active', tab === 'flooring');
     document.getElementById('tab-btn-outdoor').classList.toggle('active', tab === 'outdoor');
+    document.getElementById('tab-btn-vanities').classList.toggle('active', tab === 'vanities');
     document.getElementById('tab-btn-gallery').classList.toggle('active', tab === 'gallery');
     document.getElementById('tab-btn-sitecontent').classList.toggle('active', tab === 'sitecontent');
     if (tab === 'about' && !aboutLoaded) loadAboutContent();
@@ -1140,8 +1201,217 @@ function switchTab(tab) {
     if (tab === 'flooring' && !flooringProductsLoaded) loadFlooringProducts();
     if (tab === 'outdoor' && !outdoorLoaded) loadOutdoorImages();
     if (tab === 'outdoor' && !outdoorProductsLoaded) loadOutdoorProducts();
+    if (tab === 'vanities' && !vanityPhotosLoaded) loadVanityPhotos();
     if (tab === 'gallery' && !galleryPhotosLoaded) loadGalleryPhotos();
 }
+
+function mergeVanityPhotoRows(rows) {
+    const rowsBySlug = {};
+    (Array.isArray(rows) ? rows : []).forEach(function(row) {
+        if (row.slug) rowsBySlug[row.slug] = row;
+    });
+    const merged = VANITY_DEFAULT_PHOTOS.map(function(defaultPhoto) {
+        const row = rowsBySlug[defaultPhoto.slug];
+        if (row) return { ...defaultPhoto, ...row, isDefault: true, isVirtual: false };
+        return { ...defaultPhoto, id: '__default_' + defaultPhoto.slug, isDefault: true, isVirtual: true };
+    });
+    (Array.isArray(rows) ? rows : []).forEach(function(row) {
+        if (row.slug && !VANITY_DEFAULT_PHOTOS.some(function(photo) { return photo.slug === row.slug; })) {
+            merged.push({ ...row, isDefault: false, isVirtual: false });
+        }
+    });
+    return merged.sort(function(a, b) {
+        return (Number(a.sort_order) || 9999) - (Number(b.sort_order) || 9999);
+    });
+}
+
+async function loadVanityPhotos() {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?slug=like.${encodeURIComponent(VANITY_SLUG_PREFIX + '*')}&order=sort_order`, { headers: headers(true) });
+    const rows = await res.json();
+    const grid = document.getElementById('vanity-photos-grid');
+    const loading = document.getElementById('loading-vanity-photos');
+
+    vanityPhotoRows = mergeVanityPhotoRows(rows);
+    vanityPhotosCache = {};
+    vanityPhotoRows.forEach(r => { vanityPhotosCache[r.id] = r; });
+
+    grid.innerHTML = vanityPhotoRows.map((r, index) => `
+        <div class="style-card">
+            <div class="style-card-img" style="${r.image_url ? 'background-image:url(' + r.image_url + ')' : ''}"></div>
+            <div class="style-card-body">
+                <div class="style-card-name">${r.label || '(no description)'}</div>
+                <div class="order-controls">
+                    <button class="btn-order" onclick="moveVanityPhoto('${r.id}', -1)" ${index === 0 ? 'disabled' : ''}>← Earlier</button>
+                    <button class="btn-order" onclick="moveVanityPhoto('${r.id}', 1)" ${index === vanityPhotoRows.length - 1 ? 'disabled' : ''}>Later →</button>
+                </div>
+                <button class="btn-edit" onclick="openVanityPhotoModalById('${r.id}')">Edit</button>
+            </div>
+        </div>
+    `).join('');
+
+    loading.style.display = 'none';
+    grid.style.display = 'grid';
+    vanityPhotosLoaded = true;
+}
+
+async function persistVanityPhoto(row, sortOrder) {
+    const payload = {
+        slug: row.slug,
+        label: row.label || null,
+        image_url: row.image_url || null,
+        sort_order: sortOrder
+    };
+    if (row.isVirtual || String(row.id).startsWith('__default_')) {
+        return fetch(`${SUPABASE_URL}/rest/v1/outdoor_images`, {
+            method: 'POST',
+            headers: { ...headers(true), 'Prefer': 'return=minimal' },
+            body: JSON.stringify(payload)
+        });
+    }
+    return fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?id=eq.${row.id}`, {
+        method: 'PATCH',
+        headers: { ...headers(true), 'Prefer': 'return=minimal' },
+        body: JSON.stringify(payload)
+    });
+}
+
+async function moveVanityPhoto(id, direction) {
+    if (vanityPhotoReorderBusy) return;
+    const currentIndex = vanityPhotoRows.findIndex(photo => photo.id === id);
+    const targetIndex = currentIndex + direction;
+    if (currentIndex < 0 || targetIndex < 0 || targetIndex >= vanityPhotoRows.length) return;
+
+    vanityPhotoReorderBusy = true;
+    const reordered = [...vanityPhotoRows];
+    [reordered[currentIndex], reordered[targetIndex]] = [reordered[targetIndex], reordered[currentIndex]];
+
+    try {
+        const results = await Promise.all(reordered.map(function(photo, index) {
+            return persistVanityPhoto(photo, index + 1);
+        }));
+        if (results.some(result => !result.ok)) throw new Error('A photo could not be reordered.');
+        vanityPhotosLoaded = false;
+        await loadVanityPhotos();
+    } catch (error) {
+        alert('The vanity gallery order could not be saved. Please try again.');
+    } finally {
+        vanityPhotoReorderBusy = false;
+    }
+}
+
+function openNewVanityPhotoModal() {
+    openVanityPhotoModal({ id: '', slug: '', label: '', image_url: '', sort_order: vanityPhotoRows.length + 1 });
+}
+function openVanityPhotoModalById(id) {
+    const p = vanityPhotosCache[id];
+    if (p) openVanityPhotoModal(p);
+}
+function openVanityPhotoModal(p) {
+    const isNew = !p.id;
+    document.getElementById('vp-edit-id').value = p.id || '';
+    document.getElementById('vp-edit-slug').value = p.slug || '';
+    document.getElementById('modal-vanity-photo-title').textContent = isNew ? 'Add Vanity Photo' : 'Edit Vanity Photo';
+    document.getElementById('vp-edit-caption').value = p.label || '';
+    document.getElementById('vp-edit-image').value = p.image_url || '';
+    document.getElementById('btn-delete-vp').style.display = isNew ? 'none' : 'block';
+    document.getElementById('btn-delete-vp').textContent = p.isDefault ? 'Reset' : 'Delete';
+    document.getElementById('vp-save-msg').textContent = '';
+    document.getElementById('vp-upload-status').textContent = 'or paste a URL above';
+    document.getElementById('vp-upload-status').className = '';
+    previewVanityPhotoImage();
+    document.getElementById('modal-vanity-photo').classList.add('open');
+}
+function closeVanityPhotoModal() {
+    document.getElementById('modal-vanity-photo').classList.remove('open');
+}
+function previewVanityPhotoImage() {
+    const url = document.getElementById('vp-edit-image').value;
+    const img = document.getElementById('vp-img-preview');
+    if (url) { img.src = url; img.style.display = 'block'; } else { img.style.display = 'none'; }
+}
+async function saveVanityPhoto() {
+    const id = document.getElementById('vp-edit-id').value;
+    const row = id ? vanityPhotosCache[id] : null;
+    const isNew = !id;
+    const btn = document.getElementById('btn-save-vp');
+    const msg = document.getElementById('vp-save-msg');
+    btn.disabled = true; btn.textContent = 'Saving...'; msg.textContent = '';
+
+    const payload = {
+        slug: document.getElementById('vp-edit-slug').value || (VANITY_SLUG_PREFIX + Date.now()),
+        label: document.getElementById('vp-edit-caption').value || null,
+        image_url: document.getElementById('vp-edit-image').value || null,
+        sort_order: row ? row.sort_order : vanityPhotoRows.length + 1
+    };
+
+    let res;
+    if (isNew || (row && row.isVirtual)) {
+        res = await fetch(`${SUPABASE_URL}/rest/v1/outdoor_images`, {
+            method: 'POST',
+            headers: { ...headers(true), 'Prefer': 'return=minimal' },
+            body: JSON.stringify(payload)
+        });
+    } else {
+        res = await fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?id=eq.${id}`, {
+            method: 'PATCH',
+            headers: { ...headers(true), 'Prefer': 'return=minimal' },
+            body: JSON.stringify(payload)
+        });
+    }
+
+    btn.disabled = false; btn.textContent = 'Save';
+    if (res.ok) {
+        msg.textContent = '✅ Saved!'; msg.className = 'save-msg success';
+        vanityPhotosLoaded = false;
+        await loadVanityPhotos();
+        setTimeout(closeVanityPhotoModal, 1000);
+    } else {
+        const err = await res.json().catch(() => ({}));
+        msg.textContent = '❌ Error: ' + (err.message || err.hint || ('HTTP ' + res.status));
+        msg.className = 'save-msg error';
+    }
+}
+async function deleteVanityPhoto() {
+    const id = document.getElementById('vp-edit-id').value;
+    if (!id) return;
+    const row = vanityPhotosCache[id];
+    const prompt = row && row.isDefault ? 'Reset this default vanity photo back to the built-in version?' : 'Delete this vanity photo? This cannot be undone.';
+    if (!confirm(prompt)) return;
+    if (row && row.isVirtual) {
+        closeVanityPhotoModal();
+        return;
+    }
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?id=eq.${id}`, { method: 'DELETE', headers: headers(true) });
+    if (res.ok) {
+        vanityPhotosLoaded = false;
+        await loadVanityPhotos();
+        closeVanityPhotoModal();
+    }
+}
+async function uploadVanityPhotoPhoto(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const status = document.getElementById('vp-upload-status');
+    status.textContent = 'Uploading...'; status.className = 'uploading';
+    const ext = file.name.split('.').pop();
+    const filename = `bathroom-vanities/${Date.now()}.${ext}`;
+    try {
+        const _fd = new FormData();
+        _fd.append('file', file);
+        _fd.append('path', filename);
+        _fd.append('token', accessToken || '');
+        const res = await fetch('/api/upload', { method: 'POST', body: _fd });
+        if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.message || `HTTP ${res.status}`); }
+        const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/images/${filename}`;
+        document.getElementById('vp-edit-image').value = publicUrl;
+        previewVanityPhotoImage();
+        status.textContent = '✅ Uploaded!'; status.className = 'done';
+    } catch (err) {
+        status.textContent = '❌ Upload failed: ' + err.message; status.className = 'err';
+    }
+    input.value = '';
+}
+document.getElementById('modal-vanity-photo').addEventListener('click', function(e) { if (e.target === this) closeVanityPhotoModal(); });
 
 // ===== Gallery Photo Catalog =====
 async function loadGalleryPhotos() {
