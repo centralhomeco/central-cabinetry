@@ -186,6 +186,14 @@ a.storage-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.12);transform:translateY(
 .lightbox.open{display:flex}
 .lightbox img{max-width:90%;max-height:90%}
 
+/* BATHROOM VANITIES */
+.bathroom-vanities-banner{background-image:url('../images/bathroom-vanities/central-cabinetry-vanity-showroom.jpg')}
+.vanity-gallery-section .container{padding-top:48px}
+.vanity-gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.vanity-gallery-item{border-radius:8px;overflow:hidden;background:#fff;border:1px solid #e8e8e8}
+.vanity-gallery-item img{width:100%;height:280px;object-fit:cover;display:block;background:#eee}
+.vanity-gallery-item figcaption{min-height:54px;padding:12px 14px;color:#444;font-size:14px;line-height:1.45;background:#fff}
+
 /* CONTACT */
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px}
 .contact-info p{font-size:14px;margin-bottom:10px}
@@ -226,6 +234,7 @@ footer{background:var(--dark);color:#aaa;padding:50px 24px 20px}
     .about-grid,.detail-grid,.contact-grid{grid-template-columns:1fr}
     .ds-listing-grid{grid-template-columns:1fr}
     .related-grid{grid-template-columns:repeat(2,1fr)}
+    .vanity-gallery-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:1200px){
     .nav-links{position:static;transform:none;gap:15px}
@@ -253,6 +262,8 @@ footer{background:var(--dark);color:#aaa;padding:50px 24px 20px}
     .nav-right{display:none}
     .hero-overlay h1{font-size:26px}
     .gallery-grid,.gallery-full-grid{grid-template-columns:repeat(2,1fr)}
+    .vanity-gallery-grid{grid-template-columns:1fr}
+    .vanity-gallery-item img{height:240px}
     .local-page-list{grid-template-columns:1fr}
     .floating-bar{display:none}
 }
