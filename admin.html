@@ -1261,17 +1261,15 @@ async function persistVanityPhoto(row, sortOrder) {
         image_url: row.image_url || null,
         sort_order: sortOrder
     };
-    if (row.isVirtual || String(row.id).startsWith('__default_')) {
-        return fetch(`${SUPABASE_URL}/rest/v1/outdoor_images`, {
-            method: 'POST',
-            headers: { ...headers(true), 'Prefer': 'return=minimal' },
-            body: JSON.stringify(payload)
-        });
-    }
-    return fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?id=eq.${row.id}`, {
-        method: 'PATCH',
-        headers: { ...headers(true), 'Prefer': 'return=minimal' },
-        body: JSON.stringify(payload)
+    return fetch('/api/vanity-photo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            action: 'save',
+            id: row.isVirtual ? '' : row.id,
+            row: payload,
+            token: accessToken || ''
+        })
     });
 }
 
@@ -1344,20 +1342,16 @@ async function saveVanityPhoto() {
         sort_order: row ? row.sort_order : vanityPhotoRows.length + 1
     };
 
-    let res;
-    if (isNew || (row && row.isVirtual)) {
-        res = await fetch(`${SUPABASE_URL}/rest/v1/outdoor_images`, {
-            method: 'POST',
-            headers: { ...headers(true), 'Prefer': 'return=minimal' },
-            body: JSON.stringify(payload)
-        });
-    } else {
-        res = await fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?id=eq.${id}`, {
-            method: 'PATCH',
-            headers: { ...headers(true), 'Prefer': 'return=minimal' },
-            body: JSON.stringify(payload)
-        });
-    }
+    const res = await fetch('/api/vanity-photo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            action: 'save',
+            id: isNew || (row && row.isVirtual) ? '' : id,
+            row: payload,
+            token: accessToken || ''
+        })
+    });
 
     btn.disabled = false; btn.textContent = 'Save';
     if (res.ok) {
@@ -1367,7 +1361,7 @@ async function saveVanityPhoto() {
         setTimeout(closeVanityPhotoModal, 1000);
     } else {
         const err = await res.json().catch(() => ({}));
-        msg.textContent = '❌ Error: ' + (err.message || err.hint || ('HTTP ' + res.status));
+        msg.textContent = '❌ Error: ' + (err.error || err.message || err.hint || ('HTTP ' + res.status));
         msg.className = 'save-msg error';
     }
 }
@@ -1381,11 +1375,18 @@ async function deleteVanityPhoto() {
         closeVanityPhotoModal();
         return;
     }
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/outdoor_images?id=eq.${id}`, { method: 'DELETE', headers: headers(true) });
+    const res = await fetch('/api/vanity-photo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete', id, token: accessToken || '' })
+    });
     if (res.ok) {
         vanityPhotosLoaded = false;
         await loadVanityPhotos();
         closeVanityPhotoModal();
+    } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err.error || 'The vanity photo could not be removed. Please try again.');
     }
 }
 async function uploadVanityPhotoPhoto(input) {
