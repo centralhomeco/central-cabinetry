@@ -22,36 +22,41 @@
         <p class="section-sub">Browse vanity and bath cabinet displays available through Central Home.</p>
         <div class="vanity-gallery-grid" id="vanity-gallery-grid">
             <figure class="vanity-gallery-item">
-                <img src="images/bathroom-vanities/white-vanity-display-angle-1.jpg" alt="White bathroom vanity display with countertop">
+                <img src="images/bathroom-vanities/white-vanity-display-angle-1.jpg" alt="White bathroom vanity display with countertop" onclick="openLightbox(this.src)">
                 <figcaption>White vanity display with a clean, bright cabinet finish.</figcaption>
             </figure>
             <figure class="vanity-gallery-item">
-                <img src="images/bathroom-vanities/gray-white-vanity-display-angle-1.jpg" alt="Gray and white bathroom vanity showroom display">
+                <img src="images/bathroom-vanities/gray-white-vanity-display-angle-1.jpg" alt="Gray and white bathroom vanity showroom display" onclick="openLightbox(this.src)">
                 <figcaption>Gray and white vanity display for a simple bath update.</figcaption>
             </figure>
             <figure class="vanity-gallery-item">
-                <img src="images/bathroom-vanities/gray-vanity-display-front.jpg" alt="Gray bathroom vanity front display">
+                <img src="images/bathroom-vanities/gray-vanity-display-front.jpg" alt="Gray bathroom vanity front display" onclick="openLightbox(this.src)">
                 <figcaption>Gray vanity cabinet with practical drawer and door storage.</figcaption>
             </figure>
             <figure class="vanity-gallery-item">
-                <img src="images/bathroom-vanities/white-vanity-display-angle-2.jpg" alt="White bathroom vanity display from side angle">
+                <img src="images/bathroom-vanities/white-vanity-display-angle-2.jpg" alt="White bathroom vanity display from side angle" onclick="openLightbox(this.src)">
                 <figcaption>White vanity option shown from an angled showroom view.</figcaption>
             </figure>
             <figure class="vanity-gallery-item">
-                <img src="images/bathroom-vanities/gray-vanity-display-closeup-1.jpg" alt="Close-up of gray bathroom vanity cabinet">
+                <img src="images/bathroom-vanities/gray-vanity-display-closeup-1.jpg" alt="Close-up of gray bathroom vanity cabinet" onclick="openLightbox(this.src)">
                 <figcaption>Close-up of cabinet finish, hardware, and storage details.</figcaption>
             </figure>
             <figure class="vanity-gallery-item">
-                <img src="images/bathroom-vanities/central-cabinetry-vanity-showroom.jpg" alt="Central Home vanity showroom display">
+                <img src="images/bathroom-vanities/central-cabinetry-vanity-showroom.jpg" alt="Central Home vanity showroom display" onclick="openLightbox(this.src)">
                 <figcaption>Showroom vanity display with countertop and bath storage.</figcaption>
             </figure>
             <figure class="vanity-gallery-item">
-                <img src="images/bathroom-vanities/central-cabinetry-bath-cabinet-display.jpg" alt="Bathroom cabinet display at Central Home">
+                <img src="images/bathroom-vanities/central-cabinetry-bath-cabinet-display.jpg" alt="Bathroom cabinet display at Central Home" onclick="openLightbox(this.src)">
                 <figcaption>Bath cabinet display for vanity and bathroom storage ideas.</figcaption>
             </figure>
         </div>
     </div>
 </section>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span onclick="event.stopPropagation(); closeLightbox()">×</span>
+    <img id="lightboxImg" src="" alt="Bathroom vanity photo" onclick="event.stopPropagation()">
+</div>
 
 <footer><div class="footer-inner"><div class="footer-col"><h4>Central Home</h4><p data-ck="footer-address">1297 US-501, Myrtle Beach, SC 29577</p><p data-ck="footer-phone">(843) 712-1001</p><p data-ck="footer-email">sales@centralhomeco.com</p><p data-ck="footer-hours">Monday to Saturday, 9:00am to 5:00pm</p></div><div class="footer-col"><h4>Quick Links</h4><a href="about-us.html">About Us</a><a href="cabinet-styles.html">Cabinets</a><a href="flooring.html">Flooring</a><a href="outdoor.html">Outdoor Living</a><a href="contact.html">Contact Us</a></div><div class="footer-col"><h4>Products</h4><a href="kitchen-cabinets-myrtle-beach.html">Kitchen Cabinets Myrtle Beach</a><a href="bathroom-vanities.html">Bathroom Vanities</a><a href="flooring-myrtle-beach.html">Flooring Myrtle Beach</a><a href="outdoor-kitchens-myrtle-beach.html">Outdoor Kitchens Myrtle Beach</a></div><div class="footer-col"><h4>Follow Us</h4><a href="https://facebook.com/chgcabinets" target="_blank">Facebook</a><a href="https://instagram.com/central_cabinets" target="_blank">Instagram</a></div></div><div class="footer-bottom"><p>&copy; 2026 Central Home. All rights reserved.</p></div></footer>
 <script>
@@ -90,7 +95,7 @@
         if (!grid) return;
         grid.innerHTML = rows.filter(function(row) { return row.image_url; }).map(function(row) {
             const label = escapeHtml(row.label || '');
-            return `<figure class="vanity-gallery-item"><img src="${escapeHtml(row.image_url)}" alt="${label || 'Bathroom vanity display'}"><figcaption>${label}</figcaption></figure>`;
+            return `<figure class="vanity-gallery-item"><img src="${escapeHtml(row.image_url)}" alt="${label || 'Bathroom vanity display'}" onclick="openLightbox(this.src)"><figcaption>${label}</figcaption></figure>`;
         }).join('');
     }
 
