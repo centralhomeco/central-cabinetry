@@ -23,13 +23,25 @@
         el.setAttribute('href', href);
     }
 
+    function markNotIndexable() {
+        const canonical = document.querySelector('link[rel="canonical"]');
+        if (canonical) canonical.remove();
+        upsertMeta('robots', 'noindex, follow');
+    }
+
     const params = new URLSearchParams(window.location.search);
-    const code = (params.get('code') || '').toUpperCase();
+    const normalizedCode = (params.get('code') || '').trim().toLowerCase();
+    const code = normalizedCode.toUpperCase();
 
     if (!code) {
-        window.location.href = 'cabinet-styles.html';
+        document.title = 'Door Style Not Found | Central Home';
+        markNotIndexable();
+        document.getElementById('detail-content').innerHTML = '<p style="padding:60px;text-align:center;color:#888">Door style not found. <a href="cabinet-styles.html">Back to all styles</a></p>';
         return;
     }
+
+    // Establish the normalized preferred URL before waiting for product data.
+    upsertCanonical(`${SITE_ORIGIN}/door-style-detail.html?code=${encodeURIComponent(normalizedCode)}`);
 
     // Global content (phone, hours, footer, shared cabinet specs)
     fetch(`${SUPABASE_URL}/rest/v1/site_content?page=eq.global&select=content_key,content_type,value`, { headers: h() })
@@ -57,13 +69,13 @@
             const s = rows && rows[0];
             if (!s) {
                 document.title = 'Door Style Not Found | Central Home';
-                upsertMeta('robots', 'noindex, follow');
+                markNotIndexable();
                 document.getElementById('detail-content').innerHTML = '<p style="padding:60px;text-align:center;color:#888">Door style not found. <a href="cabinet-styles.html">Back to all styles</a></p>';
                 return;
             }
 
             document.title = `${s.name} | Central Home`;
-            upsertCanonical(`${SITE_ORIGIN}/door-style-detail.html?code=${s.code.toLowerCase()}`);
+            upsertCanonical(`${SITE_ORIGIN}/door-style-detail.html?code=${encodeURIComponent(s.code.toLowerCase())}`);
             upsertMeta('description', s.description || `${s.name} cabinet door style from Central Home in Myrtle Beach. View specifications, finishes, and request cabinet pricing.`);
             document.querySelectorAll('[data-ck="page-title"]').forEach(function(el) { el.textContent = `(${s.code}) ${s.name}`; });
             document.querySelectorAll('[data-ck="breadcrumb-name"]').forEach(function(el) { el.textContent = s.name; });

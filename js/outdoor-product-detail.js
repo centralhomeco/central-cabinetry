@@ -2,10 +2,39 @@
     const SUPABASE_URL = 'https://apxelbabvviuwqpfivtr.supabase.co';
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFweGVsYmFidnZpdXdxcGZpdnRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2NjEyOTYsImV4cCI6MjA5OTIzNzI5Nn0.EWt2FRAkJH86Is9P_uDjKDXnJ0O1J2qdg_BuctQavvY';
 
+    const SITE_ORIGIN = 'https://www.centralhomeco.com';
+
     function h() { return { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }; }
+    function upsertMeta(name, content) {
+        let el = document.querySelector('meta[name="' + name + '"]');
+        if (!el) {
+            el = document.createElement('meta');
+            el.setAttribute('name', name);
+            document.head.appendChild(el);
+        }
+        el.setAttribute('content', content);
+    }
+    function upsertCanonical(href) {
+        let el = document.querySelector('link[rel="canonical"]');
+        if (!el) {
+            el = document.createElement('link');
+            el.setAttribute('rel', 'canonical');
+            document.head.appendChild(el);
+        }
+        el.setAttribute('href', href);
+    }
+    function markNotIndexable() {
+        const canonical = document.querySelector('link[rel="canonical"]');
+        if (canonical) canonical.remove();
+        upsertMeta('robots', 'noindex, follow');
+    }
 
     const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
+    const id = (params.get('id') || '').trim();
+
+    if (id) {
+        upsertCanonical(`${SITE_ORIGIN}/outdoor-product-detail.html?id=${encodeURIComponent(id)}`);
+    }
 
     // Global content (phone, hours, footer)
     fetch(`${SUPABASE_URL}/rest/v1/site_content?page=eq.global&select=content_key,content_type,value`, { headers: h() })
@@ -21,20 +50,25 @@
         });
 
     if (!id) {
-        window.location.href = 'outdoor.html';
+        document.title = 'Outdoor Product Not Found | Central Home';
+        markNotIndexable();
+        document.getElementById('detail-content').innerHTML = '<p style="padding:60px;text-align:center;color:#888">Product not found. <a href="outdoor.html">Back to Outdoor Living</a></p>';
         return;
     }
 
-    fetch(`${SUPABASE_URL}/rest/v1/outdoor_products?id=eq.${id}&select=*`, { headers: h() })
+    fetch(`${SUPABASE_URL}/rest/v1/outdoor_products?id=eq.${encodeURIComponent(id)}&select=*`, { headers: h() })
         .then(function(res) { return res.json(); })
         .then(function(rows) {
             const p = rows && rows[0];
             if (!p) {
+                document.title = 'Outdoor Product Not Found | Central Home';
+                markNotIndexable();
                 document.getElementById('detail-content').innerHTML = '<p style="padding:60px;text-align:center;color:#888">Product not found. <a href="outdoor.html">Back to Outdoor Living</a></p>';
                 return;
             }
 
             document.title = `${p.name} | Central Home`;
+            upsertCanonical(`${SITE_ORIGIN}/outdoor-product-detail.html?id=${encodeURIComponent(String(p.id).trim())}`);
             document.querySelectorAll('[data-ck="page-title"]').forEach(function(el) { el.textContent = p.name; });
             document.querySelectorAll('[data-ck="breadcrumb-name"]').forEach(function(el) { el.textContent = p.name; });
 
