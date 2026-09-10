@@ -252,14 +252,18 @@ footer{background:var(--dark);color:#aaa;padding:50px 24px 20px}
 
 @media(max-width:600px){
     .navbar{height:70px}
-    .nav-inner{flex-direction:row;justify-content:space-between;padding:0 15px}
+    .nav-inner{flex-direction:row;justify-content:space-between;padding:0 15px;gap:8px}
+    .branding{min-width:0}
     .logo-text{font-size:22px}
     .logo-img{height:45px}
     .logo-tagline{display:none}
-    .nav-links{display:none;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:#fff;padding:16px;box-shadow:0 4px 10px rgba(0,0,0,.1);z-index:99;order:unset}
+    .nav-links{display:none;flex-direction:column;align-items:stretch;position:absolute;top:calc(100% + 15px);left:-15px;right:-15px;width:auto;background:#fff;padding:0;gap:0;box-shadow:0 4px 10px rgba(0,0,0,.1);z-index:99;order:unset}
+    .nav-links a{display:block;padding:14px 20px;border-top:1px solid #eee;font-size:16px}
     .nav-links.open{display:flex}
-    .nav-toggle{display:block}
-    .nav-right{display:none}
+    .nav-right{display:flex;order:unset;margin-left:auto;gap:0}
+    .nav-right .header-search,.nav-right .nav-phone{display:none}
+    .nav-toggle{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:4px;font-size:28px;line-height:1}
+    .nav-toggle:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
     .hero-overlay h1{font-size:26px}
     .gallery-grid,.gallery-full-grid{grid-template-columns:repeat(2,1fr)}
     .vanity-gallery-grid{grid-template-columns:1fr}

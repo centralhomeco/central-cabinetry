@@ -1,10 +1,47 @@
 // Central Cabinetry v2
 
 // NAV
-function toggleMenu(){document.getElementById('navLinks').classList.toggle('open')}
+function setMenuOpen(open){
+    var links=document.getElementById('navLinks');
+    var toggle=document.querySelector('.nav-toggle');
+    if(!links||!toggle)return;
+    links.classList.toggle('open',open);
+    toggle.setAttribute('aria-expanded',String(open));
+    toggle.setAttribute('aria-label',open?'Close navigation menu':'Open navigation menu');
+}
+function toggleMenu(){
+    var links=document.getElementById('navLinks');
+    if(links)setMenuOpen(!links.classList.contains('open'));
+}
+function initNavigation(){
+    var links=document.getElementById('navLinks');
+    var toggle=document.querySelector('.nav-toggle');
+    if(!links||!toggle)return;
+
+    toggle.type='button';
+    toggle.setAttribute('aria-controls','navLinks');
+    setMenuOpen(false);
+
+    links.querySelectorAll('a').forEach(function(link){
+        link.addEventListener('click',function(){setMenuOpen(false)});
+    });
+}
 document.addEventListener('click',function(e){
     var nb=document.querySelector('.navbar');
-    if(nb&&!nb.contains(e.target))document.getElementById('navLinks').classList.remove('open');
+    if(nb&&!nb.contains(e.target))setMenuOpen(false);
+});
+document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){
+        var links=document.getElementById('navLinks');
+        var toggle=document.querySelector('.nav-toggle');
+        if(links&&toggle&&links.classList.contains('open')){
+            setMenuOpen(false);
+            toggle.focus();
+        }
+    }
+});
+window.addEventListener('resize',function(){
+    if(window.innerWidth>600)setMenuOpen(false);
 });
 
 // HOME SHOWCASE
@@ -277,6 +314,7 @@ function initFooterMemberBadge() {
 }
 
 window.addEventListener('DOMContentLoaded', function() {
+    initNavigation();
     initHero();
     initSearch();
     initFooterMemberBadge();
