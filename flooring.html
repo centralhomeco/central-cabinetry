@@ -257,6 +257,8 @@ function filterFlooring() {
     if (noRes) noRes.style.display = visible === 0 ? 'block' : 'none';
 }
 </script>
+<script src="js/image-preview-manifest.js"></script>
+<script src="js/image-previews.js"></script>
 <script src="js/main.js"></script>
 <script src="js/site-content.js"></script>
 <script>
@@ -274,8 +276,8 @@ function filterFlooring() {
         rows.forEach(function(row) {
             if (!row.image_url) return;
             document.querySelectorAll('[data-slug="' + row.slug + '"]').forEach(function(el) {
-                if (el.tagName === 'IMG') el.src = row.image_url;
-                else el.style.backgroundImage = "url('" + row.image_url + "')";
+                if (el.tagName === 'IMG') window.centralHomeImages.setImage(el, row.image_url);
+                else window.centralHomeImages.setBackground(el, row.image_url);
             });
         });
     })
@@ -295,8 +297,8 @@ function filterFlooring() {
         return `
                 <a class="product-card" href="flooring-product-detail.html?id=${p.id}" data-search="${searchText.toLowerCase().replace(/"/g, '&quot;')}" style="text-decoration:none;color:inherit;display:block">
                     <div class="product-card-photo">
-                        <img src="${p.image_url || ''}" alt="${p.name}">
-                        ${p.corner_image_url ? `<img class="flooring-corner-badge ${p.corner_position === 'top-right' ? 'top-right' : 'top-left'}" src="${p.corner_image_url}" alt="">` : ''}
+                        <img src="${window.centralHomeImages.previewUrl(p.image_url || '')}" data-full-src="${p.image_url || ''}" loading="lazy" decoding="async" alt="${p.name}">
+                        ${p.corner_image_url ? `<img class="flooring-corner-badge ${p.corner_position === 'top-right' ? 'top-right' : 'top-left'}" src="${window.centralHomeImages.previewUrl(p.corner_image_url)}" data-full-src="${p.corner_image_url}" loading="lazy" decoding="async" alt="">` : ''}
                     </div>
                     <div class="product-card-body"><div class="product-card-name">${p.name}</div><div class="product-card-size">${p.size || ''}</div></div>
                 </a>`;

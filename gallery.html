@@ -103,11 +103,11 @@
         <p>&copy; 2026 Central Home. All rights reserved. &nbsp;|&nbsp; <a href="admin.html" style="color:inherit;opacity:.55;text-decoration:none;">Admin</a></p>
     </div>
 </footer>
+<script src="js/image-preview-manifest.js"></script>
+<script src="js/image-previews.js"></script>
 <script>
 function openLightboxFromEl(el){
-  const bg = el.style.backgroundImage;
-  const m = bg.match(/url\(['"]?(.*?)['"]?\)/);
-  if (m) openLightbox(m[1]);
+  openLightbox(el.dataset.fullSrc || '');
 }
 (function() {
     const SUPABASE_URL = 'https://apxelbabvviuwqpfivtr.supabase.co';
@@ -126,8 +126,11 @@ function openLightboxFromEl(el){
         }
         grid.innerHTML = photos.map(function(p) {
             const imgName = (p.image_url || '').split('/').pop().replace(/\.[^.]+$/, '');
-            return `<div class="gallery-full-item" style="background-image:url('${p.image_url || ''}')" data-img="${imgName}" onclick="openLightboxFromEl(this)"><div class="gallery-label">${p.caption || ''}</div></div>`;
+            return `<div class="gallery-full-item" data-full-src="${p.image_url || ''}" data-img="${imgName}" onclick="openLightboxFromEl(this)"><div class="gallery-label">${p.caption || ''}</div></div>`;
         }).join('');
+        grid.querySelectorAll('.gallery-full-item[data-full-src]').forEach(function(el) {
+            window.centralHomeImages.setBackground(el, el.dataset.fullSrc);
+        });
         // Auto-open from URL param (e.g. ?img=gallery_1)
         const urlImg = new URLSearchParams(window.location.search).get('img');
         if (urlImg) {

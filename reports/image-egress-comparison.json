@@ -1,0 +1,127 @@
+{
+  "generatedAt": "2026-11-17T16:07:00.165Z",
+  "pages": [
+    {
+      "before": {
+        "origin": "https://www.centralhomeco.com",
+        "pathname": "index.html",
+        "viewport": "1440x900@1x",
+        "cache": "disabled",
+        "imageRequests": 29,
+        "imageBytes": 37344650,
+        "supabaseStorageRequests": 11,
+        "supabaseStorageBytes": 23227996,
+        "localPreviewRequests": 0,
+        "localPreviewBytes": 0,
+        "errors": []
+      },
+      "after": {
+        "origin": "http://127.0.0.1:4173",
+        "pathname": "index.html",
+        "viewport": "1440x900@1x",
+        "cache": "disabled",
+        "imageRequests": 17,
+        "imageBytes": 13827681,
+        "supabaseStorageRequests": 0,
+        "supabaseStorageBytes": 0,
+        "localPreviewRequests": 0,
+        "localPreviewBytes": 0,
+        "errors": []
+      }
+    },
+    {
+      "before": {
+        "origin": "https://www.centralhomeco.com",
+        "pathname": "cabinet-styles.html",
+        "viewport": "1440x900@1x",
+        "cache": "disabled",
+        "imageRequests": 23,
+        "imageBytes": 30800543,
+        "supabaseStorageRequests": 20,
+        "supabaseStorageBytes": 29325565,
+        "localPreviewRequests": 0,
+        "localPreviewBytes": 0,
+        "errors": []
+      },
+      "after": {
+        "origin": "http://127.0.0.1:4173",
+        "pathname": "cabinet-styles.html",
+        "viewport": "1440x900@1x",
+        "cache": "disabled",
+        "imageRequests": 19,
+        "imageBytes": 1679937,
+        "supabaseStorageRequests": 0,
+        "supabaseStorageBytes": 0,
+        "localPreviewRequests": 16,
+        "localPreviewBytes": 205754,
+        "errors": []
+      }
+    },
+    {
+      "before": {
+        "origin": "https://www.centralhomeco.com",
+        "pathname": "flooring.html",
+        "viewport": "1440x900@1x",
+        "cache": "disabled",
+        "imageRequests": 43,
+        "imageBytes": 11647336,
+        "supabaseStorageRequests": 5,
+        "supabaseStorageBytes": 446384,
+        "localPreviewRequests": 0,
+        "localPreviewBytes": 0,
+        "errors": []
+      },
+      "after": {
+        "origin": "http://127.0.0.1:4173",
+        "pathname": "flooring.html",
+        "viewport": "1440x900@1x",
+        "cache": "disabled",
+        "imageRequests": 24,
+        "imageBytes": 7155162,
+        "supabaseStorageRequests": 0,
+        "supabaseStorageBytes": 0,
+        "localPreviewRequests": 5,
+        "localPreviewBytes": 110439,
+        "errors": []
+      }
+    },
+    {
+      "before": {
+        "origin": "https://www.centralhomeco.com",
+        "pathname": "gallery.html",
+        "viewport": "1440x900@1x",
+        "cache": "disabled",
+        "imageRequests": 16,
+        "imageBytes": 22114479,
+        "supabaseStorageRequests": 7,
+        "supabaseStorageBytes": 19168884,
+        "localPreviewRequests": 0,
+        "localPreviewBytes": 0,
+        "errors": [],
+        "lightbox": {
+          "src": "https://apxelbabvviuwqpfivtr.supabase.co/storage/v1/object/public/images/gallery-photos/1784566845863.jpg",
+          "naturalWidth": 1920,
+          "naturalHeight": 1281
+        }
+      },
+      "after": {
+        "origin": "http://127.0.0.1:4173",
+        "pathname": "gallery.html",
+        "viewport": "1440x900@1x",
+        "cache": "disabled",
+        "imageRequests": 15,
+        "imageBytes": 2908251,
+        "supabaseStorageRequests": 0,
+        "supabaseStorageBytes": 0,
+        "localPreviewRequests": 7,
+        "localPreviewBytes": 238133,
+        "errors": [],
+        "lightbox": {
+          "src": "https://apxelbabvviuwqpfivtr.supabase.co/storage/v1/object/public/images/gallery-photos/1784566845863.jpg",
+          "naturalWidth": 1920,
+          "naturalHeight": 1281
+        }
+      }
+    }
+  ]
+}

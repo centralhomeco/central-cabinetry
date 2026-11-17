@@ -113,7 +113,7 @@
                         wrap.innerHTML = related.map(function(r) {
                             return `
         <a href="door-style-detail.html?code=${r.code.toLowerCase()}" class="related-card">
-            <img src="${r.image_url || ''}" alt="${r.name}">
+            <img src="${window.centralHomeImages.previewUrl(r.image_url || '')}" data-full-src="${r.image_url || ''}" loading="lazy" decoding="async" alt="${r.name}">
             <span>${r.name} &rsaquo;</span>
         </a>`;
                         }).join('');

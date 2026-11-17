@@ -60,6 +60,8 @@
 </div>
 
 <footer><div class="footer-inner"><div class="footer-col"><h4>Central Home</h4><p data-ck="footer-address">1297 US-501, Myrtle Beach, SC 29577</p><p data-ck="footer-phone">(843) 712-1001</p><p data-ck="footer-email">sales@centralhomeco.com</p><p data-ck="footer-hours">Monday to Saturday, 9:00am to 5:00pm</p></div><div class="footer-col"><h4>Quick Links</h4><a href="about-us.html">About Us</a><a href="cabinet-styles.html">Cabinets</a><a href="flooring.html">Flooring</a><a href="outdoor.html">Outdoor Living</a><a href="contact.html">Contact Us</a></div><div class="footer-col"><h4>Products</h4><a href="kitchen-cabinets-myrtle-beach.html">Kitchen Cabinets Myrtle Beach</a><a href="bathroom-vanities.html">Bathroom Vanities</a><a href="flooring-myrtle-beach.html">Flooring Myrtle Beach</a><a href="outdoor-kitchens-myrtle-beach.html">Outdoor Kitchens Myrtle Beach</a></div><div class="footer-col"><h4>Follow Us</h4><a href="https://facebook.com/chgcabinets" target="_blank">Facebook</a><a href="https://instagram.com/central_cabinets" target="_blank">Instagram</a></div></div><div class="footer-bottom"><p>&copy; 2026 Central Home. All rights reserved.</p></div></footer>
+<script src="js/image-preview-manifest.js"></script>
+<script src="js/image-previews.js"></script>
 <script>
 (function() {
     const SUPABASE_URL = 'https://apxelbabvviuwqpfivtr.supabase.co';
@@ -96,7 +98,8 @@
         if (!grid) return;
         grid.innerHTML = rows.filter(function(row) { return row.image_url; }).map(function(row) {
             const label = escapeHtml(row.label || '');
-            return `<figure class="vanity-gallery-item"><img src="${escapeHtml(row.image_url)}" alt="${label || 'Bathroom vanity display'}" onclick="openLightbox(this.src)"><figcaption>${label}</figcaption></figure>`;
+            const preview = window.centralHomeImages.previewUrl(row.image_url);
+            return `<figure class="vanity-gallery-item"><img src="${escapeHtml(preview)}" data-full-src="${escapeHtml(row.image_url)}" loading="lazy" decoding="async" alt="${label || 'Bathroom vanity display'}" onclick="openLightbox(this)"><figcaption>${label}</figcaption></figure>`;
         }).join('');
     }
 

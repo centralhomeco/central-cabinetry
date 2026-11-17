@@ -125,9 +125,8 @@
                         button.setAttribute('aria-pressed', 'false');
 
                         const image = document.createElement('img');
-                        image.src = photo.image_url;
+                        window.centralHomeImages.setImage(image, photo.image_url);
                         image.alt = photo.label || `${p.name} thumbnail ${index + 1}`;
-                        image.loading = index === 0 ? 'eager' : 'lazy';
                         button.appendChild(image);
                         button.onclick = function() { selectPhoto(photo, button); };
                         gallery.appendChild(button);
