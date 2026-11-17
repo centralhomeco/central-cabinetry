@@ -18,8 +18,15 @@
                 if (row.content_key === 'site-logo') return;
 
                 if (row.content_type === 'image') {
-                    if (el.tagName === 'IMG') el.src = row.value;
-                    else el.style.backgroundImage = "url('" + row.value + "')";
+                    const usePreview = el.hasAttribute('data-preview-image') && window.centralHomeImages;
+                    if (el.tagName === 'IMG') {
+                        if (usePreview) window.centralHomeImages.setImage(el, row.value);
+                        else el.src = row.value;
+                    } else if (usePreview) {
+                        window.centralHomeImages.setBackground(el, row.value);
+                    } else {
+                        el.style.backgroundImage = "url('" + row.value + "')";
+                    }
                 } else {
                     // Prevent overwriting with the old incorrect email
                     if ((row.content_key === 'footer-email' || row.content_key === 'showroom-email') && row.value.includes('centralhomegood.com')) {

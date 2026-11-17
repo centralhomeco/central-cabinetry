@@ -120,7 +120,7 @@
         <h2 data-ck="gallery-preview-title">Our Projects</h2>
         <p class="section-sub" data-ck="gallery-preview-subtitle">Browse our online gallery</p>
         <div class="gallery-grid">
-            <a href="gallery.html?img=gallery_1" class="gallery-thumb" data-ck="gallery-preview-1" style="background-image:url(images/lifestyle/gallery_1.jpg);display:block"></a><a href="gallery.html?img=gallery_2" class="gallery-thumb" data-ck="gallery-preview-2" style="background-image:url(images/lifestyle/gallery_2.jpg);display:block"></a><a href="gallery.html?img=gallery_3" class="gallery-thumb" data-ck="gallery-preview-3" style="background-image:url(images/lifestyle/gallery_3.jpg);display:block"></a><a href="gallery.html?img=gallery_4" class="gallery-thumb" data-ck="gallery-preview-4" style="background-image:url(images/lifestyle/gallery_4.jpg);display:block"></a><a href="gallery.html?img=gallery_5" class="gallery-thumb" data-ck="gallery-preview-5" style="background-image:url(images/lifestyle/gallery_5.jpg);display:block"></a><a href="gallery.html?img=gallery_6" class="gallery-thumb" data-ck="gallery-preview-6" style="background-image:url(images/lifestyle/gallery_6.jpg);display:block"></a>
+            <a href="gallery.html?img=gallery_1" class="gallery-thumb" data-preview-image data-ck="gallery-preview-1" style="background-image:url(images/lifestyle/gallery_1.jpg);display:block"></a><a href="gallery.html?img=gallery_2" class="gallery-thumb" data-preview-image data-ck="gallery-preview-2" style="background-image:url(images/lifestyle/gallery_2.jpg);display:block"></a><a href="gallery.html?img=gallery_3" class="gallery-thumb" data-preview-image data-ck="gallery-preview-3" style="background-image:url(images/lifestyle/gallery_3.jpg);display:block"></a><a href="gallery.html?img=gallery_4" class="gallery-thumb" data-preview-image data-ck="gallery-preview-4" style="background-image:url(images/lifestyle/gallery_4.jpg);display:block"></a><a href="gallery.html?img=gallery_5" class="gallery-thumb" data-preview-image data-ck="gallery-preview-5" style="background-image:url(images/lifestyle/gallery_5.jpg);display:block"></a><a href="gallery.html?img=gallery_6" class="gallery-thumb" data-preview-image data-ck="gallery-preview-6" style="background-image:url(images/lifestyle/gallery_6.jpg);display:block"></a>
         </div>
         <div style="text-align:center;margin-top:32px">
             <a href="gallery.html" class="btn-secondary">View Full Gallery</a>
@@ -239,6 +239,8 @@
     </div>
 </footer>
 
+<script src="js/image-preview-manifest.js"></script>
+<script src="js/image-previews.js"></script>
 <script>
 (function() {
     const SUPABASE_URL = 'https://apxelbabvviuwqpfivtr.supabase.co';
@@ -254,7 +256,7 @@
         grid.innerHTML = styles.map(function(s) {
             return `
         <div class="door-card">
-            <div class="door-card-img" style="${s.image_url ? "background-image:url('" + s.image_url + "')" : ''}"></div>
+            <div class="door-card-img" data-full-src="${s.image_url || ''}"></div>
             <div class="door-card-info">
                 <span class="door-code">(${s.code})</span>
                 <h3>${s.name}</h3>
@@ -263,6 +265,9 @@
             </div>
         </div>`;
         }).join('');
+        grid.querySelectorAll('.door-card-img[data-full-src]').forEach(function(el) {
+            window.centralHomeImages.setBackground(el, el.dataset.fullSrc);
+        });
     })
     .catch(function(err) { console.error('Home door styles load error:', err); });
 
@@ -289,7 +294,7 @@
             const link = document.createElement('a');
             link.href = 'gallery.html?img=' + encodeURIComponent(imageName);
             link.className = 'gallery-thumb';
-            link.style.backgroundImage = 'url("' + photo.image_url.replace(/["\\]/g, '\\$&') + '")';
+            window.centralHomeImages.setBackground(link, photo.image_url);
             link.setAttribute('aria-label', photo.caption
                 ? 'View ' + photo.caption
                 : 'View gallery photo ' + (index + 1));
@@ -298,60 +303,6 @@
     })
     .catch(function(err) { console.error('Home gallery load error:', err); });
 
-    fetch(`${SUPABASE_URL}/rest/v1/home_showcase?order=sort_order.asc`, {
-    headers: {
-        'apikey': SUPABASE_ANON,
-        'Authorization': `Bearer ${SUPABASE_ANON}`
-    }
-})
-.then(function(res) {
-    if (!res.ok) throw new Error('Supabase error: ' + res.status);
-    return res.json();
-})
-.then(function(images) {
-    const track = document.getElementById('home-showcase-track');
-
-    if (!track || !Array.isArray(images) || images.length === 0) {
-        return;
-    }
-
-    const validImages = images.filter(function(item) {
-        return item.image_url;
-    });
-
-    if (validImages.length === 0) {
-        return;
-    }
-
-    track.innerHTML = validImages.map(function(item) {
-        const marker = '|||link:';
-        const markerIndex = (item.label || '').indexOf(marker);
-        const displayLabel = markerIndex === -1 ? (item.label || '') : item.label.slice(0, markerIndex);
-        const embeddedLink = markerIndex === -1 ? '' : item.label.slice(markerIndex + marker.length);
-        const rawDestination = embeddedLink || item.alt_text || '';
-        const destination = (/^https?:\/\//.test(rawDestination) || /^[\w-]+\.html(?:\?|$)/.test(rawDestination))
-            ? rawDestination
-            : '';
-        const label = displayLabel ? `<div class="showcase-label">${displayLabel}</div>` : '';
-        if (destination) {
-            return `
-                <a class="showcase-item" href="${destination}" aria-label="View ${displayLabel || 'showcase item'}">
-                    <img src="${item.image_url}" alt="${displayLabel || 'Product Showcase'}">
-                    ${label}
-                </a>
-            `;
-        }
-        return `
-            <div class="showcase-item">
-                <img src="${item.image_url}" alt="${displayLabel || 'Showcase'}" onclick="openLightbox(this.src)">
-                ${label}
-            </div>
-        `;
-    }).join('');
-})
-.catch(function(err) {
-    console.error('Home showcase load error:', err);
-});
 })();
 </script>
 <script src="js/main.js"></script>

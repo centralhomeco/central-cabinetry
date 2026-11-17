@@ -65,9 +65,10 @@ async function initShowcase() {
                     ? rawDestination
                     : '';
                 const label = displayLabel ? `<div class="showcase-label">${displayLabel}</div>` : '';
+                const preview = window.centralHomeImages ? window.centralHomeImages.previewUrl(r.image_url) : r.image_url;
                 return destination
-                    ? `<a class="showcase-item" href="${destination}" aria-label="View ${displayLabel || 'showcase item'}"><img src="${r.image_url}" alt="${displayLabel || 'Product Showcase'}">${label}</a>`
-                    : `<div class="showcase-item"><img src="${r.image_url}" alt="${displayLabel || 'Product Showcase'}" onclick="openLightbox(this.src)">${label}</div>`;
+                    ? `<a class="showcase-item" href="${destination}" aria-label="View ${displayLabel || 'showcase item'}"><img src="${preview}" data-full-src="${r.image_url}" loading="lazy" decoding="async" alt="${displayLabel || 'Product Showcase'}">${label}</a>`
+                    : `<div class="showcase-item"><img src="${preview}" data-full-src="${r.image_url}" loading="lazy" decoding="async" alt="${displayLabel || 'Product Showcase'}" onclick="openLightbox(this)">${label}</div>`;
             }).join('');
         }
     } catch (err) {
@@ -124,7 +125,8 @@ function nextStep(n){
 function openLightbox(src){
     var lb=document.getElementById('lightbox');
     var img=document.getElementById('lightboxImg');
-    if(lb&&img){img.src=src;lb.classList.add('open')}
+    var fullSrc=window.centralHomeImages?window.centralHomeImages.fullSource(src):src;
+    if(lb&&img){img.src=fullSrc;lb.classList.add('open')}
 }
 function closeLightbox(){
     var lb=document.getElementById('lightbox');

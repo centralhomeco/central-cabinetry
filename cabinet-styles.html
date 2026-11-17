@@ -126,6 +126,8 @@
     </div>
 </footer>
 
+<script src="js/image-preview-manifest.js"></script>
+<script src="js/image-previews.js"></script>
 <script>
 const SUPABASE_URL = 'https://apxelbabvviuwqpfivtr.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFweGVsYmFidnZpdXdxcGZpdnRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2NjEyOTYsImV4cCI6MjA5OTIzNzI5Nn0.EWt2FRAkJH86Is9P_uDjKDXnJ0O1J2qdg_BuctQavvY';
@@ -153,8 +155,8 @@ function renderStyles(styles) {
     const grid = document.getElementById('ds-grid');
     grid.innerHTML = styles.map(s => `
         <div class="ds-listing-card" data-name="${s.name.toLowerCase()}" data-type="${s.style_type.toLowerCase()}" data-code="${s.code.toLowerCase()}">
-    <a href="door-style-detail.html?code=${s.code.toLowerCase()}" class="ds-listing-bg" style="display:block;position:relative;${s.banner_image ? 'background-image:url(' + s.banner_image + ')' : ''}">
-    ${s.image_url ? `<img src="${s.image_url}" class="ds-swatch" alt="${s.name}">` : ''}
+    <a href="door-style-detail.html?code=${s.code.toLowerCase()}" class="ds-listing-bg" data-full-src="${s.banner_image || ''}" style="display:block;position:relative">
+    ${s.image_url ? `<img src="${window.centralHomeImages.previewUrl(s.image_url)}" data-full-src="${s.image_url}" loading="lazy" decoding="async" class="ds-swatch" alt="${s.name}">` : ''}
     </a>
             <div class="ds-listing-bar">
                 <span>(${s.code}) ${s.name}</span>
@@ -162,6 +164,9 @@ function renderStyles(styles) {
             </div>
         </div>
     `).join('');
+    grid.querySelectorAll('.ds-listing-bg[data-full-src]').forEach(function(el) {
+        window.centralHomeImages.setBackground(el, el.dataset.fullSrc);
+    });
 }
 
 function filterStyles() {

@@ -2,7 +2,16 @@
   "name": "central-cabinetry",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "build:previews": "node scripts/build-image-previews.mjs",
+    "measure:images": "node scripts/measure-image-bytes.mjs",
+    "test": "node scripts/test-image-previews.mjs"
+  },
   "engines": {
     "node": "24.x"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.58.2",
+    "sharp": "^0.35.5"
   }
 }
