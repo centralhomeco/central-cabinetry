@@ -7,7 +7,8 @@
     "measure:images": "node scripts/measure-image-bytes.mjs",
     "test:image-previews": "node scripts/test-image-previews.mjs",
     "test:flooring-details": "node scripts/test-flooring-product-specs.mjs",
-    "test": "npm run test:image-previews && npm run test:flooring-details"
+    "test:flooring-compare": "node scripts/test-flooring-compare.mjs",
+    "test": "npm run test:image-previews && npm run test:flooring-details && npm run test:flooring-compare"
   },
   "engines": {
     "node": "24.x"
