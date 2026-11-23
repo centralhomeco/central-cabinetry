@@ -23,6 +23,10 @@
         .flooring-tab{padding:12px 24px;font-size:22px;font-weight:800;color:#888;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
         .flooring-tab.active{color:#2A6496;border-bottom-color:#2A6496}
         .flooring-tab:hover{color:#2A6496}
+        .flooring-compare-bar{display:flex;align-items:center;justify-content:space-between;gap:18px;background:#f6f4ef;border:1px solid #e5dfd5;border-radius:12px;padding:18px 20px;margin:-18px 0 38px}
+        .flooring-compare-bar strong{display:block;color:#1A1A2E;font-size:17px;margin-bottom:3px}
+        .flooring-compare-bar span{color:#666;font-size:14px}
+        .flooring-compare-bar .btn-primary{white-space:nowrap}
 
         .tab-content{display:none}
         .tab-content.active{display:block}
@@ -60,6 +64,7 @@
         @media(max-width:500px){
             .products-grid{grid-template-columns:1fr 1fr}
             .flooring-tab{padding:10px 14px;font-size:18px;font-weight:800}
+            .flooring-compare-bar{align-items:flex-start;flex-direction:column;margin-top:-16px}
         }
     </style>
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17836315268"></script>
@@ -118,9 +123,14 @@
 
         <!-- TABS -->
         <div class="flooring-tabs">
-            <button class="flooring-tab active" onclick="showTab('hardwood')">Engineered Hardwood</button>
-            <button class="flooring-tab" onclick="showTab('wpc')">WPC Luxury Vinyl Plank</button>
-            <button class="flooring-tab" onclick="showTab('spc')">LVP Luxury Vinyl Plank</button>
+            <button class="flooring-tab active" onclick="showTab('hardwood', this)">Engineered Hardwood</button>
+            <button class="flooring-tab" onclick="showTab('wpc', this)">WPC Luxury Vinyl Plank</button>
+            <button class="flooring-tab" onclick="showTab('spc', this)">LVP Luxury Vinyl Plank</button>
+        </div>
+
+        <div class="flooring-compare-bar">
+            <div><strong>Not sure which flooring type to choose?</strong><span>Compare construction, sizes, waterproofing, warranties and certifications.</span></div>
+            <a href="flooring-compare.html" class="btn-primary">Compare Flooring Types</a>
         </div>
 
         <!-- TAB: ENGINEERED HARDWOOD -->
@@ -173,7 +183,7 @@
         <div id="tab-spc" class="tab-content">
             <div class="product-hero">
                 <div>
-                    <h2>UniCore ULTRA</h2>
+                    <h2>UniCore</h2>
                     <h3>LVP Luxury Vinyl Plank</h3>
                     <p>Built for the demands of high-traffic residential and commercial spaces. UniCore ULTRA (LVP) features an ultra-rigid stone polymer composite core that is virtually indestructible — 100% waterproof, dent-resistant, and dimensionally stable in extreme temperature fluctuations. The perfect floor for spaces where performance is non-negotiable.</p>
                     <div class="specs-bar">
@@ -226,6 +236,7 @@
         </div>
         <div class="footer-col">
             <h4>Flooring</h4>
+            <a href="flooring-compare.html">Compare Flooring Types</a>
             <a href="flooring.html">Engineered Hardwood</a>
             <a href="flooring.html">WPC Luxury Vinyl Plank</a>
             <a href="flooring.html">LVP Luxury Vinyl Plank</a>
@@ -350,12 +361,19 @@ function filterFlooring() {
 })();
 </script>
 <script>
-function showTab(tab) {
+function showTab(tab, clickedButton) {
+    if (!['hardwood', 'wpc', 'spc'].includes(tab)) tab = 'hardwood';
     document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
     document.querySelectorAll('.flooring-tab').forEach(function(el) { el.classList.remove('active'); });
     document.getElementById('tab-' + tab).classList.add('active');
-    event.target.classList.add('active');
+    const buttonIndex = { hardwood: 0, wpc: 1, spc: 2 }[tab];
+    const button = clickedButton || document.querySelectorAll('.flooring-tab')[buttonIndex];
+    if (button) button.classList.add('active');
 }
+document.addEventListener('DOMContentLoaded', function() {
+    const requestedType = new URLSearchParams(window.location.search).get('type');
+    if (requestedType) showTab(requestedType);
+});
 </script>
 </body>
 </html>

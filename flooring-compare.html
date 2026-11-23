@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Flooring Types | Central Home</title>
+    <meta name="description" content="Compare engineered hardwood, WPC luxury vinyl plank, and SPC luxury vinyl plank by construction, size, comfort, waterproofing, warranty, and certifications.">
+    <link rel="canonical" href="https://www.centralhomeco.com/flooring-compare.html">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .page-banner{display:flex;flex-direction:column;justify-content:flex-end;padding:34px 5%;color:#fff}
+        .page-banner h1,.page-banner p,.page-banner a{color:#fff}
+        .page-banner .breadcrumb{opacity:.82;margin-bottom:8px}
+        .page-banner>p:last-child{opacity:.9;margin-top:7px}
+        .compare-intro{max-width:760px;margin:0 auto 38px;text-align:center;color:#555;line-height:1.7}
+        .compare-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:stretch}
+        .compare-card{background:#fff;border:1px solid #e4e4e4;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 6px 22px rgba(20,28,42,.06)}
+        .compare-card-photo{position:relative;aspect-ratio:4/3;overflow:hidden;background:#eee}
+        .compare-card-photo>img{width:100%;height:100%;object-fit:cover;display:block}
+        .compare-card-label{position:absolute;left:14px;top:14px;background:rgba(26,26,46,.9);color:#fff;padding:7px 10px;border-radius:6px;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+        .compare-card-body{padding:24px;display:flex;flex:1;flex-direction:column}
+        .compare-card h2{font-size:27px;color:#1A1A2E;margin:0 0 4px}
+        .compare-card h3{font-size:14px;color:#2A6496;letter-spacing:.06em;text-transform:uppercase;margin:0 0 16px}
+        .compare-card-summary{color:#555;line-height:1.6;margin:0 0 18px}
+        .compare-highlights{list-style:none;padding:0;margin:0 0 24px}
+        .compare-highlights li{position:relative;padding:9px 0 9px 25px;border-bottom:1px solid #eee;color:#333;line-height:1.4}
+        .compare-highlights li::before{content:'✓';position:absolute;left:0;color:#2f7a42;font-weight:900}
+        .compare-card-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
+        .compare-card-actions a{flex:1;text-align:center;min-width:125px}
+        .compare-count{font-size:13px;color:#777;margin:0 0 16px}
+        .compare-section{margin-top:48px}
+        .compare-section-heading{text-align:center;margin-bottom:22px}
+        .compare-section-heading h2{font-size:30px;color:#1A1A2E;margin-bottom:8px}
+        .compare-section-heading p{color:#666;margin:0}
+        .compare-table-wrap{overflow-x:auto;border:1px solid #ddd;border-radius:14px;background:#fff;box-shadow:0 6px 22px rgba(20,28,42,.05)}
+        .compare-table{border-collapse:separate;border-spacing:0;width:100%;min-width:920px;color:#333}
+        .compare-table th,.compare-table td{padding:16px 18px;border-bottom:1px solid #e9e9e9;border-right:1px solid #eee;text-align:left;vertical-align:top;line-height:1.45}
+        .compare-table th:last-child,.compare-table td:last-child{border-right:0}
+        .compare-table tr:last-child th,.compare-table tr:last-child td{border-bottom:0}
+        .compare-table thead th{background:#1A1A2E;color:#fff;font-size:17px;position:sticky;top:72px;z-index:2}
+        .compare-table thead th:first-child{left:0;z-index:3;width:180px}
+        .compare-table tbody th{background:#f6f4ef;color:#1A1A2E;font-size:14px;width:180px;position:sticky;left:0;z-index:1}
+        .compare-table td{width:calc((100% - 180px)/3)}
+        .yes{color:#276333;font-weight:800}.no{color:#7a3a32;font-weight:700}
+        .cert-list{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+        .cert-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid #ddd;border-radius:8px;padding:5px 8px;background:#fff;font-size:12px;font-weight:750}
+        .cert-chip img{width:30px;height:30px;object-fit:contain}
+        .choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+        .choice-card{border-radius:12px;padding:22px;background:#f6f4ef;border:1px solid #e4dfd6}
+        .choice-card strong{display:block;font-size:18px;color:#1A1A2E;margin-bottom:8px}
+        .choice-card p{margin:0;color:#555;line-height:1.55}
+        .compare-note{font-size:12px;color:#737373;line-height:1.5;margin-top:14px}
+        .compare-cta{margin-top:46px;background:#1A1A2E;color:#fff;border-radius:14px;padding:34px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+        .compare-cta h2{color:#fff;margin:0 0 8px;font-size:25px}.compare-cta p{color:#e5e5e5;margin:0}
+        .compare-cta-actions{display:flex;gap:10px;flex-wrap:wrap;flex-shrink:0}
+        @media(max-width:900px){.compare-cards,.choice-grid{grid-template-columns:1fr}.compare-card{max-width:680px;margin:0 auto;width:100%}.compare-card-photo{aspect-ratio:16/9}.compare-cta{align-items:flex-start;flex-direction:column}}
+        @media(max-width:600px){.page-banner{padding:28px 20px}.compare-table-wrap{margin-left:-18px;margin-right:-18px;border-radius:0;border-left:0;border-right:0}.compare-table th,.compare-table td{padding:14px 12px}.compare-table thead th{top:64px}.compare-table thead th:first-child,.compare-table tbody th{width:135px}.compare-cta{padding:26px}.compare-card-body{padding:20px}}
+    </style>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17836315268"></script>
+    <script src="js/ads-tracking.js" defer></script>
+</head>
+<body data-page="flooring-compare">
+<nav class="navbar">
+    <div class="nav-inner">
+        <a href="index.html" class="branding">
+            <img src="images/logo.png" alt="Central Home Logo" class="logo-img">
+            <div class="logo-text-wrap">
+                <span class="logo-text">Central Home</span>
+                <span class="logo-tagline">CABINETS <span>&bull;</span> FLOORING <span>&bull;</span> OUTDOOR LIVING</span>
+            </div>
+        </a>
+        <div class="nav-links" id="navLinks">
+            <a href="cabinet-styles.html">Cabinets</a>
+            <a href="flooring.html" class="active">Flooring</a>
+            <a href="outdoor.html">Outdoor Living</a>
+            <a href="about-us.html">About Us</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+        <div class="nav-right">
+            <div class="header-search"><input type="text" placeholder="Search cabinets, flooring..."><button class="header-search-btn" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button></div>
+            <a href="tel:(843) 712-1001" class="nav-phone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.81 12.81 0 0 0 .62 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.62A2 2 0 0 1 22 16.92z"/></svg>(843) 712-1001</a>
+            <button class="nav-toggle" onclick="toggleMenu()" aria-label="Open menu">&#9776;</button>
+        </div>
+    </div>
+</nav>
+<div class="floating-bar"><a href="tel:(843) 712-1001" title="Call Us">&#128222;</a><a href="book-appointment.html" title="Book Appointment">&#128197;</a><a href="mailto:sales@centralhomeco.com" title="Email Us">&#9993;</a></div>
+
+<div class="page-banner">
+    <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; <a href="flooring.html">Flooring</a> &rsaquo; Compare</p>
+    <h1>Compare Flooring Types</h1>
+    <p>Engineered hardwood, WPC and SPC side by side</p>
+</div>
+
+<section>
+    <div class="container">
+        <p class="compare-intro">Compare construction, sizes, comfort, waterproofing, warranties and certifications before choosing a floor. Product-level specifications may vary by color and collection.</p>
+
+        <div class="compare-cards">
+            <article class="compare-card" data-category="hardwood">
+                <div class="compare-card-photo"><img src="images/flooring-compare/engineered-hardwood.webp" alt="Engineered hardwood flooring room" width="933" height="700"><span class="compare-card-label">Real wood</span></div>
+                <div class="compare-card-body">
+                    <h2>NatDura</h2><h3>Engineered Hardwood</h3>
+                    <p class="compare-count"><span data-product-count="hardwood">15</span> products currently listed</p>
+                    <p class="compare-card-summary">Real hardwood veneer over a cross-directional engineered wood core.</p>
+                    <ul class="compare-highlights"><li>Authentic hardwood surface</li><li>1.2–4 mm veneer options</li><li>Tongue-and-groove profile</li><li>Random-length planks</li></ul>
+                    <div class="compare-card-actions"><a href="flooring.html?type=hardwood" class="btn-primary">View Hardwood</a></div>
+                </div>
+            </article>
+            <article class="compare-card" data-category="wpc">
+                <div class="compare-card-photo"><img src="images/flooring-compare/wpc-luxury-vinyl.webp" alt="WPC luxury vinyl plank room" width="1024" height="768" loading="lazy"><span class="compare-card-label">Comfort core</span></div>
+                <div class="compare-card-body">
+                    <h2>UniCore PRO</h2><h3>WPC Luxury Vinyl Plank</h3>
+                    <p class="compare-count"><span data-product-count="wpc">8</span> products currently listed</p>
+                    <p class="compare-card-summary">Waterproof luxury vinyl plank with a thicker WPC core and attached acoustic pad.</p>
+                    <ul class="compare-highlights"><li>100% waterproof construction</li><li>8–10.5 mm total thickness</li><li>22 mil wear layer</li><li>Click-lock profile</li></ul>
+                    <div class="compare-card-actions"><a href="flooring.html?type=wpc" class="btn-primary">View WPC</a></div>
+                </div>
+            </article>
+            <article class="compare-card" data-category="spc">
+                <div class="compare-card-photo"><img src="images/flooring-compare/spc-luxury-vinyl.webp" alt="SPC luxury vinyl plank room" width="1024" height="717" loading="lazy"><span class="compare-card-label">Rigid core</span></div>
+                <div class="compare-card-body">
+                    <h2>UniCore</h2><h3>SPC Luxury Vinyl Plank</h3>
+                    <p class="compare-count"><span data-product-count="spc">11</span> products currently listed</p>
+                    <p class="compare-card-summary">Waterproof luxury vinyl plank with a dense stone-plastic composite core.</p>
+                    <ul class="compare-highlights"><li>100% waterproof construction</li><li>5–6 mm total thickness</li><li>12 or 22 mil wear layer</li><li>Click-lock profile</li></ul>
+                    <div class="compare-card-actions"><a href="flooring.html?type=spc" class="btn-primary">View SPC</a></div>
+                </div>
+            </article>
+        </div>
+
+        <div class="compare-section">
+            <div class="compare-section-heading"><h2>Detailed Comparison</h2><p>Verified specifications across the products currently listed on our site.</p></div>
+            <div class="compare-table-wrap" role="region" aria-label="Flooring type comparison" tabindex="0">
+                <table class="compare-table">
+                    <thead><tr><th scope="col">Feature</th><th scope="col">Engineered Hardwood</th><th scope="col">WPC Luxury Vinyl</th><th scope="col">SPC Luxury Vinyl</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Brand</th><td>NatDura</td><td>UniCore PRO</td><td>UniCore</td></tr>
+                        <tr><th scope="row">Construction</th><td>Hardwood veneer with engineered cross-directional wood core</td><td>Luxury vinyl surface with WPC comfort core</td><td>Luxury vinyl surface with rigid stone-plastic composite core</td></tr>
+                        <tr><th scope="row">Waterproof</th><td class="no">Not listed as waterproof</td><td class="yes">Yes — 100% waterproof</td><td class="yes">Yes — 100% waterproof</td></tr>
+                        <tr><th scope="row">Thickness</th><td>1/2", 9/16" or 5/8"</td><td>8 mm or 10.5 mm</td><td>5 mm or 6 mm</td></tr>
+                        <tr><th scope="row">Wear surface</th><td>1.2 mm, 3 mm or 4 mm real-wood veneer</td><td>22 mil wear layer</td><td>12 mil or 22 mil wear layer</td></tr>
+                        <tr><th scope="row">Plank widths</th><td>6", 7 1/2" or 9 1/2"</td><td>7.1" or 9"</td><td>7.1"</td></tr>
+                        <tr><th scope="row">Plank lengths</th><td>Random lengths; maximum varies by collection</td><td>48", 60" or 72"</td><td>48"</td></tr>
+                        <tr><th scope="row">Attached pad</th><td>No attached pad listed</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+                        <tr><th scope="row">Profile</th><td>Tongue and groove</td><td>Click lock</td><td>Click lock</td></tr>
+                        <tr><th scope="row">Residential warranty</th><td>Limited lifetime structural; limited 50-year residential</td><td>Limited lifetime structural; limited 50-year residential</td><td>Limited lifetime structural; limited 50-year residential</td></tr>
+                        <tr><th scope="row">Light commercial warranty</th><td>Limited 3-year</td><td>Limited 5-year</td><td>Limited 5-year</td></tr>
+                        <tr><th scope="row">Certifications &amp; compliance</th>
+                            <td><div class="cert-list"><span class="cert-chip"><img src="images/certifications/floorscore.avif" alt="" loading="lazy">FloorScore®</span><span class="cert-chip"><img src="images/certifications/epa-tsca-title-vi.avif" alt="" loading="lazy">EPA TSCA Title VI</span><span class="cert-chip"><img src="images/certifications/carb-phase-2.png" alt="" loading="lazy">CARB Phase 2</span><span class="cert-chip"><img src="images/certifications/lacey-act.avif" alt="" loading="lazy">Lacey Act</span></div></td>
+                            <td><div class="cert-list"><span class="cert-chip"><img src="images/certifications/floorscore.avif" alt="" loading="lazy">FloorScore®</span><span class="cert-chip"><img src="images/certifications/zero-added-formaldehyde.avif" alt="" loading="lazy">Zero Added Formaldehyde</span></div></td>
+                            <td><div class="cert-list"><span class="cert-chip"><img src="images/certifications/floorscore.avif" alt="" loading="lazy">FloorScore®</span><span class="cert-chip"><img src="images/certifications/zero-added-formaldehyde.avif" alt="" loading="lazy">Zero Added Formaldehyde</span></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="compare-note">Ranges reflect the active products currently listed. Always confirm the specifications and warranty for the exact product selected.</p>
+        </div>
+
+        <div class="compare-section">
+            <div class="compare-section-heading"><h2>Quick Guide</h2><p>A simple starting point based on the construction of each flooring type.</p></div>
+            <div class="choice-grid">
+                <div class="choice-card"><strong>Choose engineered hardwood for</strong><p>A real-wood surface, natural variation and wider premium plank options.</p></div>
+                <div class="choice-card"><strong>Choose WPC for</strong><p>Waterproof performance with a thicker core and a softer, quieter feel underfoot.</p></div>
+                <div class="choice-card"><strong>Choose SPC for</strong><p>Waterproof rigid-core performance in active residential or light-commercial spaces.</p></div>
+            </div>
+        </div>
+
+        <aside class="compare-cta">
+            <div><h2>Need help choosing?</h2><p>See flooring samples at our Myrtle Beach showroom. Wholesale available.</p></div>
+            <div class="compare-cta-actions"><a href="book-appointment.html" class="btn-primary">Visit the Showroom</a><a href="contact.html?category=flooring" class="btn-outline-white">Ask a Question</a></div>
+        </aside>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-col"><h4>Central Home</h4><p data-ck="footer-address">1297 US-501, Myrtle Beach, SC 29577</p><p data-ck="footer-phone">(843) 712-1001</p><p data-ck="footer-email">sales@centralhomeco.com</p><p data-ck="footer-hours">Monday to Saturday, 9:00am to 5:00pm</p></div>
+        <div class="footer-col"><h4>Quick Links</h4><a href="about-us.html">About Us</a><a href="cabinet-styles.html">Cabinets</a><a href="flooring.html">Flooring</a><a href="outdoor.html">Outdoor Living</a><a href="contact.html">Contact Us</a><a href="book-appointment.html">Book Appointment</a></div>
+        <div class="footer-col"><h4>Flooring</h4><a href="flooring-compare.html">Compare Flooring Types</a><a href="flooring.html?type=hardwood">Engineered Hardwood</a><a href="flooring.html?type=wpc">WPC Luxury Vinyl Plank</a><a href="flooring.html?type=spc">SPC Luxury Vinyl Plank</a></div>
+        <div class="footer-col"><h4>Follow Us</h4><a href="https://facebook.com/chgcabinets" target="_blank" rel="noopener">Facebook</a><a href="https://instagram.com/central_cabinets" target="_blank" rel="noopener">Instagram</a></div>
+    </div>
+    <div class="footer-bottom"><p>&copy; 2026 Central Home. All rights reserved. &nbsp;|&nbsp; <a href="admin.html" style="color:inherit;opacity:.55;text-decoration:none;">Admin</a></p></div>
+</footer>
+<script src="js/main.js"></script>
+<script src="js/site-content.js"></script>
+<script src="js/flooring-compare.js"></script>
+</body>
+</html>
