@@ -5,7 +5,9 @@
   "scripts": {
     "build:previews": "node scripts/build-image-previews.mjs",
     "measure:images": "node scripts/measure-image-bytes.mjs",
-    "test": "node scripts/test-image-previews.mjs"
+    "test:image-previews": "node scripts/test-image-previews.mjs",
+    "test:flooring-details": "node scripts/test-flooring-product-specs.mjs",
+    "test": "npm run test:image-previews && npm run test:flooring-details"
   },
   "engines": {
     "node": "24.x"
