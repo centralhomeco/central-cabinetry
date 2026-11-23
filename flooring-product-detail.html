@@ -31,6 +31,11 @@
         .fp-spec-row{display:grid;grid-template-columns:minmax(120px,.8fr) minmax(130px,1.2fr);gap:14px;padding:13px 0;border-bottom:1px solid #eee}
         .fp-spec-label{font-weight:750;color:#1A1A2E}
         .fp-spec-value{color:#4b4b4b}
+        .fp-compliance-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+        .fp-compliance-card{border:1px solid #e2ded6;border-radius:10px;padding:18px;background:#faf9f6}
+        .fp-compliance-name{font-size:17px;font-weight:800;color:#1A1A2E;margin-bottom:7px}
+        .fp-compliance-status{display:inline-block;background:#e7f3e8;color:#276333;border-radius:999px;padding:4px 9px;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-bottom:10px}
+        .fp-compliance-detail{color:#555;line-height:1.55;margin:0}
         .fp-docs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
         .fp-doc-link{display:flex;align-items:center;justify-content:space-between;padding:15px 17px;border:1px solid #ddd;border-radius:9px;color:#1A1A2E;text-decoration:none;font-weight:700;background:#fff}
         .fp-doc-link:hover{border-color:#b1782d;color:#8a5a1d}
@@ -43,7 +48,7 @@
             .fp-photo{min-height:260px;order:1!important}
             .fp-summary{order:2!important;padding:24px}
             .fp-summary h1{font-size:29px}
-            .fp-features,.fp-spec-table,.fp-docs{grid-template-columns:1fr}
+            .fp-features,.fp-spec-table,.fp-compliance-grid,.fp-docs{grid-template-columns:1fr}
             .fp-detail-section{padding:24px}
             .fp-availability{align-items:flex-start;flex-direction:column}
         }
@@ -120,6 +125,11 @@
         <section class="fp-detail-section" id="product-specifications-section">
             <h2>Product Specifications</h2>
             <div class="fp-spec-table" id="product-specifications"></div>
+        </section>
+        <section class="fp-detail-section" id="product-compliance-section">
+            <h2>Certifications &amp; Compliance</h2>
+            <div class="fp-compliance-grid" id="product-compliance"></div>
+            <p class="fp-source" id="product-compliance-source"></p>
         </section>
         <section class="fp-detail-section" id="product-documents-section">
             <h2>Installation, Care &amp; Warranty</h2>
