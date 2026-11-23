@@ -100,7 +100,10 @@
         const complianceGrid = document.getElementById('product-compliance');
         if (compliance.length) {
             complianceGrid.innerHTML = compliance.map(function(item) {
-                return `<article class="fp-compliance-card"><div class="fp-compliance-name">${escapeHtml(item.name)}</div><div class="fp-compliance-status">${escapeHtml(item.status)}</div><p class="fp-compliance-detail">${escapeHtml(item.detail)}</p></article>`;
+                const symbol = item.image
+                    ? `<div class="fp-compliance-symbol"><img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)} symbol" loading="lazy" decoding="async"></div>`
+                    : '';
+                return `<article class="fp-compliance-card">${symbol}<div class="fp-compliance-copy"><div class="fp-compliance-name">${escapeHtml(item.name)}</div><div class="fp-compliance-status">${escapeHtml(item.status)}</div><p class="fp-compliance-detail">${escapeHtml(item.detail)}</p></div></article>`;
             }).join('');
             complianceSection.style.display = 'block';
         } else {
