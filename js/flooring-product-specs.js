@@ -2231,17 +2231,17 @@ window.CENTRAL_HOME_FLOORING_DOCUMENTS = {
 window.CENTRAL_HOME_FLOORING_COMPLIANCE = {
   "sourceUrl": "https://peninsulafloorings.com/certifications-compliance/",
   "all": [
-    {"name":"FloorScore®","status":"Certified","detail":"Certified for indoor air quality."}
+    {"name":"FloorScore®","status":"Certified","detail":"Certified for indoor air quality.","image":"images/certifications/floorscore.avif"}
   ],
   "hardwood": [
-    {"name":"EPA TSCA Title VI","status":"Compliant","detail":"Meets federal formaldehyde-emission requirements for composite wood products."},
-    {"name":"CARB Phase 2","status":"Compliant","detail":"Meets California formaldehyde-emission requirements for composite wood products."},
-    {"name":"Lacey Act","status":"Compliant","detail":"Follows legal and responsible wood-sourcing requirements."}
+    {"name":"EPA TSCA Title VI","status":"Compliant","detail":"Meets federal formaldehyde-emission requirements for composite wood products.","image":"images/certifications/epa-tsca-title-vi.avif"},
+    {"name":"CARB Phase 2","status":"Compliant","detail":"Meets California formaldehyde-emission requirements for composite wood products.","image":"images/certifications/carb-phase-2.png"},
+    {"name":"Lacey Act","status":"Compliant","detail":"Follows legal and responsible wood-sourcing requirements.","image":"images/certifications/lacey-act.avif"}
   ],
   "spc": [
-    {"name":"Zero Added Formaldehyde","status":"Verified manufacturer claim","detail":"Manufactured with no added formaldehyde."}
+    {"name":"Zero Added Formaldehyde","status":"Verified manufacturer claim","detail":"Manufactured with no added formaldehyde.","image":"images/certifications/zero-added-formaldehyde.avif"}
   ],
   "wpc": [
-    {"name":"Zero Added Formaldehyde","status":"Verified manufacturer claim","detail":"Manufactured with no added formaldehyde."}
+    {"name":"Zero Added Formaldehyde","status":"Verified manufacturer claim","detail":"Manufactured with no added formaldehyde.","image":"images/certifications/zero-added-formaldehyde.avif"}
   ]
 };

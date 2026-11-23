@@ -16,6 +16,11 @@ assert.deepEqual(Array.from(compliance.all, item => item.name), ['FloorScore®']
 assert.deepEqual(Array.from(compliance.hardwood, item => item.name), ['EPA TSCA Title VI', 'CARB Phase 2', 'Lacey Act']);
 assert.deepEqual(Array.from(compliance.spc, item => item.name), ['Zero Added Formaldehyde']);
 assert.deepEqual(Array.from(compliance.wpc, item => item.name), ['Zero Added Formaldehyde']);
+for (const claim of [...compliance.all, ...compliance.hardwood, ...compliance.spc, ...compliance.wpc]) {
+  assert.match(claim.image, /^images\/certifications\/(?:[a-z0-9-]+)\.(?:avif|png)$/);
+  assert.ok(fs.existsSync(claim.image), `${claim.name}: certification symbol is missing`);
+  assert.ok(fs.statSync(claim.image).size > 1000, `${claim.name}: certification symbol is empty`);
+}
 
 const requiredVinyl = ['Brand', 'Type', 'SKU', 'Dimension', 'Coverage', 'Wear Layer Thickness', 'Thickness', 'Width', 'Length', 'Attached Pad', 'Profile', 'Warranty'];
 const requiredHardwood = ['Brand', 'Type', 'Collection', 'Species', 'Wood Grade', 'Dimension', 'Coverage', 'Thickness', 'Width', 'Length', 'Veneer Thickness', 'Profile', 'Warranty'];
