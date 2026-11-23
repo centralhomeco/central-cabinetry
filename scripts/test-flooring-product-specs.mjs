@@ -6,10 +6,16 @@ const sandbox = { window: {} };
 vm.runInNewContext(fs.readFileSync('js/flooring-product-specs.js', 'utf8'), sandbox);
 const products = sandbox.window.CENTRAL_HOME_FLOORING_SPECS;
 const documents = sandbox.window.CENTRAL_HOME_FLOORING_DOCUMENTS;
+const compliance = sandbox.window.CENTRAL_HOME_FLOORING_COMPLIANCE;
 const entries = Object.entries(products);
 
 assert.equal(entries.length, 34, 'all 34 current flooring products must have verified detail data');
 assert.deepEqual(Object.keys(documents).sort(), ['hardwood', 'spc', 'wpc']);
+assert.equal(compliance.sourceUrl, 'https://peninsulafloorings.com/certifications-compliance/');
+assert.deepEqual(Array.from(compliance.all, item => item.name), ['FloorScore®']);
+assert.deepEqual(Array.from(compliance.hardwood, item => item.name), ['EPA TSCA Title VI', 'CARB Phase 2', 'Lacey Act']);
+assert.deepEqual(Array.from(compliance.spc, item => item.name), ['Zero Added Formaldehyde']);
+assert.deepEqual(Array.from(compliance.wpc, item => item.name), ['Zero Added Formaldehyde']);
 
 const requiredVinyl = ['Brand', 'Type', 'SKU', 'Dimension', 'Coverage', 'Wear Layer Thickness', 'Thickness', 'Width', 'Length', 'Attached Pad', 'Profile', 'Warranty'];
 const requiredHardwood = ['Brand', 'Type', 'Collection', 'Species', 'Wood Grade', 'Dimension', 'Coverage', 'Thickness', 'Width', 'Length', 'Veneer Thickness', 'Profile', 'Warranty'];
@@ -29,6 +35,9 @@ for (const [id, product] of entries) {
   const byLabel = Object.fromEntries(product.specifications.map(spec => [spec.label, spec.value]));
   const required = product.type === 'Engineered Hardwood Flooring' ? requiredHardwood : requiredVinyl;
   for (const label of required) assert.ok(byLabel[label], `${product.name}: missing ${label}`);
+  const category = product.type === 'Engineered Hardwood Flooring' ? 'hardwood' : (product.type.startsWith('WPC') ? 'wpc' : 'spc');
+  const claims = compliance.all.concat(compliance[category]);
+  assert.equal(claims.length, category === 'hardwood' ? 4 : 2, `${product.name}: incomplete certification/compliance claims`);
 }
 
 for (const [category, links] of Object.entries(documents)) {
@@ -39,7 +48,7 @@ for (const [category, links] of Object.entries(documents)) {
 const html = fs.readFileSync('flooring-product-detail.html', 'utf8');
 assert.ok(html.includes('js/flooring-product-specs.js'), 'detail page must load verified specs before renderer');
 assert.ok(html.indexOf('js/flooring-product-specs.js') < html.indexOf('js/flooring-product-detail.js'), 'spec data must load before renderer');
-for (const id of ['product-quick-specs', 'product-features', 'product-specifications', 'product-documents']) {
+for (const id of ['product-quick-specs', 'product-features', 'product-specifications', 'product-compliance', 'product-documents']) {
   assert.ok(html.includes(`id="${id}"`), `detail page missing ${id}`);
 }
 

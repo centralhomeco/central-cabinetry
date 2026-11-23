@@ -5,6 +5,7 @@
     const SITE_ORIGIN = 'https://www.centralhomeco.com';
     const VERIFIED_SPECS = window.CENTRAL_HOME_FLOORING_SPECS || {};
     const PRODUCT_DOCUMENTS = window.CENTRAL_HOME_FLOORING_DOCUMENTS || {};
+    const PRODUCT_COMPLIANCE = window.CENTRAL_HOME_FLOORING_COMPLIANCE || {};
 
     function h() { return { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }; }
     function escapeHtml(value) {
@@ -38,6 +39,9 @@
         const wanted = Array.isArray(labels) ? labels : [labels];
         const match = (details.specifications || []).find(function(spec) { return wanted.includes(spec.label); });
         return match && match.value;
+    }
+    function complianceFor(category) {
+        return (PRODUCT_COMPLIANCE.all || []).concat(PRODUCT_COMPLIANCE[category] || []);
     }
     function renderProductDetails(p, details) {
         const kicker = document.getElementById('product-kicker');
@@ -91,6 +95,24 @@
             specsSection.style.display = 'none';
         }
 
+        const compliance = complianceFor(p.category);
+        const complianceSection = document.getElementById('product-compliance-section');
+        const complianceGrid = document.getElementById('product-compliance');
+        if (compliance.length) {
+            complianceGrid.innerHTML = compliance.map(function(item) {
+                return `<article class="fp-compliance-card"><div class="fp-compliance-name">${escapeHtml(item.name)}</div><div class="fp-compliance-status">${escapeHtml(item.status)}</div><p class="fp-compliance-detail">${escapeHtml(item.detail)}</p></article>`;
+            }).join('');
+            complianceSection.style.display = 'block';
+        } else {
+            complianceSection.style.display = 'none';
+        }
+        const complianceSource = document.getElementById('product-compliance-source');
+        if (complianceSource && PRODUCT_COMPLIANCE.sourceUrl) {
+            complianceSource.innerHTML = `Certification and compliance claims are supplied by the manufacturer. <a href="${escapeHtml(PRODUCT_COMPLIANCE.sourceUrl)}" target="_blank" rel="noopener">View source ↗</a>`;
+        } else if (complianceSource) {
+            complianceSource.textContent = '';
+        }
+
         const docs = PRODUCT_DOCUMENTS[p.category] || [];
         const documentsSection = document.getElementById('product-documents-section');
         const documentsGrid = document.getElementById('product-documents');
@@ -121,7 +143,9 @@
             url: `${SITE_ORIGIN}/flooring-product-detail.html?id=${encodeURIComponent(String(p.id).trim())}`,
             additionalProperty: (details.specifications || []).map(function(spec) {
                 return { '@type': 'PropertyValue', name: spec.label, value: spec.value };
-            }),
+            }).concat(complianceFor(p.category).map(function(item) {
+                return { '@type': 'PropertyValue', name: item.name, value: item.status };
+            })),
         };
         Object.keys(data).forEach(function(key) { if (data[key] === undefined) delete data[key]; });
         const script = document.createElement('script');

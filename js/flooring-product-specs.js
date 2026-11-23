@@ -2228,3 +2228,20 @@ window.CENTRAL_HOME_FLOORING_DOCUMENTS = {
     {"label":"Light Commercial Warranty","url":"https://peninsulafloorings.com/wp-content/uploads/2026/04/Peninsula-Flooring_-Light-Commercial-Warranties-NatDura-Engineered-Hardwood-Flooring-Updated-on-April-1st-2026.pdf"}
   ]
 };
+window.CENTRAL_HOME_FLOORING_COMPLIANCE = {
+  "sourceUrl": "https://peninsulafloorings.com/certifications-compliance/",
+  "all": [
+    {"name":"FloorScore®","status":"Certified","detail":"Certified for indoor air quality."}
+  ],
+  "hardwood": [
+    {"name":"EPA TSCA Title VI","status":"Compliant","detail":"Meets federal formaldehyde-emission requirements for composite wood products."},
+    {"name":"CARB Phase 2","status":"Compliant","detail":"Meets California formaldehyde-emission requirements for composite wood products."},
+    {"name":"Lacey Act","status":"Compliant","detail":"Follows legal and responsible wood-sourcing requirements."}
+  ],
+  "spc": [
+    {"name":"Zero Added Formaldehyde","status":"Verified manufacturer claim","detail":"Manufactured with no added formaldehyde."}
+  ],
+  "wpc": [
+    {"name":"Zero Added Formaldehyde","status":"Verified manufacturer claim","detail":"Manufactured with no added formaldehyde."}
+  ]
+};
